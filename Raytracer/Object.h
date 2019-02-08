@@ -7,6 +7,7 @@ public:
 
 	struct intersectResult
 	{
+		bool isIntersection;
 		float omega;
 		Material mat;
 	};
