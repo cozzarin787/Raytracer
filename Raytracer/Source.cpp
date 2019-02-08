@@ -1,9 +1,10 @@
-#include "Triangle.h"
+#include "Polygon.h"
 #include <iostream>
 
 int main()
 {
-	Triangle o = Triangle(Material(Color()), Point(0,0,0), Point(1, 0, 0), Point(2, 0, 0));
+	std::vector<Point> v { Point(4, 1, 4), Point(4, 1, -4), Point(-4, 1, 4), Point(-4, 1, -4) };
+	Polygon o = Polygon(Material(Color()), v);
 	std::cout << o.toString() << std::endl;
 	std::cin.ignore();
 	return 0;
