@@ -10,6 +10,21 @@ public:
 		bool isIntersection;
 		float omega;
 		Material mat;
+
+		intersectResult()
+		{};
+
+		intersectResult(bool i) 
+		{
+			isIntersection = i;
+		};
+
+		intersectResult(bool i, float o, Material m)
+		{
+			isIntersection = i;
+			omega = o;
+			mat = m;
+		};
 	};
 
 	Material mat;

@@ -21,7 +21,7 @@ Object::intersectResult Triangle::intersect(Ray r)
 
 	if (denom == 0) 
 	{
-		return intersectResult();
+		return intersectResult(false);
 	}
 
 	return intersectResult();
