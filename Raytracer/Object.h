@@ -5,11 +5,17 @@ class Object
 {
 public:
 
+	struct intersectResult
+	{
+		float omega;
+		Material mat;
+	};
+
 	Material mat;
 
 	Object(Material mat);
 
-	virtual float intersect(Ray r) = 0;
+	virtual intersectResult intersect(Ray r) = 0;
 
 	virtual std::string toString() = 0;
 

@@ -6,10 +6,10 @@ Sphere::Sphere(Material mat, Point center, float radius) : Object(mat)
 	this->radius = radius;
 };
 
-float Sphere::intersect(Ray r)
+Object::intersectResult Sphere::intersect(Ray r)
 {
 	// TODO
-	return 0.0f;
+	return intersectResult();
 }
 
 std::string Sphere::toString()

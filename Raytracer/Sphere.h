@@ -9,7 +9,7 @@ public:
 
 	Sphere(Material mat, Point center, float radius);
 
-	float intersect(Ray r);
+	intersectResult intersect(Ray r);
 
 	std::string toString();
 

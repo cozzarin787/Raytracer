@@ -27,6 +27,11 @@ void Point::transform(float x, float y, float z)
 	this->z += z;
 }
 
+Vector3f Point::vector()
+{
+	return Vector3f(this->x, this->y, this->z);
+}
+
 std::string Point::toString()
 {
 	std::string x = std::to_string(this->x);

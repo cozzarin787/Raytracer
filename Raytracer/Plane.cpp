@@ -6,10 +6,10 @@ Plane::Plane(Material m, Point p, Vector3f normal) : Object(m)
 	this->normal = normal;
 }
 
-float Plane::intersect(Ray r)
+Object::intersectResult Plane::intersect(Ray r)
 {
 	// TODO
-	return 0.0f;
+	return intersectResult();
 }
 
 std::string Plane::toString()

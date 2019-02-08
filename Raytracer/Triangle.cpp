@@ -7,10 +7,24 @@ Triangle::Triangle(Material m, Point p0, Point p1, Point p2) : Object(m)
 	this->p2 = p2;
 }
 
-float Triangle::intersect(Ray r)
+Object::intersectResult Triangle::intersect(Ray r)
 {
 	// TODO
-	return 0.0f;
+	float omega = 0.0f, u = 0.0f, v = 0.0f;
+	Vector3f 
+		e1 = p1.vector - p0.vector,
+		e2 = p2.vector - p0.vector,
+		T = r.origin.vector - p0.vector,
+		P = r.direction.cross(e2),
+		Q = T.cross(e1);
+	float denom = P.dot(e1);
+
+	if (denom == 0) 
+	{
+
+	}
+
+	return intersectResult();
 }
 
 std::string Triangle::toString()

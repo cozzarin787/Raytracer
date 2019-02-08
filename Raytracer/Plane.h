@@ -10,7 +10,7 @@ public:
 
 	Plane(Material m, Point p, Vector3f normal);
 
-	float intersect(Ray r);
+	intersectResult intersect(Ray r);
 
 	std::string toString();
 

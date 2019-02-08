@@ -11,7 +11,7 @@ public:
 
 	Triangle(Material m, Point p0, Point p1, Point p2);
 
-	float intersect(Ray r);
+	intersectResult intersect(Ray r);
 
 	std::string toString();
 
