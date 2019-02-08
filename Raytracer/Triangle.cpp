@@ -9,22 +9,42 @@ Triangle::Triangle(Material m, Point p0, Point p1, Point p2) : Object(m)
 
 Object::intersectResult Triangle::intersect(Ray r)
 {
-	// TODO
-	float omega = 0.0f, u = 0.0f, v = 0.0f;
+	float omega = 0.0f, u = 0.0f, v = 0.0f, w = 0.0f;
 	Vector3f 
 		e1 = p1.vector - p0.vector,
 		e2 = p2.vector - p0.vector,
 		T = r.origin.vector - p0.vector,
 		P = r.direction.cross(e2),
 		Q = T.cross(e1);
-	float denom = P.dot(e1);
 
+	float denom = P.dot(e1);
 	if (denom == 0) 
 	{
-		return intersectResult();
+		return intersectResult(false);
 	}
 
-	return intersectResult();
+	Vector3f vec = Vector3f(
+		Q.dot(e2),
+		P.dot(T),
+		Q.dot(r.direction));
+
+	vec *= (1 / denom);
+	omega = vec[0];
+	u = vec[1];
+	v = vec[1];
+	w = 1 - u - v;
+
+	if (u < 0 && v < 0 && u + v > 1)
+	{
+		// intersection outside of the triangle
+		return intersectResult(false);
+	}
+	else
+	{
+		Point i = Point();
+		Vector3f normal = e1.cross(e2);
+		return intersectResult(true, omega, this->mat);
+	}
 }
 
 std::string Triangle::toString()
