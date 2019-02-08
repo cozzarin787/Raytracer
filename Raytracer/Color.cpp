@@ -2,9 +2,9 @@
 
 Color::Color()
 {
-	this->r = 255.0f;
-	this->g = 255.0f;
-	this->b = 255.0f;
+	this->r = 1.0f;
+	this->g = 1.0f;
+	this->b = 1.0f;
 }
 
 Color::Color(float r, float g, float b)
@@ -12,6 +12,14 @@ Color::Color(float r, float g, float b)
 	this->r = r;
 	this->g = g;
 	this->b = b;
+}
+
+std::string Color::toString()
+{
+	std::string red = std::to_string(this->r);
+	std::string green = std::to_string(this->g);
+	std::string blue = std::to_string(this->b);
+	return std::string("r: " + red + " g: " + green + " b: " + blue);
 }
 
 Color::~Color()

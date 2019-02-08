@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 class Point
 {
 	public:
@@ -14,6 +15,9 @@ class Point
 		// Functions
 		float distance(Point);
 		void transform(float, float, float);
+
+		// To String
+		std::string toString();
 
 		// Destructors
 		~Point();

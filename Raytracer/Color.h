@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 class Color
 {
 	public:
@@ -8,6 +10,8 @@ class Color
 
 		Color();
 		Color(float r, float g, float b);
+
+		std::string toString();
 
 		~Color();
 };

@@ -27,6 +27,14 @@ void Point::transform(float x, float y, float z)
 	this->z += z;
 }
 
+std::string Point::toString()
+{
+	std::string x = std::to_string(this->x);
+	std::string y = std::to_string(this->y);
+	std::string z = std::to_string(this->z);
+	return std::string("(" + x + ", " + y + ", " + z + ")");
+}
+
 Point::~Point()
 {
 

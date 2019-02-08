@@ -12,6 +12,8 @@ class Ray
 
 		Ray(Point origin, Vector3f directions);
 
+		std::string toString();
+
 		~Ray();
 };
 
