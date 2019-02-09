@@ -35,13 +35,25 @@ Object::intersectResult Polygon::intersect(Ray r)
 	Point inter = Point(xi, yi, zi);
 
 	// check if point of intersection lies within the boundaries of the polygon
+	Vector3f A = Vector3f(this->vertices[0].x - inter.x, this->vertices[0].y - inter.y, this->vertices[0].z - inter.z);
+	Vector3f B = Vector3f(this->vertices[vertices.size() - 1].x - inter.x, this->vertices[vertices.size() - 1].y - inter.y, this->vertices[vertices.size() - 1].z - inter.z);
+	float angleSum = acos((A.dot(B)) / (A.norm() * B.norm()));
+
 	for (int i = 0; i < this->vertices.size()-1; i++)
 	{
 		Vector3f A = Vector3f(this->vertices[i].x - inter.x, this->vertices[i].y - inter.y, this->vertices[i].z - inter.z);
 		Vector3f B = Vector3f(this->vertices[i+1].x - inter.x, this->vertices[i+1].y - inter.y, this->vertices[i+1].z - inter.z);
+		angleSum += acos((A.dot(B)) / (A.norm() * B.norm()));
 	}
 
-	return intersectResult();
+	if (angleSum >= 359 && angleSum <= 361)
+	{
+		return intersectResult(true, omega, this->mat);
+	}
+	else
+	{
+		return intersectResult(false);
+	}
 }
 
 std::string Polygon::toString()
