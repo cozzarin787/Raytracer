@@ -32,7 +32,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 	float omega = omega = (-B + roots) / 2;
 	float xi, yi, zi;
 	
-	Point intersecpoints[2];
+	Point intersectPoints[2];
 	RowVector3f normals[2];
 
 	if (roots < 0)
@@ -46,7 +46,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 		xi = x0 + dx * omega;
 		yi = y0 + dy * omega;
 		zi = z0 + dz * omega;
-		intersecpoints[0] = Point(xi, yi, zi);
+		intersectPoints[0] = Point(xi, yi, zi);
 	}
 	else
 	{
@@ -56,11 +56,11 @@ Object::intersectResult Sphere::intersect(Ray r)
 			xi = x0 + dx * omega;
 			yi = y0 + dy * omega;
 			zi = z0 + dz * omega;
-			intersecpoints[i] = Point(xi, yi, zi);
+			intersectPoints[i] = Point(xi, yi, zi);
 			omega *= -1;
 		}
 	}
-	for (Point p : intersecpoints)
+	for (Point p : intersectPoints)
 	{
 		int i = 0;
 		normals[i++] = RowVector3f(xi - xc, yi - yc, zi - zc);
