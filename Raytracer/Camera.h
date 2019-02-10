@@ -17,11 +17,11 @@ private:
 
 public:
 	Point position;
-	Vector3f lookat;
-	Vector3f up;
+	RowVector3f lookat;
+	RowVector3f up;
 
 
-	Camera(Point p, Vector3f lookat, Vector3f up);
+	Camera(Point p, RowVector3f lookat, RowVector3f up);
 
 	void render(World world);
 	void setImageDim(int h, int w);

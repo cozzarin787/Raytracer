@@ -10,7 +10,7 @@ Triangle::Triangle(Material m, Point p0, Point p1, Point p2) : Object(m)
 Object::intersectResult Triangle::intersect(Ray r)
 {
 	float omega = 0.0f, u = 0.0f, v = 0.0f, w = 0.0f;
-	Vector3f 
+	RowVector3f 
 		e1 = p1.vector() - p0.vector(),
 		e2 = p2.vector() - p0.vector(),
 		T = r.origin.vector() - p0.vector(),
@@ -23,7 +23,7 @@ Object::intersectResult Triangle::intersect(Ray r)
 		return intersectResult(false);
 	}
 
-	Vector3f vec = Vector3f(
+	RowVector3f vec = RowVector3f(
 		Q.dot(e2),
 		P.dot(T),
 		Q.dot(r.direction));
@@ -48,10 +48,28 @@ Object::intersectResult Triangle::intersect(Ray r)
 		Point i = Point(xi, yi, zi);
 
 		// calc normal
-		Vector3f normal = e1.cross(e2).normalized();
+		RowVector3f normal = e1.cross(e2).normalized();
 
 		return intersectResult(true, omega, this->mat);
 	}
+}
+
+void Triangle::transform(Matrix4f transMat)
+{
+	// Transform p0
+	RowVector4f p0Homo = this->p0.homogen();
+	RowVector4f p0PrimeHomo = p0Homo * transMat;
+	this->p0 = Point(p0PrimeHomo[0], p0PrimeHomo[1], p0PrimeHomo[2]);
+
+	// Transform p1
+	RowVector4f p1Homo = this->p1.homogen();
+	RowVector4f p1PrimeHomo = p1Homo * transMat;
+	this->p1 = Point(p1PrimeHomo[0], p1PrimeHomo[1], p1PrimeHomo[2]);
+
+	// Transform p2
+	RowVector4f p2Homo = this->p2.homogen();
+	RowVector4f p2PrimeHomo = p2Homo * transMat;
+	this->p2 = Point(p2PrimeHomo[0], p2PrimeHomo[1], p2PrimeHomo[2]);
 }
 
 std::string Triangle::toString()

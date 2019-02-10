@@ -4,19 +4,23 @@ World::World()
 {
 }
 
-void World::add(Object o)
+int World::add(Object o)
 {
 	this->objectList.push_back(o);
+	return this->objectList.size() - 1;
 }
 
-void World::transform(Object o, Matrix4f transMat)
+void World::transform(int index, Matrix4f transMat)
 {
-	// TODO
+	this->objectList[index].transform(transMat);
 }
 
 void World::transformAllObjects(Matrix4f transMat)
 {
-	// TODO
+	for (Object o : this->objectList)
+	{
+		o.transform(transMat);
+	}
 }
 
 std::vector<Object::intersectResult> World::spawnRay(Ray r)

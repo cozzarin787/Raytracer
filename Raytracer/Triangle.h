@@ -12,6 +12,7 @@ public:
 	Triangle(Material m, Point p0, Point p1, Point p2);
 
 	intersectResult intersect(Ray r);
+	void transform(Matrix4f transMat);
 
 	std::string toString();
 

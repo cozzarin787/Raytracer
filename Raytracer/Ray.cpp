@@ -1,6 +1,6 @@
 #include "Ray.h"
 
-Ray::Ray(Point origin, Vector3f direction)
+Ray::Ray(Point origin, RowVector3f direction)
 {
 	this->origin = origin;
 	this->direction = direction.normalized();

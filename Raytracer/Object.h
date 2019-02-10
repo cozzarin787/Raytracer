@@ -2,6 +2,8 @@
 #include "Material.h"
 #include "Ray.h"
 
+using Eigen::Matrix4f;
+
 class Object
 {
 public:
@@ -33,6 +35,7 @@ public:
 	Object(Material mat);
 
 	virtual intersectResult intersect(Ray r);
+	virtual void transform(Matrix4f transMat);
 
 	virtual std::string toString();
 

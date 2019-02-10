@@ -12,6 +12,7 @@ public:
 	Sphere(Material mat, Point center, float radius);
 
 	intersectResult intersect(Ray r);
+	void transform(Matrix4f transMat);
 
 	std::string toString();
 

@@ -47,6 +47,14 @@ Object::intersectResult Sphere::intersect(Ray r)
 	return intersectResult();
 }
 
+void Sphere::transform(Matrix4f transMat)
+{
+	// Transform center of sphere
+	RowVector4f centerHomo = this->center.homogen();
+	RowVector4f centerPrimeHomo = centerHomo * transMat;
+	this->center = Point(centerPrimeHomo[0], centerPrimeHomo[1], centerPrimeHomo[2]);
+}
+
 std::string Sphere::toString()
 {
 	std::string m = this->mat.toString();

@@ -7,11 +7,12 @@ class Polygon : public Object
 {
 public:
 	std::vector<Point> vertices;
-	Vector3f normal;
+	RowVector3f normal;
 
 	Polygon(Material mat, std::vector<Point> v_list);
 	
 	intersectResult intersect(Ray r);
+	void transform(Matrix4f transMat);
 
 	std::string toString();
 

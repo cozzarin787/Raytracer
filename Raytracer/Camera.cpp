@@ -1,15 +1,15 @@
 #include "Camera.h"
 
-Camera::Camera(Point p, Vector3f lookat, Vector3f up)
+Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 {
 	this->position = p;
 	this->lookat = lookat;
 	this->up = up;
 
 	// construct view transform
-	Vector3f n = p.vector() - lookat.normalized();
-	Vector3f u = (up.cross(n)).normalized();
-	Vector3f v = n.cross(u);
+	RowVector3f n = p.vector() - lookat.normalized();
+	RowVector3f u = (up.cross(n)).normalized();
+	RowVector3f v = n.cross(u);
 
 	this->viewTransform.row(0) << u[0], u[1], u[2], -(p.vector().dot(u));
 	this->viewTransform.row(1) << v[0], v[1], v[2], -(p.vector().dot(v));

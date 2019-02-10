@@ -6,12 +6,13 @@ class Plane : public Object
 {
 public:
 	Point p;
-	Vector3f normal;
+	RowVector3f normal;
 	float F;
 
-	Plane(Material m, Point p, Vector3f normal);
+	Plane(Material m, Point p, RowVector3f normal);
 
 	intersectResult intersect(Ray r);
+	void transform(Matrix4f transMat);
 
 	std::string toString();
 

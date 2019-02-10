@@ -2,7 +2,8 @@
 #include <string>
 #include <Eigen/Dense>
 
-using Eigen::Vector3f;
+using Eigen::RowVector3f; 
+using Eigen::RowVector4f;
 
 class Point
 {
@@ -19,7 +20,8 @@ class Point
 		// Functions
 		float distance(Point);
 		void transform(float, float, float);
-		Vector3f vector();
+		RowVector3f vector();
+		RowVector4f homogen();
 
 		// To String
 		std::string toString();

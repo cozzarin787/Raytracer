@@ -27,9 +27,14 @@ void Point::transform(float x, float y, float z)
 	this->z += z;
 }
 
-Vector3f Point::vector()
+RowVector3f Point::vector()
 {
-	return Vector3f(this->x, this->y, this->z);
+	return RowVector3f(this->x, this->y, this->z);
+}
+
+RowVector4f Point::homogen()
+{
+	return RowVector4f(this->x, this->y, this->z, 1);
 }
 
 std::string Point::toString()

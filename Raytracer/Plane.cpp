@@ -1,7 +1,7 @@
 #include "Plane.h"
 #include "Ray.h"
 
-Plane::Plane(Material m, Point p, Vector3f normal) : Object(m)
+Plane::Plane(Material m, Point p, RowVector3f normal) : Object(m)
 {
 	this->p = p;
 	this->normal = normal;
@@ -30,6 +30,20 @@ Object::intersectResult Plane::intersect(Ray r)
 	Point i = Point(xi, yi, zi);
 
 	return intersectResult(true, omega, this->mat);
+}
+
+void Plane::transform(Matrix4f transMat)
+{
+	// Transform Vector and F of plane
+	RowVector4f planeHomo = RowVector4f(this->normal[0], this->normal[1], this->normal[2], F);
+	RowVector4f planePrimeHomo = planeHomo * transMat.inverse().transpose();
+	this->F = planePrimeHomo[3];
+	this->normal = RowVector3f(planePrimeHomo[0], planePrimeHomo[1], planePrimeHomo[2]).normalized();
+	
+	// Transform point on plane
+	RowVector4f pHomo = this->p.homogen();
+	RowVector4f pPrimeHomo = pHomo * transMat;
+	this->p = Point(pPrimeHomo[0], pPrimeHomo[1], pPrimeHomo[2]);
 }
 
 std::string Plane::toString()
