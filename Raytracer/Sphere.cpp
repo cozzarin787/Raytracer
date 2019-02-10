@@ -9,7 +9,6 @@ Sphere::Sphere(Material mat, Point center, float radius) : Object(mat)
 
 Object::intersectResult Sphere::intersect(Ray r)
 {
-
 	//Origin of sphere
 	float xc = this->center.x;
 	float yc = this->center.y;
@@ -30,21 +29,43 @@ Object::intersectResult Sphere::intersect(Ray r)
 	float C = (x0 - xc)*(x0 - xc) + (y0 - yc)*(y0 - yc) + (z0 - zc)*(z0 - zc) - this->radius_sqr;
 
 	float roots = sqrt(pow(B,2)-4*A*C);
-	float omega = (-B + roots) / 2;
+	float omega = omega = (-B + roots) / 2;
+	float xi, yi, zi;
+	
+	Point intersecpoints[2];
+	Vector3f normals[2];
 
 	if (roots < 0)
 	{
 		// no real root, no intersection
+		return intersectResult(false);
 	}
-	else if(roots == 0)
-	{
+	else if (roots == 0) 
+	{ 
 		// one root, ray intersects at sphere's surface
+		xi = x0 + dx * omega;
+		yi = y0 + dy * omega;
+		zi = z0 + dz * omega;
+		intersecpoints[0] = Point(xi, yi, zi);
 	}
 	else
 	{
 		// two roots, ray goes through sphere
+		for (int i = 0; i < 2; i++) 
+		{
+			xi = x0 + dx * omega;
+			yi = y0 + dy * omega;
+			zi = z0 + dz * omega;
+			intersecpoints[i] = Point(xi, yi, zi);
+			omega *= -1;
+		}
 	}
-	return intersectResult();
+	for (Point p : intersecpoints)
+	{
+		int i = 0;
+		normals[i++] = Vector3f(xi - xc, yi - yc, zi - zc);
+	}
+	return intersectResult(true, omega, this->mat);
 }
 
 void Sphere::transform(Matrix4f transMat)
