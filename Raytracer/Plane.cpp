@@ -43,7 +43,8 @@ void Plane::transform(Matrix4f transMat)
 	// Transform point on plane
 	RowVector4f pHomo = this->p.homogen();
 	RowVector4f pPrimeHomo = pHomo * transMat;
-	this->p = Point(pPrimeHomo[0], pPrimeHomo[1], pPrimeHomo[2]);
+	float w = pPrimeHomo[3];
+	this->p = Point(pPrimeHomo[0] / w, pPrimeHomo[1] / w, pPrimeHomo[2] / w);
 }
 
 std::string Plane::toString()

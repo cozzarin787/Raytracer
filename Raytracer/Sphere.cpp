@@ -28,8 +28,8 @@ Object::intersectResult Sphere::intersect(Ray r)
 	float B = 2 * (dx*(x0 - xc) + dy*(y0 - yc) + dz*(z0 - zc));
 	float C = (x0 - xc)*(x0 - xc) + (y0 - yc)*(y0 - yc) + (z0 - zc)*(z0 - zc) - this->radius_sqr;
 
-	float roots = sqrt(pow(B,2)-4*A*C);
-	float omega = omega = (-B + roots) / 2;
+	float roots = pow(B,2)-4*A*C;
+	float omega;
 	float xi, yi, zi;
 	
 	Point intersectPoints[2];
@@ -43,6 +43,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 	else if (roots == 0) 
 	{ 
 		// one root, ray intersects at sphere's surface
+		omega = (-B + sqrt(roots)) / 2;
 		xi = x0 + dx * omega;
 		yi = y0 + dy * omega;
 		zi = z0 + dz * omega;
@@ -53,6 +54,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 		// two roots, ray goes through sphere
 		for (int i = 0; i < 2; i++) 
 		{
+			omega = (-B + sqrt(roots)) / 2;
 			xi = x0 + dx * omega;
 			yi = y0 + dy * omega;
 			zi = z0 + dz * omega;
@@ -73,7 +75,8 @@ void Sphere::transform(Matrix4f transMat)
 	// Transform center of sphere
 	RowVector4f centerHomo = this->center.homogen();
 	RowVector4f centerPrimeHomo = centerHomo * transMat;
-	this->center = Point(centerPrimeHomo[0], centerPrimeHomo[1], centerPrimeHomo[2]);
+	float w = centerPrimeHomo[3];
+	this->center = Point(centerPrimeHomo[0] / w, centerPrimeHomo[1] / w, centerPrimeHomo[2] / w);
 }
 
 std::string Sphere::toString()

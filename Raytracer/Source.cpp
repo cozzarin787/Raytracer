@@ -1,8 +1,9 @@
 #include "Camera.h"
 #include <iostream>
-
+#include "lodepng.h"
 #include "Sphere.h"
 #include "Polygon.h"
+#define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
 Color colorGlass = Color(191, 63, 63, 1);
@@ -53,13 +54,26 @@ int main()
 
 	// Define camera
 	Camera c = Camera(Point(0, 0.941, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
-	c.setFocalLength(50);
+	c.setFocalLength(2);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(1028, 770);
 
+	const char* filename = "test.png";
+
+	//generate some image
+	/*unsigned width = 512, height = 512;
+	std::vector<unsigned char> image;
+	image.resize(width * height * 4);
+	for (unsigned y = 0; y < height; y++)
+		for (unsigned x = 0; x < width; x++) {
+			image[4 * width * y + 4 * x + 0] = 255 * !(x & y);
+			image[4 * width * y + 4 * x + 1] = x ^ y;
+			image[4 * width * y + 4 * x + 2] = x | y;
+			image[4 * width * y + 4 * x + 3] = 255;
+		}
+	lodepng::encode(filename, image, width, height);*/
 	c.render(world);
 
-	std::cout << c.toString() << std::endl;
 	std::cin.ignore();
 	return 0;
 }

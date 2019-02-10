@@ -4,13 +4,13 @@
 class Color
 {
 	public:
-		uint8_t r;
-		uint8_t g;
-		uint8_t b;
-		uint8_t a;
+		unsigned char r;
+		unsigned char g;
+		unsigned char b;
+		unsigned char a;
 
 		Color();
-		Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
 		std::string toString();
 

@@ -8,7 +8,6 @@ using Eigen::Matrix4f;
 class Camera
 {
 private:
-	Matrix4f viewTransform;
 	float focalLength;
 	int imageHeightPx;
 	int imageWidthPx;
@@ -19,7 +18,7 @@ public:
 	Point position;
 	RowVector3f lookat;
 	RowVector3f up;
-
+	Matrix4f viewTransform;
 
 	Camera(Point p, RowVector3f lookat, RowVector3f up);
 

@@ -64,11 +64,12 @@ void Polygon::transform(Matrix4f transMat)
 	this->normal = RowVector3f(normPrimeHomo[0], normPrimeHomo[1], normPrimeHomo[2]).normalized();
 
 	// Transform points of the polygon
-	for (Point p : this->vertices)
+	for (int i = 0; i < this->vertices.size(); i++)
 	{
-		RowVector4f pHomo = p.homogen();
+		RowVector4f pHomo = this->vertices[i].homogen();
 		RowVector4f pPrimeHomo = pHomo * transMat;
-		p = Point(pPrimeHomo[0], pPrimeHomo[1], pPrimeHomo[2]);
+		float w = pPrimeHomo[3];
+		this->vertices[i] = Point(pPrimeHomo[0] / w, pPrimeHomo[1] / w, pPrimeHomo[2] / w);
 	}
 }
 

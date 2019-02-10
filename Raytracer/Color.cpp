@@ -8,7 +8,7 @@ Color::Color()
 	this->a = 255;
 }
 
-Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
 	this->r = r;
 	this->g = g;
