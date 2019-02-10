@@ -34,10 +34,10 @@ public:
 
 	Object(Material mat);
 
-	virtual intersectResult intersect(Ray r);
-	virtual void transform(Matrix4f transMat);
+	virtual intersectResult intersect(Ray r) = 0;
+	virtual void transform(Matrix4f transMat) = 0;
 
-	virtual std::string toString();
+	virtual std::string toString() = 0;
 
 	virtual ~Object();
 };

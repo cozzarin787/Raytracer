@@ -1,6 +1,8 @@
 #include "Camera.h"
 #include <lodepng.h>
-#define PI 3.242593654
+#include <iostream>
+#define PI 3.141592654
+#define print(x) std::cout << x << std::endl;
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 {
@@ -23,6 +25,9 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 
 void Camera::render(World world)
 {
+	// transform world into camera coordinates
+	world.transformAllObjects(this->viewTransform);
+
 	// init pixelArray
 	Color** pixelArray = new Color*[this->imageHeightPx];
 	for (int i = 0; i < this->imageHeightPx; ++i)
@@ -88,8 +93,21 @@ void Camera::render(World world)
 			pngBuffer[index + 1] = pixelArray[i][j].g;
 			pngBuffer[index + 2] = pixelArray[i][j].r;
 			pngBuffer[index + 3] = pixelArray[i][j].a;
+			std::string str1 = std::to_string(pngBuffer[index + 0]);
+			std::string str2 = std::to_string(pngBuffer[index + 1]);
+			std::string str3 = std::to_string(pngBuffer[index + 2]);
+			std::string str4 = std::to_string(pngBuffer[index + 3]);
+			print(pixelArray[i][j].toString());
 		}
 	}
+	
+	// Free pixelArray pointer
+	/*for (uint8_t i = 0; i < imageHeightPx; i++)
+	{
+		delete pixelArray[i];
+	}
+
+	delete pixelArray;*/
 
 	std::vector<uint8_t> imageBuffer;
 	lodepng::encode(imageBuffer, pngBuffer, this->imageWidthPx, this->imageHeightPx);
