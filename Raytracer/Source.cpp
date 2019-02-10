@@ -1,11 +1,10 @@
-#include "Polygon.h"
+#include "Camera.h"
 #include <iostream>
 
 int main()
 {
-	std::vector<Point> v { Point(4, 1, 4), Point(4, 1, -4), Point(-4, 1, 4), Point(-4, 1, -4) };
-	Polygon o = Polygon(Material(Color()), v);
-	std::cout << o.toString() << std::endl;
+	Camera c = Camera(Point(0, 4, -10), Vector3f(0, 0, 1), Vector3f(0, 1, 0));
+	std::cout << c.toString() << std::endl;
 	std::cin.ignore();
 	return 0;
 }

@@ -1,4 +1,5 @@
 #include "Plane.h"
+#include "Ray.h"
 
 Plane::Plane(Material m, Point p, Vector3f normal) : Object(m)
 {
@@ -9,13 +10,13 @@ Plane::Plane(Material m, Point p, Vector3f normal) : Object(m)
 
 Object::intersectResult Plane::intersect(Ray r)
 {
-	float denom = normal[0] * r.direction[0] - normal[1] * r.direction[1] - normal[2] * r.direction[2];
+	float denom = this->normal[0] * r.direction[0] - this->normal[1] * r.direction[1] - this->normal[2] * r.direction[2];
 	if (denom <= 0)
 	{
 		return intersectResult(false);
 	}
 	
-	float numan = normal[0] * r.origin.x - normal[1] * r.origin.y - normal[2] * r.origin.z;
+	float numan = this->normal[0] * r.origin.x - this->normal[1] * r.origin.y - this->normal[2] * r.origin.z;
 	float omega = numan / denom;
 	if (omega <= 0)
 	{

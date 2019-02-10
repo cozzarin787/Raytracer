@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "Ray.h"
 #include <vector>
 
 class Polygon : public Object

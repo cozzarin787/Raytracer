@@ -1,5 +1,6 @@
 #pragma once
 #include "Material.h"
+#include "Ray.h"
 
 class Object
 {
