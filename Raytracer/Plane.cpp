@@ -1,15 +1,35 @@
 #include "Plane.h"
+#include "Ray.h"
 
 Plane::Plane(Material m, Point p, Vector3f normal) : Object(m)
 {
 	this->p = p;
 	this->normal = normal;
+	this->F = -1 * normal[0] * p.x - normal[1] * p.y - normal[2] * p.z;
 }
 
 Object::intersectResult Plane::intersect(Ray r)
 {
-	// TODO
-	return intersectResult();
+	float denom = this->normal[0] * r.direction[0] - this->normal[1] * r.direction[1] - this->normal[2] * r.direction[2];
+	if (denom <= 0)
+	{
+		return intersectResult(false);
+	}
+	
+	float numan = this->normal[0] * r.origin.x - this->normal[1] * r.origin.y - this->normal[2] * r.origin.z;
+	float omega = numan / denom;
+	if (omega <= 0)
+	{
+		return intersectResult(false);
+	}
+
+	// calc intersection point
+	float xi = r.origin.x + r.direction[0] * omega;
+	float yi = r.origin.y + r.direction[1] * omega;
+	float zi = r.origin.z + r.direction[2] * omega;
+	Point i = Point(xi, yi, zi);
+
+	return intersectResult(true, omega, this->mat);
 }
 
 std::string Plane::toString()

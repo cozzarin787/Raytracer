@@ -1,5 +1,6 @@
 #pragma once
 #include "Material.h"
+#include "Ray.h"
 
 class Object
 {
@@ -31,9 +32,9 @@ public:
 
 	Object(Material mat);
 
-	virtual intersectResult intersect(Ray r) = 0;
+	virtual intersectResult intersect(Ray r);
 
-	virtual std::string toString() = 0;
+	virtual std::string toString();
 
 	virtual ~Object();
 };

@@ -1,11 +1,10 @@
-#include "Ray.h"
+#include "Camera.h"
 #include <iostream>
-#include <Eigen/Dense>
 
 int main()
 {
-	Ray R = Ray(Point(0, 0, 0), Vector3f(1, 0, 0));
-	std::cout << R.toString() << std::endl;
+	Camera c = Camera(Point(0, 4, -10), Vector3f(0, 0, 1), Vector3f(0, 1, 0));
+	std::cout << c.toString() << std::endl;
 	std::cin.ignore();
 	return 0;
 }

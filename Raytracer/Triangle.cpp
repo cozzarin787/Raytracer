@@ -11,9 +11,9 @@ Object::intersectResult Triangle::intersect(Ray r)
 {
 	float omega = 0.0f, u = 0.0f, v = 0.0f, w = 0.0f;
 	Vector3f 
-		e1 = p1.vector - p0.vector,
-		e2 = p2.vector - p0.vector,
-		T = r.origin.vector - p0.vector,
+		e1 = p1.vector() - p0.vector(),
+		e2 = p2.vector() - p0.vector(),
+		T = r.origin.vector() - p0.vector(),
 		P = r.direction.cross(e2),
 		Q = T.cross(e1);
 
@@ -41,8 +41,15 @@ Object::intersectResult Triangle::intersect(Ray r)
 	}
 	else
 	{
-		Point i = Point();
-		Vector3f normal = e1.cross(e2);
+		// calc intersection point
+		float xi = w * p0.x + u * p1.x + v * p2.x;
+		float yi = w * p0.y + u * p1.y + v * p2.y;
+		float zi = w * p0.z + u * p1.z + v * p2.z;
+		Point i = Point(xi, yi, zi);
+
+		// calc normal
+		Vector3f normal = e1.cross(e2).normalized();
+
 		return intersectResult(true, omega, this->mat);
 	}
 }
