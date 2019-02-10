@@ -24,8 +24,8 @@ public:
 	Camera(Point p, RowVector3f lookat, RowVector3f up);
 
 	void render(World world);
-	void setImageDim(int h, int w);
-	void setFilmPlaneDim(float h, float w);
+	void setImageDim(int w, int h);
+	void setFilmPlaneDim(int fov, float aspect);
 	void setFocalLength(float f);
 
 	std::string toString();

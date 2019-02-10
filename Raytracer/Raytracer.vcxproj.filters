@@ -65,9 +65,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -101,5 +98,8 @@
     <ClInclude Include="Polygon.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
