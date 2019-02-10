@@ -1,10 +1,11 @@
-#include "Triangle.h"
+#include "Ray.h"
 #include <iostream>
+#include <Eigen/Dense>
 
 int main()
 {
-	Triangle o = Triangle(Material(Color()), Point(0,0,0), Point(1, 0, 0), Point(2, 0, 0));
-	std::cout << o.toString() << std::endl;
+	Ray R = Ray(Point(0, 0, 0), Vector3f(1, 0, 0));
+	std::cout << R.toString() << std::endl;
 	std::cin.ignore();
 	return 0;
 }
