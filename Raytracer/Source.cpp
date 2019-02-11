@@ -6,22 +6,25 @@
 #define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
-Color colorGlass = Color(191, 63, 63, 1);
+Color colorGlass = Color(191, 63, 63, 255);
 Material matGlass = Material(colorGlass);
 Point centerGlass = Point(-0.121, 1.014, -7.724);
 float radiusGlass = 1.988;
 
 // Mirror Sphere
-Color colorMirror = Color(19, 15, 255, 1);
+Color colorMirror = Color(19, 15, 255, 255);
 Material matMirror = Material(colorMirror);
 Point centerMirror = Point(0.86, 0.55, -6.94);
 float radiusMirror = 1.2567;
 
 //Floor
-Color colorFloor = Color(44, 220, 47, 1);
+Color colorFloor = Color(44, 220, 47, 255);
 Material matFloor = Material(colorFloor);
 std::vector<Point> floorVertices{Point(-1.72-100 ,0 ,100), Point(100+1.72, 0, 100), Point(100+1.72, 0 , -100), Point(1.72 - 100, 0, -100)};
 
+Color colorFloor1 = Color(44, 220, 47, 255);
+Material matFloor1 = Material(colorFloor);
+std::vector<Point> floorVertices1{ Point(10 , 100, 100), Point(10, 100, -100), Point(10, -100 , -100), Point(10, -100, 100) };
 
 int main()
 {
@@ -54,25 +57,14 @@ int main()
 
 	// Define camera
 	Camera c = Camera(Point(0, 0.941, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
-	c.setFocalLength(2);
-	c.setFilmPlaneDim(60, (4 / 3.0f));
-	c.setImageDim(1028, 770);
+	c.setFocalLength(1);
+	c.setFilmPlaneDim(30, (4 / 3.0f));
+	c.setImageDim(512, 368);
 
-	const char* filename = "test.png";
-
-	//generate some image
-	/*unsigned width = 512, height = 512;
-	std::vector<unsigned char> image;
-	image.resize(width * height * 4);
-	for (unsigned y = 0; y < height; y++)
-		for (unsigned x = 0; x < width; x++) {
-			image[4 * width * y + 4 * x + 0] = 255 * !(x & y);
-			image[4 * width * y + 4 * x + 1] = x ^ y;
-			image[4 * width * y + 4 * x + 2] = x | y;
-			image[4 * width * y + 4 * x + 3] = 255;
-		}
-	lodepng::encode(filename, image, width, height);*/
 	c.render(world);
+	/*world.transformAllObjects(c.viewTransform);
+	print(world.toString());
+	print(c.toString());*/
 
 	std::cin.ignore();
 	return 0;

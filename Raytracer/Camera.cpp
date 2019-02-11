@@ -17,9 +17,9 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 	RowVector3f u = (up.cross(n)).normalized();
 	RowVector3f v = n.cross(u);
 
-	this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
-	this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
-	this->viewTransform.row(2) << n[0], n[1], n[2], -1 * (p.vector().dot(n));
+	this->viewTransform.row(0) << u[0], u[1], u[2], (-1 * p.vector()).dot(u);
+	this->viewTransform.row(1) << v[0], v[1], v[2], (-1 * p.vector()).dot(v);
+	this->viewTransform.row(2) << n[0], n[1], n[2], (-1 * p.vector()).dot(n);
 	this->viewTransform.row(3) << 0, 0, 0, 1;
 }
 
@@ -29,15 +29,15 @@ void Camera::render(World world)
 	world.transformAllObjects(this->viewTransform);
 
 	// init pixelArray
-	Color** pixelArray = new Color*[this->imageHeightPx];
-	for (int i = 0; i < this->imageHeightPx; i++)
-		pixelArray[i] = new Color[this->imageWidthPx];
+	std::vector<std::vector<Color>> pixelArray(imageHeightPx);
+	for (int i = 0; i < imageHeightPx; i++)
+		pixelArray[i].resize(imageWidthPx);
 
 	float pXh = this->filmPlaneHeight / this->imageHeightPx;
 	float pXw = this->filmPlaneWidth / this->imageWidthPx;
 
 	float pxY = this->filmPlaneWidth / 2;
-	float pxX = -1* this->filmPlaneHeight / 2;
+	float pxX = -1 * this->filmPlaneHeight / 2;
 
 	// Create the array of pixels representing the rendered image of the world
 	int count = 0;
@@ -49,7 +49,8 @@ void Camera::render(World world)
 			// Spawn Ray at pixel position
 			Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
 			RowVector3f rayvec = (pxpos.vector() - this->position.vector()).normalized();
-			Ray r = Ray(this->position, rayvec);
+			Ray r = Ray(Point(0,0,0), rayvec);
+			print(r.toString());
 
 			// Calculate Intersections with world objects
 			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
@@ -95,41 +96,9 @@ void Camera::render(World world)
 			image[4 * width * y + 4 * x + 1] = pixelArray[y][x].g;
 			image[4 * width * y + 4 * x + 2] = pixelArray[y][x].b;
 			image[4 * width * y + 4 * x + 3] = pixelArray[y][x].a;
-			//print(pixelArray[y][x].r)
+			//print(pixelArray[y][x].toString())
 		}
 	lodepng::encode(filename, image, width, height);
-
-	// Create image from pixelArray
-	//std::vector<std::uint8_t> pngBuffer(this->imageHeightPx*this->imageWidthPx * 4);
-
-	//for (int32_t i = 0; i < this->imageHeightPx; i++)
-	//{
-	//	for (int32_t j = 0; j < this->imageWidthPx; j++)
-	//	{
-	//		std::size_t index = i * (this->imageWidthPx * 4) + 4 * j;
-	//		pngBuffer[index + 0] = pixelArray[i][j].r;
-	//		pngBuffer[index + 1] = pixelArray[i][j].g;
-	//		pngBuffer[index + 2] = pixelArray[i][j].b;
-	//		pngBuffer[index + 3] = pixelArray[i][j].a;
-	//		/*std::string str1 = std::to_string(pngBuffer[index + 0]);
-	//		std::string str2 = std::to_string(pngBuffer[index + 1]);
-	//		std::string str3 = std::to_string(pngBuffer[index + 2]);
-	//		std::string str4 = std::to_string(pngBuffer[index + 3]);
-	//		print(pixelArray[i][j].toString());*/
-	//	}
-	//}
-	
-	// Free pixelArray pointer
-	/*for (uint8_t i = 0; i < imageHeightPx; i++)
-	{
-		delete pixelArray[i];
-	}
-
-	delete pixelArray;*/
-
-	/*std::vector<uint8_t> imageBuffer;
-	lodepng::encode(imageBuffer, pngBuffer, this->imageWidthPx, this->imageHeightPx);
-	lodepng::save_file(imageBuffer, "rendered.png");*/
 }
 
 void Camera::setImageDim(int w, int h)
@@ -144,8 +113,8 @@ void Camera::setFilmPlaneDim(int fov, float aspect)
 	float w = 2 * this->focalLength * tan(fovRad / 2);
 	float h = w / aspect;
 
-	this->filmPlaneHeight = h;
-	this->filmPlaneWidth = w;
+	this->filmPlaneHeight = 3;
+	this->filmPlaneWidth = 4;
 }
 
 void Camera::setFocalLength(float f)

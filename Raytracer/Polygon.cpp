@@ -10,7 +10,7 @@ Polygon::Polygon(Material mat, std::vector<Point> v_list) : Object(mat)
 	Point p2 = vertices[2];
 	RowVector3f v1 = p1.vector() - p0.vector();
 	RowVector3f v2 = p2.vector() - p0.vector();
-	this->normal = v1.cross(v2).normalized();
+	this->normal = -1 * (v1.cross(v2).normalized());
 }
 
 Object::intersectResult Polygon::intersect(Ray r)
