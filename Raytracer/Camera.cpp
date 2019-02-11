@@ -34,20 +34,19 @@ void Camera::render(World world)
 		pixelArray[i].resize(imageWidthPx);
 
 	float pXh = this->filmPlaneHeight / this->imageHeightPx;
-	float pXw = this->filmPlaneWidth / this->imageWidthPx;
+	float pXw = this->filmPlaneWidth / (float) this->imageWidthPx;
 
-	float pxY = this->filmPlaneWidth / 2;
-	float pxX = -1 * this->filmPlaneHeight / 2;
+	float pxY = this->filmPlaneHeight / 2;
+	float pxX = -1 * this->filmPlaneWidth / 2;
 
 	// Create the array of pixels representing the rendered image of the world
-	int count = 0;
 	for (int i = 0; i < this->imageHeightPx; i++)
 	{
 		for (int j = 0; j < this->imageWidthPx; j++)
 		{
-			count++;
 			// Spawn Ray at pixel position
 			Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
+			//print(pxpos.toString());
 			RowVector3f rayvec = (pxpos.vector() - this->position.vector()).normalized();
 			Ray r = Ray(Point(0,0,0), rayvec);
 			print(r.toString());
@@ -81,7 +80,8 @@ void Camera::render(World world)
 			}
 			pxX += pXw;
 		}
-		pxY -= pXw;
+		pxY -= pXh;
+		pxX = -1 * this->filmPlaneWidth / 2;
 	}
 
 	//generate some image

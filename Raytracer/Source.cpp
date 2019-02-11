@@ -61,10 +61,10 @@ int main()
 	c.setFilmPlaneDim(30, (4 / 3.0f));
 	c.setImageDim(512, 368);
 
-	c.render(world);
-	/*world.transformAllObjects(c.viewTransform);
+	//c.render(world);
+	world.transformAllObjects(c.viewTransform);
 	print(world.toString());
-	print(c.toString());*/
+	print(c.toString());
 
 	std::cin.ignore();
 	return 0;
