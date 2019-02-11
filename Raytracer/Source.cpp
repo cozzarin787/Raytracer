@@ -22,7 +22,7 @@ Color colorFloor = Color(44, 220, 47, 255);
 Material matFloor = Material(colorFloor);
 std::vector<Point> floorVertices{Point(-1.4 ,0 ,-9), Point(-1.4, 0, 9), Point(1.4, 0 , 9), Point(1.4, 0, -9)};
 
-std::vector<Point> floorVertices1{ Point(100 , 100, -7), Point(-100, 100, -7), Point(-100, -100 , -7), Point(100, -100, -7) };
+std::vector<Point> floorVertices1{ Point(7, 7, -5), Point(-7, 7, -5), Point(-7, -7, -5), Point(7, -7, -5) };
 
 int main()
 {

@@ -18,7 +18,7 @@ Polygon::Polygon(Material mat, std::vector<Point> v_list) : Object(mat)
 Object::intersectResult Polygon::intersect(Ray r)
 {
 	float denom = normal[0] * r.direction[0] + normal[1] * r.direction[1] + normal[2] * r.direction[2];
-	if (denom <= 0)
+	if (denom == 0)
 	{
 		return intersectResult(false);
 	}
@@ -37,14 +37,14 @@ Object::intersectResult Polygon::intersect(Ray r)
 	Point inter = Point(xi, yi, zi);
 
 	// check if point of intersection lies within the boundaries of the polygon
-	RowVector3f A = RowVector3f(this->vertices[0].x - inter.x, this->vertices[0].y - inter.y, this->vertices[0].z - inter.z);
-	RowVector3f B = RowVector3f(this->vertices[vertices.size() - 1].x - inter.x, this->vertices[vertices.size() - 1].y - inter.y, this->vertices[vertices.size() - 1].z - inter.z);
-	float angleSum = acos((A.dot(B)) / (A.norm() * B.norm())) * (180 / PI);
+	RowVector3f A = RowVector3f(this->vertices[this->vertices.size() - 1].vector() - inter.vector());
+	RowVector3f B = RowVector3f(this->vertices[0].vector() - inter.vector());
+	float angleSum = acos(A.dot(B) / (A.norm() * B.norm())) * (180 / PI);
 
 	for (int i = 0; i < this->vertices.size()-1; i++)
 	{
-		RowVector3f A = RowVector3f(this->vertices[i].x - inter.x, this->vertices[i].y - inter.y, this->vertices[i].z - inter.z);
-		RowVector3f B = RowVector3f(this->vertices[i+1].x - inter.x, this->vertices[i+1].y - inter.y, this->vertices[i+1].z - inter.z);
+		A = RowVector3f(this->vertices[i].vector() - inter.vector());
+		B = RowVector3f(this->vertices[i+1].vector() - inter.vector());
 		angleSum += acos((A.dot(B)) / (A.norm() * B.norm())) * (180 / PI);
 	}
 

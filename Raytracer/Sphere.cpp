@@ -54,12 +54,22 @@ Object::intersectResult Sphere::intersect(Ray r)
 		// two roots, ray goes through sphere
 		for (int i = 0; i < 2; i++) 
 		{
-			omega = (-B + sqrt(roots)) / 2;
+			if (i == 0)
+			{
+				omega = (-B + sqrt(roots)) / 2;
+			}
+			else
+			{
+				float temp = (-B - sqrt(roots)) / 2;
+				if (temp < omega)
+				{
+					omega = temp;
+				}
+			}
 			xi = x0 + dx * omega;
 			yi = y0 + dy * omega;
 			zi = z0 + dz * omega;
 			intersectPoints[i] = Point(xi, yi, zi);
-			omega *= -1;
 		}
 	}
 	for (Point p : intersectPoints)
@@ -67,6 +77,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 		int i = 0;
 		normals[i++] = RowVector3f(xi - xc, yi - yc, zi - zc);
 	}
+	
 	return intersectResult(true, omega, this->mat);
 }
 
