@@ -10,16 +10,16 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 	this->lookat = lookat;
 	this->up = up;
 	// default value
-	this->focalLength = 50;
+	this->focalLength = 1;
 
 	// construct view transform
 	RowVector3f n = (p.vector() - lookat).normalized();
 	RowVector3f u = (up.cross(n)).normalized();
 	RowVector3f v = n.cross(u);
 
-	this->viewTransform.row(0) << u[0], u[1], u[2], (-1 * p.vector()).dot(u);
-	this->viewTransform.row(1) << v[0], v[1], v[2], (-1 * p.vector()).dot(v);
-	this->viewTransform.row(2) << n[0], n[1], n[2], (-1 * p.vector()).dot(n);
+	this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
+	this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
+	this->viewTransform.row(2) << n[0], n[1], n[2], -1 * (p.vector().dot(n));
 	this->viewTransform.row(3) << 0, 0, 0, 1;
 }
 
@@ -49,7 +49,7 @@ void Camera::render(World world)
 			//print(pxpos.toString());
 			RowVector3f rayvec = (pxpos.vector() - this->position.vector()).normalized();
 			Ray r = Ray(Point(0,0,0), rayvec);
-			print(r.toString());
+			//print(r.toString());
 
 			// Calculate Intersections with world objects
 			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
@@ -92,10 +92,10 @@ void Camera::render(World world)
 	image.resize(width * height * 4);
 	for (unsigned y = 0; y < height; y++)
 		for (unsigned x = 0; x < width; x++) {
-			image[4 * width * y + 4 * x + 0] = pixelArray[y][x].r;
-			image[4 * width * y + 4 * x + 1] = pixelArray[y][x].g;
-			image[4 * width * y + 4 * x + 2] = pixelArray[y][x].b;
-			image[4 * width * y + 4 * x + 3] = pixelArray[y][x].a;
+			image[4 * width * y + 4 * x + 0] = pixelArray[y][width - 1 - x].r;
+			image[4 * width * y + 4 * x + 1] = pixelArray[y][width - 1 - x].g;
+			image[4 * width * y + 4 * x + 2] = pixelArray[y][width - 1 - x].b;
+			image[4 * width * y + 4 * x + 3] = pixelArray[y][width - 1 - x].a;
 			//print(pixelArray[y][x].toString())
 		}
 	lodepng::encode(filename, image, width, height);
@@ -113,8 +113,8 @@ void Camera::setFilmPlaneDim(int fov, float aspect)
 	float w = 2 * this->focalLength * tan(fovRad / 2);
 	float h = w / aspect;
 
-	this->filmPlaneHeight = 3;
-	this->filmPlaneWidth = 4;
+	this->filmPlaneHeight = h;
+	this->filmPlaneWidth = w;
 }
 
 void Camera::setFocalLength(float f)

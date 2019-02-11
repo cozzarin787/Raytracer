@@ -9,22 +9,20 @@
 Color colorGlass = Color(191, 63, 63, 255);
 Material matGlass = Material(colorGlass);
 Point centerGlass = Point(-0.121, 1.014, -7.724);
-float radiusGlass = 1.988;
+float radiusGlass = 0.016988;
 
 // Mirror Sphere
 Color colorMirror = Color(19, 15, 255, 255);
 Material matMirror = Material(colorMirror);
-Point centerMirror = Point(0.86, 0.55, -6.94);
-float radiusMirror = 1.2567;
+Point centerMirror = Point(0.86, 0.35, -6.94);
+float radiusMirror = 0.012567;
 
 //Floor
 Color colorFloor = Color(44, 220, 47, 255);
 Material matFloor = Material(colorFloor);
-std::vector<Point> floorVertices{Point(-1.72-100 ,0 ,100), Point(100+1.72, 0, 100), Point(100+1.72, 0 , -100), Point(1.72 - 100, 0, -100)};
+std::vector<Point> floorVertices{Point(-1.4 ,0 ,-9), Point(-1.4, 0, 9), Point(1.4, 0 , 9), Point(1.4, 0, -9)};
 
-Color colorFloor1 = Color(44, 220, 47, 255);
-Material matFloor1 = Material(colorFloor);
-std::vector<Point> floorVertices1{ Point(10 , 100, 100), Point(10, 100, -100), Point(10, -100 , -100), Point(10, -100, 100) };
+std::vector<Point> floorVertices1{ Point(100 , 100, -7), Point(-100, 100, -7), Point(-100, -100 , -7), Point(100, -100, -7) };
 
 int main()
 {
@@ -38,7 +36,7 @@ int main()
 	// Create Objects
 	Sphere sphereGlass = Sphere(matGlass, centerGlass, radiusGlass);
 	Sphere sphereMirror = Sphere(matMirror, centerMirror, radiusMirror);
-	Polygon floor = Polygon(matFloor, floorVertices);
+	Polygon floor = Polygon(matFloor, floorVertices1);
 
 	// Wrap objects in object pointers to induce polymorphism
 	Object* o1 = &sphereGlass;
@@ -53,16 +51,16 @@ int main()
 	int floorIndex = world.add(o3);
 
 	// translate, rotate, and scale world objects to taste
-	world.transform(floorIndex, scalingMatrix);
+	//world.transform(floorIndex, scalingMatrix);
 
 	// Define camera
 	Camera c = Camera(Point(0, 0.941, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
-	c.setFocalLength(1);
-	c.setFilmPlaneDim(30, (4 / 3.0f));
+	c.setFocalLength(10);
+	c.setFilmPlaneDim(100, (4 / 3.0f));
 	c.setImageDim(512, 368);
 
-	//c.render(world);
-	world.transformAllObjects(c.viewTransform);
+	c.render(world);
+	//world.transformAllObjects(c.viewTransform);
 	print(world.toString());
 	print(c.toString());
 

@@ -5,18 +5,18 @@ Plane::Plane(Material m, Point p, RowVector3f normal) : Object(m)
 {
 	this->p = p;
 	this->normal = normal;
-	this->F = -1 * normal[0] * p.x - normal[1] * p.y - normal[2] * p.z;
+	this->F = normal[0] * p.x - normal[1] * p.y - normal[2] * p.z;
 }
 
 Object::intersectResult Plane::intersect(Ray r)
 {
-	float denom = this->normal[0] * r.direction[0] - this->normal[1] * r.direction[1] - this->normal[2] * r.direction[2];
+	float denom = this->normal[0] * r.direction[0] + this->normal[1] * r.direction[1] + this->normal[2] * r.direction[2];
 	if (denom <= 0)
 	{
 		return intersectResult(false);
 	}
 	
-	float numan = this->normal[0] * r.origin.x - this->normal[1] * r.origin.y - this->normal[2] * r.origin.z;
+	float numan = -1 * (this->normal[0] * r.origin.x + this->normal[1] * r.origin.y + this->normal[2] * r.origin.z + F);
 	float omega = numan / denom;
 	if (omega <= 0)
 	{

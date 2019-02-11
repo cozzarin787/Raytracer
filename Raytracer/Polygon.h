@@ -8,6 +8,7 @@ class Polygon : public Object
 public:
 	std::vector<Point> vertices;
 	RowVector3f normal;
+	float F;
 
 	Polygon(Material mat, std::vector<Point> v_list);
 	
