@@ -47,8 +47,9 @@ void Camera::render(World world)
 			// Spawn Ray at pixel position
 			Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
 			//print(pxpos.toString());
-			RowVector3f rayvec = (pxpos.vector() - this->position.vector()).normalized();
-			Ray r = Ray(Point(0,0,0), rayvec);
+			Point cameraOrigin = Point(0, 0, 0);
+			RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
+			Ray r = Ray(cameraOrigin, rayvec);
 			//print(r.toString());
 
 			// Calculate Intersections with world objects

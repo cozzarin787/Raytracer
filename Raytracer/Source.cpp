@@ -3,26 +3,39 @@
 #include "lodepng.h"
 #include "Sphere.h"
 #include "Polygon.h"
+#include "Triangle.h"
 #define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
 Color colorGlass = Color(191, 63, 63, 255);
 Material matGlass = Material(colorGlass);
 Point centerGlass = Point(-0.121, 1.014, -7.724);
-float radiusGlass = 0.016988;
+float radiusGlass = 1.2988;
 
 // Mirror Sphere
 Color colorMirror = Color(19, 15, 255, 255);
 Material matMirror = Material(colorMirror);
-Point centerMirror = Point(0.86, 0.35, -6.94);
-float radiusMirror = 0.012567;
+Point centerMirror = Point(0.86, 0.55, -6.94);
+float radiusMirror = 1.2567;
 
 //Floor
 Color colorFloor = Color(44, 220, 47, 255);
 Material matFloor = Material(colorFloor);
-std::vector<Point> floorVertices{Point(-1.4 ,0 ,-9), Point(-1.4, 0, 9), Point(1.4, 0 , 9), Point(1.4, 0, -9)};
+std::vector<Point> floorVertices{Point(3.4 ,0 ,9), Point(-1.4, 0, 9), Point(-1.4, 0 , -9), Point(3.4, 0, -9)};
 
-std::vector<Point> floorVertices1{ Point(7, 7, -5), Point(-7, 7, -5), Point(-7, -7, -5), Point(7, -7, -5) };
+std::vector<Point> floorVertices1{ Point(700, 700, -5), Point(-700, 700, -5), Point(-700, -700, -5), Point(700, -700, -5) };
+
+//Triangles
+Color colorTri = Color(255, 255, 0, 255);
+Material matTri = Material(colorTri);
+Point p0 = Point(2, 1, -7);
+Point p1 = Point(0, 3, -2);
+Point p2 = Point(-2, 1, -7);
+Color colorTri2 = Color(255, 1, 1, 255);
+Material matTri2 = Material(colorTri2);
+Point p3 = Point(-0.5, 0, 0);
+Point p4 = Point(1.0, 0, -6);
+Point p5 = Point(1.0, 0, 0);
 
 int main()
 {
@@ -37,25 +50,31 @@ int main()
 	Sphere sphereGlass = Sphere(matGlass, centerGlass, radiusGlass);
 	Sphere sphereMirror = Sphere(matMirror, centerMirror, radiusMirror);
 	Polygon floor = Polygon(matFloor, floorVertices1);
+	Triangle t1 = Triangle(matTri, p0, p1, p2);
+	Triangle t2 = Triangle(matTri2, p3, p4, p5);
 
 	// Wrap objects in object pointers to induce polymorphism
 	Object* o1 = &sphereGlass;
 	Object* o2 = &sphereMirror;
 	Object* o3 = &floor;
+	Object* o4 = &t1;
+	Object* o5 = &t2;
 
 	// Add objects to world
 	World world = World();
 
-	int glassIndex = world.add(o1);
-	int mirrorIndex = world.add(o2);
-	int floorIndex = world.add(o3);
+	//int glassIndex = world.add(o1);
+	//int mirrorIndex = world.add(o2);
+	//int floorIndex = world.add(o3);
+	int triIndex1 = world.add(o4);
+	//int triIndex2 = world.add(o5);
 
 	// translate, rotate, and scale world objects to taste
 	//world.transform(floorIndex, scalingMatrix);
 
 	// Define camera
 	Camera c = Camera(Point(0, 0.941, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
-	c.setFocalLength(10);
+	c.setFocalLength(1);
 	c.setFilmPlaneDim(100, (4 / 3.0f));
 	c.setImageDim(512, 368);
 

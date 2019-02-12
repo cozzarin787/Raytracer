@@ -31,10 +31,14 @@ Object::intersectResult Triangle::intersect(Ray r)
 	vec *= (1 / denom);
 	omega = vec[0];
 	u = vec[1];
-	v = vec[1];
+	v = vec[2];
 	w = 1 - u - v;
-
-	if (u < 0 && v < 0 && u + v > 1)
+	if (w < 0)
+	{
+		// intersection behind camera
+		return intersectResult(false);
+	}
+	else if (u < 0 || v < 0 || u + v > 1)
 	{
 		// intersection outside of the triangle
 		return intersectResult(false);

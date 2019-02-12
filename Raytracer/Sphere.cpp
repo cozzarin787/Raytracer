@@ -26,7 +26,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 	
 	float A = 1;
 	float B = 2 * (dx*(x0 - xc) + dy*(y0 - yc) + dz*(z0 - zc));
-	float C = (x0 - xc)*(x0 - xc) + (y0 - yc)*(y0 - yc) + (z0 - zc)*(z0 - zc) - this->radius_sqr;
+	float C = pow((x0 - xc), 2) + pow((y0 - yc), 2) + pow((z0 - zc), 2) - this->radius_sqr;
 
 	float roots = pow(B,2)-4*A*C;
 	float omega;
@@ -75,7 +75,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 	for (Point p : intersectPoints)
 	{
 		int i = 0;
-		normals[i++] = RowVector3f(xi - xc, yi - yc, zi - zc);
+		normals[i++] = RowVector3f(xi - xc, yi - yc, zi - zc).normalized();
 	}
 	
 	return intersectResult(true, omega, this->mat);
