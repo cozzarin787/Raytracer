@@ -34,7 +34,7 @@ Point p2 = Point(5, -1, 10);
 Color colorTri2 = Color(255, 1, 1, 255);
 Material matTri2 = Material(colorTri2);
 Point p3 = Point(-5, -1, -2);
-Point p4 = Point(2, -3, -2);
+Point p4 = Point(1.5, -3, -2);
 Point p5 = Point(5, -1, 10);
 
 int main()
