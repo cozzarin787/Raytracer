@@ -26,7 +26,7 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 void Camera::render(World world)
 {
 	// transform world into camera coordinates
-	world.transformAllObjects(this->viewTransform);
+	//world.transformAllObjects(this->viewTransform);
 
 	// init pixelArray
 	std::vector<std::vector<Color>> pixelArray(imageHeightPx);

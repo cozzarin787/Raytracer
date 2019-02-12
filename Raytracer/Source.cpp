@@ -9,14 +9,14 @@
 // Glass Sphere
 Color colorGlass = Color(191, 63, 63, 255);
 Material matGlass = Material(colorGlass);
-Point centerGlass = Point(-0.121, 1.014, -7.724);
-float radiusGlass = 1.2988;
+Point centerGlass = Point(-2.7, .04, -7);
+float radiusGlass = 2.5;
 
 // Mirror Sphere
 Color colorMirror = Color(19, 15, 255, 255);
 Material matMirror = Material(colorMirror);
-Point centerMirror = Point(0.86, 0.55, -6.94);
-float radiusMirror = 1.2567;
+Point centerMirror = Point(-.05, 0.65, -4);
+float radiusMirror = 1.1;
 
 //Floor
 Color colorFloor = Color(44, 220, 47, 255);
@@ -28,14 +28,14 @@ std::vector<Point> floorVertices1{ Point(700, 700, -5), Point(-700, 700, -5), Po
 //Triangles
 Color colorTri = Color(255, 255, 0, 255);
 Material matTri = Material(colorTri);
-Point p0 = Point(2, 1, -7);
-Point p1 = Point(0, 3, -2);
-Point p2 = Point(-2, 1, -7);
+Point p0 = Point(-5, -1, -2);
+Point p1 = Point(-2, -1, 10);
+Point p2 = Point(5, -1, 10);
 Color colorTri2 = Color(255, 1, 1, 255);
 Material matTri2 = Material(colorTri2);
-Point p3 = Point(-0.5, 0, 0);
-Point p4 = Point(1.0, 0, -6);
-Point p5 = Point(1.0, 0, 0);
+Point p3 = Point(-5, -1, -2);
+Point p4 = Point(2, -3, -2);
+Point p5 = Point(5, -1, 10);
 
 int main()
 {
@@ -63,18 +63,18 @@ int main()
 	// Add objects to world
 	World world = World();
 
-	//int glassIndex = world.add(o1);
-	//int mirrorIndex = world.add(o2);
+	int glassIndex = world.add(o1);
+	int mirrorIndex = world.add(o2);
 	//int floorIndex = world.add(o3);
 	int triIndex1 = world.add(o4);
-	//int triIndex2 = world.add(o5);
+	int triIndex2 = world.add(o5);
 
 	// translate, rotate, and scale world objects to taste
 	//world.transform(floorIndex, scalingMatrix);
 
 	// Define camera
 	Camera c = Camera(Point(0, 0.941, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
-	c.setFocalLength(1);
+	c.setFocalLength(10);
 	c.setFilmPlaneDim(100, (4 / 3.0f));
 	c.setImageDim(512, 368);
 
