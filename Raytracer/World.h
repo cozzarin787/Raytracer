@@ -3,7 +3,8 @@
 #include "Ray.h"
 #include <vector>
 
-using Eigen::Matrix4f;
+using Eigen::Matrix;
+using Eigen::RowMajor;
 
 class World
 {
@@ -13,8 +14,8 @@ public:
 	World();
 
 	int add(Object* o);
-	void transform(int index, Matrix4f transMat);
-	void transformAllObjects(Matrix4f transMat);
+	void transform(int index, Matrix<float, 4, 4, RowMajor> transMat);
+	void transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat);
 	std::vector<Object::intersectResult> spawnRay(Ray r);
 
 	std::string toString();

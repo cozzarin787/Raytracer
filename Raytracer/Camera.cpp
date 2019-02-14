@@ -15,7 +15,7 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 	// construct view transform
 	RowVector3f n = (p.vector() - lookat).normalized();
 	RowVector3f u = (up.cross(n)).normalized();
-	RowVector3f v = n.cross(u);
+	RowVector3f v = u.cross(n);
 
 	this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
 	this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
@@ -26,13 +26,14 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 void Camera::render(World world)
 {
 	// transform world into camera coordinates
-	//world.transformAllObjects(this->viewTransform);
+	world.transformAllObjects(this->viewTransform);
 
 	// init pixelArray
 	std::vector<std::vector<Color>> pixelArray(imageHeightPx);
 	for (int i = 0; i < imageHeightPx; i++)
 		pixelArray[i].resize(imageWidthPx);
 
+	// Calculate pixel height and width
 	float pXh = this->filmPlaneHeight / this->imageHeightPx;
 	float pXw = this->filmPlaneWidth / (float) this->imageWidthPx;
 
@@ -44,13 +45,11 @@ void Camera::render(World world)
 	{
 		for (int j = 0; j < this->imageWidthPx; j++)
 		{
-			// Spawn Ray at pixel position
+			// Spawn Ray through the middle of a pixel
 			Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
-			//print(pxpos.toString());
 			Point cameraOrigin = Point(0, 0, 0);
 			RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
 			Ray r = Ray(cameraOrigin, rayvec);
-			//print(r.toString());
 
 			// Calculate Intersections with world objects
 			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
@@ -93,11 +92,10 @@ void Camera::render(World world)
 	image.resize(width * height * 4);
 	for (unsigned y = 0; y < height; y++)
 		for (unsigned x = 0; x < width; x++) {
-			image[4 * width * y + 4 * x + 0] = pixelArray[y][width - 1 - x].r;
-			image[4 * width * y + 4 * x + 1] = pixelArray[y][width - 1 - x].g;
-			image[4 * width * y + 4 * x + 2] = pixelArray[y][width - 1 - x].b;
-			image[4 * width * y + 4 * x + 3] = pixelArray[y][width - 1 - x].a;
-			//print(pixelArray[y][x].toString())
+			image[4 * width * y + 4 * x + 0] = pixelArray[y][x].r;
+			image[4 * width * y + 4 * x + 1] = pixelArray[y][x].g;
+			image[4 * width * y + 4 * x + 2] = pixelArray[y][x].b;
+			image[4 * width * y + 4 * x + 3] = pixelArray[y][x].a;
 		}
 	lodepng::encode(filename, image, width, height);
 }

@@ -10,12 +10,12 @@ int World::add(Object* o)
 	return this->objectList.size() - 1;
 }
 
-void World::transform(int index, Matrix4f transMat)
+void World::transform(int index, Matrix<float, 4, 4, RowMajor> transMat)
 {
 	objectList[index]->transform(transMat);
 }
 
-void World::transformAllObjects(Matrix4f transMat)
+void World::transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat)
 {
 	for (Object* o : this->objectList)
 	{

@@ -2,7 +2,8 @@
 #include "Material.h"
 #include "Ray.h"
 
-using Eigen::Matrix4f;
+using Eigen::Matrix;
+using Eigen::RowMajor;
 
 class Object
 {
@@ -35,7 +36,7 @@ public:
 	Object(Material mat);
 
 	virtual intersectResult intersect(Ray r) = 0;
-	virtual void transform(Matrix4f transMat) = 0;
+	virtual void transform(Matrix<float, 4, 4, RowMajor> transMat) = 0;
 
 	virtual std::string toString() = 0;
 

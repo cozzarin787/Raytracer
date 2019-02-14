@@ -81,7 +81,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 	return intersectResult(true, omega, this->mat);
 }
 
-void Sphere::transform(Matrix4f transMat)
+void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
 	// Transform center of sphere
 	RowVector4f centerHomo = this->center.homogen();

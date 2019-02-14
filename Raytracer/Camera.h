@@ -3,7 +3,8 @@
 #include "Ray.h"
 #include "World.h"
 
-using Eigen::Matrix4f;
+using Eigen::Matrix;
+using Eigen::RowMajor;
 
 class Camera
 {
@@ -18,7 +19,7 @@ public:
 	Point position;
 	RowVector3f lookat;
 	RowVector3f up;
-	Matrix4f viewTransform;
+	Matrix<float, 4, 4, RowMajor> viewTransform;
 
 	Camera(Point p, RowVector3f lookat, RowVector3f up);
 

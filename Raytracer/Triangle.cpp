@@ -58,7 +58,7 @@ Object::intersectResult Triangle::intersect(Ray r)
 	}
 }
 
-void Triangle::transform(Matrix4f transMat)
+void Triangle::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
 	// Transform p0
 	RowVector4f p0Homo = this->p0.homogen();

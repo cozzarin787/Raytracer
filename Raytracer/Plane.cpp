@@ -32,11 +32,11 @@ Object::intersectResult Plane::intersect(Ray r)
 	return intersectResult(true, omega, this->mat);
 }
 
-void Plane::transform(Matrix4f transMat)
+void Plane::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
-	// Transform Vector and F of plane
-	RowVector4f planeHomo = RowVector4f(this->normal[0], this->normal[1], this->normal[2], F);
-	RowVector4f planePrimeHomo = planeHomo * transMat.inverse().transpose();
+	// Transform normal and F of plane
+	RowVector4f planeHomo = RowVector4f(this->normal[0], this->normal[1], this->normal[2], this->F);
+	RowVector4f planePrimeHomo = planeHomo * transMat;
 	this->F = planePrimeHomo[3];
 	this->normal = RowVector3f(planePrimeHomo[0], planePrimeHomo[1], planePrimeHomo[2]).normalized();
 	

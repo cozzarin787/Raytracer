@@ -12,20 +12,20 @@ Polygon::Polygon(Material mat, std::vector<Point> v_list) : Object(mat)
 	RowVector3f v1 = p1.vector() - p0.vector();
 	RowVector3f v2 = p2.vector() - p0.vector();
 	this->normal = (v1.cross(v2).normalized());
-	this->F = this->normal[0] * p0.x - this->normal[1] * p0.y - this->normal[2] * p0.z;
+	this->F = -this->normal[0] * p0.x - this->normal[1] * p0.y - this->normal[2] * p0.z;
 }
 
 Object::intersectResult Polygon::intersect(Ray r)
 {
-	float denom = normal[0] * r.direction[0] + normal[1] * r.direction[1] + normal[2] * r.direction[2];
+	float denom = this->normal[0] * r.direction[0] + this->normal[1] * r.direction[1] + this->normal[2] * r.direction[2];
 	if (denom == 0)
 	{
 		return intersectResult(false);
 	}
 
-	float numan = -1 * (normal[0] * r.origin.x + normal[1] * r.origin.y + normal[2] * r.origin.z + this->F);
+	float numan = -1 * (this->normal[0] * r.origin.x + this->normal[1] * r.origin.y + this->normal[2] * r.origin.z + this->F);
 	float omega = numan / denom;
-	if (omega <= 0)
+	if (omega < 0)
 	{
 		return intersectResult(false);
 	}
@@ -37,18 +37,18 @@ Object::intersectResult Polygon::intersect(Ray r)
 	Point inter = Point(xi, yi, zi);
 
 	// check if point of intersection lies within the boundaries of the polygon
-	RowVector3f A = RowVector3f(this->vertices[this->vertices.size() - 1].vector() - inter.vector());
-	RowVector3f B = RowVector3f(this->vertices[0].vector() - inter.vector());
+	RowVector3f A = RowVector3f(this->vertices[this->vertices.size() - 1].vector() - inter.vector()).normalized();
+	RowVector3f B = RowVector3f(this->vertices[0].vector() - inter.vector()).normalized();
 	float angleSum = acos(A.dot(B) / (A.norm() * B.norm())) * (180 / PI);
 
 	for (int i = 0; i < this->vertices.size()-1; i++)
 	{
-		A = RowVector3f(this->vertices[i].vector() - inter.vector());
-		B = RowVector3f(this->vertices[i+1].vector() - inter.vector());
-		angleSum += acos((A.dot(B)) / (A.norm() * B.norm())) * (180 / PI);
+		A = RowVector3f(this->vertices[i].vector() - inter.vector()).normalized();
+		B = RowVector3f(this->vertices[i+1].vector() - inter.vector()).normalized();
+		angleSum += acos((A.dot(B))) * (180 / PI);
 	}
 
-	if (angleSum >= 359 && angleSum <= 361)
+	if (angleSum >= 359.5 && angleSum <= 360.5)
 	{
 		return intersectResult(true, omega, this->mat);
 	}
@@ -58,23 +58,27 @@ Object::intersectResult Polygon::intersect(Ray r)
 	}
 }
 
-void Polygon::transform(Matrix4f transMat)
+void Polygon::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
-	// Transform normal
-	RowVector4f normHomo = RowVector4f(this->normal[0], this->normal[1], this->normal[2], this->F);
-	RowVector4f normPrimeHomo = normHomo * transMat;
-	this->F = normPrimeHomo[3];
-	this->normal = RowVector3f(normPrimeHomo[0] / this->F, normPrimeHomo[1] / this->F, normPrimeHomo[2] / this->F).normalized();
-
 	// Transform points of the polygon
 	for (int i = 0; i < this->vertices.size(); i++)
 	{
 		RowVector4f pHomo = this->vertices[i].homogen();
-		pHomo[3] = this->F;
 		RowVector4f pPrimeHomo = pHomo * transMat;
 		float w = pPrimeHomo[3];
 		this->vertices[i] = Point(pPrimeHomo[0] / w, pPrimeHomo[1] / w, pPrimeHomo[2] / w);
 	}
+
+	// Recalculate normal
+	Point p0 = vertices[0];
+	Point p1 = vertices[1];
+	Point p2 = vertices[2];
+	RowVector3f v1 = p1.vector() - p0.vector();
+	RowVector3f v2 = p2.vector() - p0.vector();
+	this->normal = (v1.cross(v2).normalized());
+
+	// Recalculate F
+	this->F = -this->normal[0] * this->vertices[0].x - this->normal[1] * this->vertices[0].y - this->normal[2] * this->vertices[0].z;
 }
 
 std::string Polygon::toString()
