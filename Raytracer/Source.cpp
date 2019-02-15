@@ -15,7 +15,7 @@ float radiusGlass = 0.023;
 // Mirror Sphere
 Color colorMirror = Color(19, 15, 255, 255);
 Material matMirror = Material(colorMirror);
-Point centerMirror = Point(-0.1, 0.1, -4.5);
+Point centerMirror = Point(0.8, -0.34, 5);
 float radiusMirror = 0.018;
 
 //Floor
@@ -62,7 +62,7 @@ int main()
 	World world = World();
 
 	int glassIndex = world.add(o1);
-	//int mirrorIndex = world.add(o2);
+	int mirrorIndex = world.add(o2);
 	//int floorIndex = world.add(o3);
 	int triIndex1 = world.add(o4);
 	int triIndex2 = world.add(o5);
