@@ -15,7 +15,7 @@ float radiusGlass = 0.023;
 // Mirror Sphere
 Color colorMirror = Color(19, 15, 255, 255);
 Material matMirror = Material(colorMirror);
-Point centerMirror = Point(0.8, -0.34, 5);
+Point centerMirror = Point(0.9, -0.34, 5);
 float radiusMirror = 0.018;
 
 //Floor
@@ -29,6 +29,7 @@ Material matTri = Material(colorTri);
 Point p0 = Point(-0.80, -0.5, 1);
 Point p1 = Point(-1, -0.5, 10);
 Point p2 = Point(2, -0.5, 10);
+
 Color colorTri2 = Color(255, 0, 0, 255);
 Material matTri2 = Material(colorTri2);
 Point p3 = Point(2, -0.5, 10);
@@ -77,7 +78,7 @@ int main()
 	c.setImageDim(512, 384);
 
 	c.render(world);
-	//world.transformAllObjects(c.viewTransform);
+
 	print(world.toString());
 	print(c.toString());
 

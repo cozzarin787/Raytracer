@@ -10,6 +10,12 @@ int World::add(Object* o)
 	return this->objectList.size() - 1;
 }
 
+int World::addLight(LightSource light)
+{
+	this->lightList.push_back(light);
+	return this->lightList.size() - 1;
+}
+
 void World::transform(int index, Matrix<float, 4, 4, RowMajor> transMat)
 {
 	objectList[index]->transform(transMat);
