@@ -36,7 +36,7 @@ void Plane::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
 	// Transform normal and F of plane
 	RowVector4f planeHomo = RowVector4f(this->normal[0], this->normal[1], this->normal[2], this->F);
-	RowVector4f planePrimeHomo = planeHomo * transMat;
+	RowVector4f planePrimeHomo = transMat * planeHomo.transpose();
 	this->F = planePrimeHomo[3];
 	this->normal = RowVector3f(planePrimeHomo[0], planePrimeHomo[1], planePrimeHomo[2]).normalized();
 	

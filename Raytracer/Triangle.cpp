@@ -1,5 +1,6 @@
 #include "Triangle.h"
-
+#include <iostream>
+#define print(x) std::cout << x << std::endl;
 Triangle::Triangle(Material m, Point p0, Point p1, Point p2) : Object(m)
 {
 	this->p0 = p0;
@@ -62,19 +63,19 @@ void Triangle::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
 	// Transform p0
 	RowVector4f p0Homo = this->p0.homogen();
-	RowVector4f p0PrimeHomo = p0Homo * transMat;
+	RowVector4f p0PrimeHomo = transMat * p0Homo.transpose();
 	float w = p0PrimeHomo[3];
 	this->p0 = Point(p0PrimeHomo[0] / w, p0PrimeHomo[1] / w, p0PrimeHomo[2] / w);
 
 	// Transform p1
 	RowVector4f p1Homo = this->p1.homogen();
-	RowVector4f p1PrimeHomo = p1Homo * transMat;
+	RowVector4f p1PrimeHomo = transMat * p1Homo.transpose();
 	w = p1PrimeHomo[3];
 	this->p1 = Point(p1PrimeHomo[0] / w, p1PrimeHomo[1] / w, p1PrimeHomo[2] / w);
 
 	// Transform p2
 	RowVector4f p2Homo = this->p2.homogen();
-	RowVector4f p2PrimeHomo = p2Homo * transMat;
+	RowVector4f p2PrimeHomo = transMat * p2Homo.transpose();
 	w = p2PrimeHomo[3];
 	this->p2 = Point(p2PrimeHomo[0] / w, p2PrimeHomo[1] / w, p2PrimeHomo[2] / w);
 }

@@ -13,9 +13,9 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 	this->focalLength = 1;
 
 	// construct view transform
-	RowVector3f n = (p.vector() - lookat).normalized();
+	RowVector3f n = lookat.normalized();
 	RowVector3f u = (up.cross(n)).normalized();
-	RowVector3f v = u.cross(n);
+	RowVector3f v = n.cross(u);
 
 	this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
 	this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
