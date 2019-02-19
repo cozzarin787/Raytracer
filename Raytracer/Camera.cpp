@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "IntersectData.h"
 #include <lodepng.h>
 #include <iostream>
 #define PI 3.141592654
@@ -54,30 +55,55 @@ void Camera::render(World world)
 			// Calculate Intersections with world objects
 			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
 
-			// calculate color
+			RowVector3f radiance;
+			Object::intersectResult interRes;
+
+			// Find closest intersecting point
 			if (intersectlist.empty())
 			{
 				// Background Color
-				pixelArray[i][j] = Color(30, 144, 255, 255);
+				radiance = RowVector3f(30, 144, 255);
 			}
 			else if (intersectlist.size() == 1)
 			{
-				pixelArray[i][j] = intersectlist[0].mat.color;
+				interRes = intersectlist[0];
 			}
 			else
 			{
-				float omegaMin = intersectlist[0].omega;
-				Color minColor = intersectlist[0].mat.color;
-				for (Object::intersectResult ir : intersectlist)
+				int omegaMin = 0;
+				for (int i = 0; i < intersectlist.size(); i++)
 				{
-					if (ir.omega < omegaMin)
+					if (intersectlist[i].omega < omegaMin)
 					{
-						omegaMin = ir.omega;
-						minColor = ir.mat.color;
+						omegaMin = i;
 					}
 				}
-				pixelArray[i][j] = minColor;
+
+				interRes = intersectlist[omegaMin];
 			}
+
+			// Spawn shadow ray from P to Light Source
+			RowVector3f shadowDir = (world.lightList[0].position.vector() - interRes.intersectPoint.vector()).normalized();
+			Ray shadowRay = Ray(interRes.intersectPoint, shadowDir);
+
+			// Check to see if shadow ray makes it to light without intersection
+			if (world.spawnRay(shadowRay).empty())
+			{
+				// Create IntersectData
+				IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, -1 * shadowDir, -1 * r.direction, world.lightList);
+
+				// Use illumination model
+				radiance = interRes.mat->illuminate(interData);
+			}
+			else
+			{
+				// TODO
+				// Calculate ambient component
+			}
+
+			pixelArray[i][j] = Color(radiance[0], radiance[1], radiance[2]);
+
+
 			pxX += pXw;
 		}
 		pxY -= pXh;
@@ -95,7 +121,7 @@ void Camera::render(World world)
 			image[4 * width * y + 4 * x + 0] = pixelArray[y][x].r;
 			image[4 * width * y + 4 * x + 1] = pixelArray[y][x].g;
 			image[4 * width * y + 4 * x + 2] = pixelArray[y][x].b;
-			image[4 * width * y + 4 * x + 3] = pixelArray[y][x].a;
+			image[4 * width * y + 4 * x + 3] = 255;
 		}
 	lodepng::encode(filename, image, width, height);
 }

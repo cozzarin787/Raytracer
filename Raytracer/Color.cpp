@@ -2,18 +2,21 @@
 
 Color::Color()
 {
-	this->r = 255;
-	this->g = 255;
-	this->b = 255;
-	this->a = 255;
+	this->r = 1;
+	this->g = 1;
+	this->b = 1;
 }
 
-Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+Color::Color(float r, float g, float b)
 {
 	this->r = r;
 	this->g = g;
 	this->b = b;
-	this->a = a;
+}
+
+RowVector3f Color::vector()
+{
+	return RowVector3f(this->r, this->g, this->b);
 }
 
 std::string Color::toString()

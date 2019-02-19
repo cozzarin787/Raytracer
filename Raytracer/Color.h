@@ -1,16 +1,20 @@
 #pragma once
 #include <string>
+#include <Eigen/Dense>
+
+using Eigen::RowVector3f;
 
 class Color
 {
 	public:
-		unsigned char r;
-		unsigned char g;
-		unsigned char b;
-		unsigned char a;
+		float r;
+		float g;
+		float b;
 
 		Color();
-		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+		Color(float r, float g, float b);
+
+		RowVector3f vector();
 
 		std::string toString();
 

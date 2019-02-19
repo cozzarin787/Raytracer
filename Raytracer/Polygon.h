@@ -13,7 +13,7 @@ public:
 	RowVector3f normal;
 	float F;
 
-	Polygon(Material mat, std::vector<Point> v_list);
+	Polygon(Material* mat, std::vector<Point> v_list);
 	
 	intersectResult intersect(Ray r);
 	void transform(Matrix<float, 4, 4, RowMajor> transMat);

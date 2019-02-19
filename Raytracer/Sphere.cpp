@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-Sphere::Sphere(Material mat, Point center, float radius) : Object(mat)
+Sphere::Sphere(Material* mat, Point center, float radius) : Object(mat)
 {
 	this->center = center;
 	this->radius = radius;
@@ -78,7 +78,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 		normals[i++] = RowVector3f(xi - xc, yi - yc, zi - zc).normalized();
 	}
 	
-	return intersectResult(true, omega, this->mat);
+	return intersectResult(true, omega, this->mat, intersectPoints[0], normals[0]);
 }
 
 void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
@@ -92,7 +92,7 @@ void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
 
 std::string Sphere::toString()
 {
-	std::string m = this->mat.toString();
+	std::string m = this->mat->toString();
 	std::string c = this->center.toString();
 	std::string r = std::to_string(this->radius);
 	return std::string("Sphere\n Material: " + m + "\n Center: " + c + "\n Radius: " + r);

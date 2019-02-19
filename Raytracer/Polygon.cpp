@@ -1,7 +1,7 @@
 #include "Polygon.h"
 #define PI 3.141592654
 
-Polygon::Polygon(Material mat, std::vector<Point> v_list) : Object(mat)
+Polygon::Polygon(Material* mat, std::vector<Point> v_list) : Object(mat)
 {
 	this->vertices = v_list;
 	
@@ -50,7 +50,7 @@ Object::intersectResult Polygon::intersect(Ray r)
 
 	if (angleSum >= 359.5 && angleSum <= 360.5)
 	{
-		return intersectResult(true, omega, this->mat);
+		return intersectResult(true, omega, this->mat, inter, this->normal);
 	}
 	else
 	{
@@ -96,7 +96,7 @@ std::string Polygon::toString()
 	std::string x = std::to_string(this->normal[0]);
 	std::string y = std::to_string(this->normal[1]);
 	std::string z = std::to_string(this->normal[2]);
-	std::string m = this->mat.toString();
+	std::string m = this->mat->toString();
 	return std::string("Polygon\n List of Vertices: \n" + v_list + "\n Normal: [" + x + " " + y + " " + " " + z + "]");
 }
 

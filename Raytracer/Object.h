@@ -13,7 +13,9 @@ public:
 	{
 		bool isIntersection;
 		float omega;
-		Material mat;
+		Material* mat;
+		Point intersectPoint;
+		RowVector3f normal;
 
 		intersectResult()
 		{};
@@ -23,17 +25,19 @@ public:
 			isIntersection = i;
 		};
 
-		intersectResult(bool i, float o, Material m)
+		intersectResult(bool i, float o, Material* m, Point p, RowVector3f v)
 		{
 			isIntersection = i;
 			omega = o;
 			mat = m;
+			intersectPoint = p;
+			normal = v;
 		};
 	};
 
-	Material mat;
+	Material* mat;
 
-	Object(Material mat);
+	Object(Material* mat);
 
 	virtual intersectResult intersect(Ray r) = 0;
 	virtual void transform(Matrix<float, 4, 4, RowMajor> transMat) = 0;

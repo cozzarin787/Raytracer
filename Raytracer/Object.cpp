@@ -1,6 +1,6 @@
 #include "Object.h"
 
-Object::Object(Material mat)
+Object::Object(Material* mat)
 {
 	this->mat = mat;
 }

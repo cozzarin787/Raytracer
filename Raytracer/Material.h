@@ -1,16 +1,15 @@
 #pragma once
-#include "Color.h"
+#include "Object.h"
+#include "IntersectData.h"
 #include <string>
 
 class Material
 {
 public:
-	Color color;
-
 	Material();
-	Material(Color c);
 
-	std::string toString();
+	virtual RowVector3f illuminate(IntersectData interData) = 0;
+	virtual std::string toString() = 0;
 
 	~Material();
 };
