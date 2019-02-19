@@ -64,7 +64,7 @@ void Polygon::transform(Matrix<float, 4, 4, RowMajor> transMat)
 	for (int i = 0; i < this->vertices.size(); i++)
 	{
 		RowVector4f pHomo = this->vertices[i].homogen();
-		RowVector4f pPrimeHomo = pHomo * transMat;
+		RowVector4f pPrimeHomo = transMat * pHomo.transpose();
 		float w = pPrimeHomo[3];
 		this->vertices[i] = Point(pPrimeHomo[0] / w, pPrimeHomo[1] / w, pPrimeHomo[2] / w);
 	}

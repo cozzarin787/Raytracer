@@ -34,7 +34,7 @@ RowVector3f Point::vector()
 
 RowVector4f Point::homogen()
 {
-	return RowVector4f(this->x, this->y, this->z, 1);
+	return RowVector4f(this->x, this->y, this->z, 1.0f);
 }
 
 std::string Point::toString()
