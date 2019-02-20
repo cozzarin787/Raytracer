@@ -8,6 +8,7 @@ using Eigen::RowMajor;
 class Object
 {
 public:
+	Material* mat;
 
 	struct intersectResult
 	{
@@ -35,8 +36,6 @@ public:
 		};
 	};
 
-	Material* mat;
-
 	Object(Material* mat);
 
 	virtual intersectResult intersect(Ray r) = 0;
@@ -44,6 +43,6 @@ public:
 
 	virtual std::string toString() = 0;
 
-	virtual ~Object();
+	~Object();
 };
 

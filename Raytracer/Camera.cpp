@@ -2,7 +2,7 @@
 #include "IntersectData.h"
 #include <lodepng.h>
 #include <iostream>
-#define PI 3.141592654
+#define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
@@ -55,59 +55,101 @@ void Camera::render(World world)
 			// Calculate Intersections with world objects
 			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
 
-			RowVector3f radiance;
+			Color radiance;
 			Object::intersectResult interRes;
 
 			// Find closest intersecting point
 			if (intersectlist.empty())
 			{
 				// Background Color
-				radiance = RowVector3f(30, 144, 255);
-			}
-			else if (intersectlist.size() == 1)
-			{
-				interRes = intersectlist[0];
+				radiance = world.background;
 			}
 			else
 			{
-				int omegaMin = 0;
-				for (int i = 0; i < intersectlist.size(); i++)
+				if (intersectlist.size() == 1)
 				{
-					if (intersectlist[i].omega < omegaMin)
+					interRes = intersectlist[0];
+				}
+				else
+				{
+					int omegaMinIndex = 0;
+					for (int i = 0; i < intersectlist.size(); i++)
 					{
-						omegaMin = i;
+						if (intersectlist[i].omega < omegaMinIndex)
+						{
+							omegaMinIndex = i;
+						}
+					}
+
+					interRes = intersectlist[omegaMinIndex];
+				}
+
+				// Spawn shadow rays from P to all Light Sources
+				std::vector<Ray> shadowRays;
+				for (int i = 0; i < world.lightList.size(); i++)
+				{
+					RowVector3f shadowDir = (world.lightList[i].position.vector() - interRes.intersectPoint.vector()).normalized();
+					shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
+				}
+
+				std::vector<RowVector3f> directLightVectors;
+				std::vector<LightSource> directLights;
+				for (int i = 0; i < shadowRays.size(); i++)
+				{
+					// Check to see if shadow ray makes it to light without intersection
+					if (world.spawnRay(shadowRays[i]).empty())
+					{
+						directLightVectors.push_back((-1 * shadowRays[i].direction));
+						directLights.push_back(world.lightList[i]);
 					}
 				}
 
-				interRes = intersectlist[omegaMin];
-			}
-
-			// Spawn shadow ray from P to Light Source
-			RowVector3f shadowDir = (world.lightList[0].position.vector() - interRes.intersectPoint.vector()).normalized();
-			Ray shadowRay = Ray(interRes.intersectPoint, shadowDir);
-
-			// Check to see if shadow ray makes it to light without intersection
-			if (world.spawnRay(shadowRay).empty())
-			{
 				// Create IntersectData
-				IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, -1 * shadowDir, -1 * r.direction, world.lightList);
+				IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);
 
 				// Use illumination model
 				radiance = interRes.mat->illuminate(interData);
 			}
-			else
-			{
-				// TODO
-				// Calculate ambient component
-			}
 
-			pixelArray[i][j] = Color(radiance[0], radiance[1], radiance[2]);
-
+			pixelArray[i][j] = radiance;
 
 			pxX += pXw;
 		}
 		pxY -= pXh;
 		pxX = -1 * this->filmPlaneWidth / 2;
+	}
+
+	// Tone Reproduction
+	// Find max radiance value
+	float maxRadiance = pixelArray[0][0].r;
+	for (int i = 0; i < this->imageHeightPx; i++)
+	{
+		for (int j = 0; j < this->imageWidthPx; j++)
+		{
+			if (pixelArray[i][j].r > maxRadiance)
+			{
+				maxRadiance = pixelArray[i][j].r;
+			}
+			else if (pixelArray[i][j].g > maxRadiance)
+			{
+				maxRadiance = pixelArray[i][j].g;
+			}
+			else if (pixelArray[i][j].b > maxRadiance)
+			{
+				maxRadiance = pixelArray[i][j].b;
+			}
+		}
+	}
+
+	// Interpolate each radiance value to a 255 scale to create png
+	for (int i = 0; i < this->imageHeightPx; i++)
+	{
+		for (int j = 0; j < this->imageWidthPx; j++)
+		{
+			pixelArray[i][j].r = 255 * (pixelArray[i][j].r / maxRadiance);
+			pixelArray[i][j].g = 255 * (pixelArray[i][j].g / maxRadiance);
+			pixelArray[i][j].b = 255 * (pixelArray[i][j].b / maxRadiance);
+		}
 	}
 
 	//generate some image
@@ -118,9 +160,9 @@ void Camera::render(World world)
 	image.resize(width * height * 4);
 	for (unsigned y = 0; y < height; y++)
 		for (unsigned x = 0; x < width; x++) {
-			image[4 * width * y + 4 * x + 0] = pixelArray[y][x].r;
-			image[4 * width * y + 4 * x + 1] = pixelArray[y][x].g;
-			image[4 * width * y + 4 * x + 2] = pixelArray[y][x].b;
+			image[4 * width * y + 4 * x + 0] = (unsigned char) pixelArray[y][x].r;
+			image[4 * width * y + 4 * x + 1] = (unsigned char) pixelArray[y][x].g;
+			image[4 * width * y + 4 * x + 2] = (unsigned char) pixelArray[y][x].b;
 			image[4 * width * y + 4 * x + 3] = 255;
 		}
 	lodepng::encode(filename, image, width, height);
@@ -134,7 +176,7 @@ void Camera::setImageDim(int w, int h)
 
 void Camera::setFilmPlaneDim(int fov, float aspect)
 {
-	float fovRad = fov * (PI / 180);
+	float fovRad = fov * (PI / 180.0f);
 	float w = 2 * this->focalLength * tan(fovRad / 2);
 	float h = w / aspect;
 

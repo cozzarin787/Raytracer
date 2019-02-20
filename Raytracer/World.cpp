@@ -2,18 +2,24 @@
 
 World::World()
 {
+	this->background = Color(0, 0, 0);
+}
+
+World::World(Color background)
+{
+	this->background = background;
 }
 
 int World::add(Object* o)
 {
 	this->objectList.push_back(o);
-	return this->objectList.size() - 1;
+	return (int) this->objectList.size() - 1;
 }
 
 int World::addLight(LightSource light)
 {
 	this->lightList.push_back(light);
-	return this->lightList.size() - 1;
+	return (int) this->lightList.size() - 1;
 }
 
 void World::transform(int index, Matrix<float, 4, 4, RowMajor> transMat)

@@ -1,14 +1,26 @@
 #include "IntersectData.h"
 
-IntersectData::IntersectData(Point p, RowVector3f normal, RowVector3f lightDir, RowVector3f view, std::vector<LightSource> lightList)
+IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3f> lightDirs, RowVector3f view, std::vector<LightSource> lightList, Color ambientLight)
 {
 	this->P = p;							
 	this->N = normal;						
-	this->S = lightDir;	
+	this->S = lightDirs;	
+	this->ambientLight = ambientLight;
 	this->V = view;
-	// Calculate Reflection Vector
-	this->R = this->S - 2 * (this->S.dot(this->N) / this->N.squaredNorm()) * this->N;
+	// Calculate Reflection Vectors
+	for (int i = 0; i < this->S.size(); i++)
+	{
+		this->R.push_back(reflect(this->N, Ray(this->P, this->S[i])).direction);
+	}
+	// Calculate Halfway Vectors
+	// TODO
 	this->lights = lightList;	
+}
+
+Ray IntersectData::reflect(RowVector3f normal, Ray r)
+{
+	RowVector3f direction = r.direction - 2 * (r.direction.dot(normal) / normal.squaredNorm()) * normal;
+	return Ray(r.origin, direction);
 }
 
 IntersectData::~IntersectData()

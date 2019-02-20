@@ -1,5 +1,5 @@
 #include "Polygon.h"
-#define PI 3.141592654
+#define PI 3.141592654f
 
 Polygon::Polygon(Material* mat, std::vector<Point> v_list) : Object(mat)
 {
@@ -39,16 +39,16 @@ Object::intersectResult Polygon::intersect(Ray r)
 	// check if point of intersection lies within the boundaries of the polygon
 	RowVector3f A = RowVector3f(this->vertices[this->vertices.size() - 1].vector() - inter.vector()).normalized();
 	RowVector3f B = RowVector3f(this->vertices[0].vector() - inter.vector()).normalized();
-	float angleSum = acos(A.dot(B) / (A.norm() * B.norm())) * (180 / PI);
+	float angleSum = acos(A.dot(B) / (A.norm() * B.norm())) * (180.0f / PI);
 
 	for (int i = 0; i < this->vertices.size()-1; i++)
 	{
 		A = RowVector3f(this->vertices[i].vector() - inter.vector()).normalized();
 		B = RowVector3f(this->vertices[i+1].vector() - inter.vector()).normalized();
-		angleSum += acos((A.dot(B))) * (180 / PI);
+		angleSum += acos((A.dot(B))) * (180.0f / PI);
 	}
 
-	if (angleSum >= 359.5 && angleSum <= 360.5)
+	if (angleSum >= 359.5f && angleSum <= 360.5f)
 	{
 		return intersectResult(true, omega, this->mat, inter, this->normal);
 	}

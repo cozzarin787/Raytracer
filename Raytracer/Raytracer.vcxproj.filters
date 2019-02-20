@@ -25,14 +25,20 @@
     <Filter Include="Source Files\Aux Classes">
       <UniqueIdentifier>{941e3c87-36b8-4e7f-b555-3f2419dce1a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lighting">
+    <Filter Include="Header Files\Lighting">
       <UniqueIdentifier>{2b0b3674-55cb-4a6a-a407-b41eda1cb4c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lighting">
+      <UniqueIdentifier>{394898f5-984e-486b-8760-d38d49517608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{8d5ec74c-ce4e-4dde-86e2-0234e7af48c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{bc5dc9c3-e188-4035-a574-8e522f040c25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,14 +57,8 @@
     <ClCompile Include="Ray.cpp">
       <Filter>Source Files\Aux Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Triangle.cpp">
       <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>Source Files\Objects</Filter>
@@ -70,13 +70,25 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LightSource.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Phong.cpp">
+      <Filter>Source Files\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectData.cpp">
+      <Filter>Source Files\Aux Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
@@ -92,14 +104,8 @@
     <ClInclude Include="Ray.h">
       <Filter>Header Files\Aux Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Triangle.h">
       <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Header Files\Objects</Filter>
@@ -107,8 +113,23 @@
     <ClInclude Include="Polygon.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Phong.h">
+      <Filter>Header Files\Lighting</Filter>
+    </ClInclude>
     <ClInclude Include="LightSource.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectData.h">
+      <Filter>Header Files\Aux Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,17 +10,42 @@ Phong::Phong(Color objectColor, Color specColor, float ambient, float diffuse, f
 	this->C_s = specColor;  // specular color
 }
 
-RowVector3f Phong::illuminate(IntersectData interData)
+Color Phong::illuminate(IntersectData interData)
 {
-	RowVector3f L_i = interData.lights[0].color.vector();
 
-	// Diffuse
-	RowVector3f diffuse = this->k_d * (L_i * this->C_o.vector() * (interData.S.dot(interData.N)));
+	std::vector<RowVector3f> L;
+	for (int i = 0; i < interData.lights.size(); i++)
+	{
+		L.push_back(interData.lights[i].color.vector());
+	}
 
-	// Specular
-	RowVector3f specular = this->k_s * (L_i * this->C_s.vector() * pow((interData.R.dot(interData.V)), this->k_e));
+	// Ambient
+	RowVector3f ambient = this->k_a * this->C_o.vector().array() * interData.ambientLight.vector().array();
+	
+	RowVector3f diffuse = RowVector3f(0, 0, 0);
+	RowVector3f specular = RowVector3f(0, 0, 0);
 
-	return diffuse + specular;
+	// If you can see light from point of intersection:
+	if (!interData.lights.empty())
+	{
+		// Diffuse
+		for (int i = 0; i < interData.lights.size(); i++)
+		{
+			RowVector3f L_iC_o = L[i].array() * this->C_o.vector().array();
+			diffuse += (L_iC_o * (interData.S[i].dot(interData.N)));
+		}
+		diffuse *= this->k_d;
+
+		// Specular
+		for (int i = 0; i < interData.lights.size(); i++)
+		{
+			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
+			specular += (L_iC_s * pow((interData.R[i].dot(interData.V)), this->k_e));
+		}
+		specular *= this->k_s;
+	}
+	RowVector3f totalRad = ambient + diffuse + specular;
+	return Color(totalRad[0], totalRad[1], totalRad[2]);
 }
 
 std::string Phong::toString()
