@@ -18,7 +18,7 @@ Object::intersectResult Plane::intersect(Ray r)
 	
 	float numan = -1 * (this->normal[0] * r.origin.x + this->normal[1] * r.origin.y + this->normal[2] * r.origin.z + F);
 	float omega = numan / denom;
-	if (omega <= 0)
+	if (omega <= epsilon)
 	{
 		return intersectResult(false);
 	}

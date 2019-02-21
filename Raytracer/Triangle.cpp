@@ -30,6 +30,12 @@ Object::intersectResult Triangle::intersect(Ray r)
 
 	vec *= (1 / denom);
 	omega = vec[0];
+
+	if (omega <= epsilon)
+	{
+		return intersectResult(false);
+	}
+
 	u = vec[1];
 	v = vec[2];
 	w = 1 - u - v;

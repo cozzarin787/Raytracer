@@ -2,6 +2,8 @@
 #include "Material.h"
 #include "Ray.h"
 
+#define epsilon 0.5f
+
 using Eigen::Matrix;
 using Eigen::RowMajor;
 

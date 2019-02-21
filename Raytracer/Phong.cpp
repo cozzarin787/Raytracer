@@ -28,20 +28,18 @@ Color Phong::illuminate(IntersectData interData)
 	// If you can see light from point of intersection:
 	if (!interData.lights.empty())
 	{
-		// Diffuse
+		// Enumerate through all light direct light sources
 		for (int i = 0; i < interData.lights.size(); i++)
 		{
+			// Diffuse
 			RowVector3f L_iC_o = L[i].array() * this->C_o.vector().array();
 			diffuse += (L_iC_o * (interData.S[i].dot(interData.N)));
-		}
-		diffuse *= this->k_d;
 
-		// Specular
-		for (int i = 0; i < interData.lights.size(); i++)
-		{
+			// Specular
 			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
 			specular += (L_iC_s * pow((interData.R[i].dot(interData.V)), this->k_e));
 		}
+		diffuse *= this->k_d;
 		specular *= this->k_s;
 	}
 	RowVector3f totalRad = ambient + diffuse + specular;

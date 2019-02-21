@@ -46,6 +46,16 @@ Object::intersectResult Sphere::intersect(Ray r)
 	{ 
 		// one root, ray intersects at sphere's surface
 		omega = (-B + sqrt(roots)) / 2;
+
+		if (omega < 0)
+		{
+			return intersectResult(false);
+		}
+		else if (omega <= epsilon)
+		{
+			return intersectResult(false);
+		}
+
 		xi = x0 + dx * omega;
 		yi = y0 + dy * omega;
 		zi = z0 + dz * omega;
@@ -73,6 +83,15 @@ Object::intersectResult Sphere::intersect(Ray r)
 			zi = z0 + dz * omega;
 			intersectPoints[i] = Point(xi, yi, zi);
 		}
+		if (omega < 0)
+		{
+			return intersectResult(false);
+		}
+		else if (omega <= epsilon)
+		{
+			return intersectResult(false);
+		}
+
 	}
 	for (Point p : intersectPoints)
 	{

@@ -99,7 +99,7 @@ void Camera::render(World world)
 					// Check to see if shadow ray makes it to light without intersection
 					if (world.spawnRay(shadowRays[i]).empty())
 					{
-						directLightVectors.push_back((-1 * shadowRays[i].direction));
+						directLightVectors.push_back((shadowRays[i].direction));
 						directLights.push_back(world.lightList[i]);
 					}
 				}
