@@ -70,8 +70,10 @@ int main()
 	Object* o5 = &t2;
 
 	// Create LightSources
-	Point lightPoint1 = Point(-0.121f, 7.014f, -6.0f);
+	Point lightPoint1 = Point(-1.0f, 7.014f, -6.0f);
+	Point lightPoint2 = Point(2.0f, 6.0f, -6.0f);
 	LightSource l1 = LightSource(lightPoint1, Color(1, 1, 1));
+	LightSource l2 = LightSource(lightPoint2, Color(1, 1, 1));
 
 	// Add objects to world
 	World world = World(Color(0.11765f, 0.56471f, 1));
@@ -84,6 +86,7 @@ int main()
 
 	// Add lights to world
 	int light1Index = world.addLight(l1);
+	int light2Index = world.addLight(l2);
 
 	// translate, rotate, and scale world objects to taste
 	//world.transform(floorIndex, scalingMatrix);
