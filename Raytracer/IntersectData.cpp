@@ -14,7 +14,7 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	}
 	// Calculate Halfway Vectors
 	// TODO
-	this->lights = lightList;	
+	this->lights = lightList;
 }
 
 Ray IntersectData::reflect(RowVector3f normal, Ray r)
