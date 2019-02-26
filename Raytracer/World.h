@@ -21,6 +21,7 @@ public:
 	int addLight(LightSource light);
 	void transform(int index, Matrix<float, 4, 4, RowMajor> transMat);
 	void transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat);
+	void transformAllLights(Matrix<float, 4, 4, RowMajor> transMat);
 	std::vector<Object::intersectResult> spawnRay(Ray r);
 
 	std::string toString();

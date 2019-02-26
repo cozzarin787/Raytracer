@@ -39,8 +39,8 @@ Color Phong::illuminate(IntersectData interData)
 			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
 			specular += (L_iC_s * pow((interData.R[i].dot(interData.V)), this->k_e));
 		}
-		diffuse *= this->k_d;
-		specular *= this->k_s;
+		diffuse = this->k_d * diffuse;
+		specular = this->k_s * specular;
 	}
 	RowVector3f totalRad = ambient + diffuse + specular;
 	return Color(totalRad[0], totalRad[1], totalRad[2]);

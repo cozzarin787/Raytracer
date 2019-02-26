@@ -10,7 +10,7 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	// Calculate Reflection Vectors
 	for (int i = 0; i < this->S.size(); i++)
 	{
-		this->R.push_back(reflect(this->N, Ray(this->P, -1 * this->S[i])).direction);
+		this->R.push_back(reflect(this->N, Ray(this->P, this->S[i])).direction);
 	}
 	// Calculate Halfway Vectors
 	// TODO
@@ -19,7 +19,7 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 
 Ray IntersectData::reflect(RowVector3f normal, Ray r)
 {
-	RowVector3f direction = r.direction - 2 * (r.direction.dot(normal) / normal.squaredNorm()) * normal;
+	RowVector3f direction = (r.direction - (2 * normal * (r.direction.dot(normal)))).normalized();
 	return Ray(r.origin, direction);
 }
 

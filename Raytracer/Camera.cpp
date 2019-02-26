@@ -29,6 +29,9 @@ void Camera::render(World world)
 	// transform world into camera coordinates
 	world.transformAllObjects(this->viewTransform);
 
+	// transform lightsources into camera coordinates
+	world.transformAllLights(this->viewTransform);
+
 	// init pixelArray
 	std::vector<std::vector<Color>> pixelArray(imageHeightPx);
 	for (int i = 0; i < imageHeightPx; i++)
@@ -73,11 +76,11 @@ void Camera::render(World world)
 				else
 				{
 					int omegaMinIndex = 0;
-					for (int i = 0; i < intersectlist.size(); i++)
+					for (int index = 0; index < intersectlist.size(); index++)
 					{
-						if (intersectlist[i].omega < omegaMinIndex)
+						if (intersectlist[index].omega < omegaMinIndex)
 						{
-							omegaMinIndex = i;
+							omegaMinIndex = index;
 						}
 					}
 
@@ -86,23 +89,27 @@ void Camera::render(World world)
 
 				// Spawn shadow rays from P to all Light Sources
 				std::vector<Ray> shadowRays;
-				for (int i = 0; i < world.lightList.size(); i++)
+				for (int index = 0; index < world.lightList.size(); index++)
 				{
-					RowVector3f shadowDir = (world.lightList[i].position.vector() - interRes.intersectPoint.vector()).normalized();
+					RowVector3f shadowDir = (world.lightList[index].position.vector() - interRes.intersectPoint.vector()).normalized();
 					shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
 				}
 
 				std::vector<RowVector3f> directLightVectors;
 				std::vector<LightSource> directLights;
-				for (int i = 0; i < shadowRays.size(); i++)
+				for (int index = 0; index < shadowRays.size(); index++)
 				{
 					// Check to see if shadow ray makes it to light without intersection
-					if (world.spawnRay(shadowRays[i]).empty())
+					if (world.spawnRay(shadowRays[index]).empty())
 					{
-						directLightVectors.push_back((shadowRays[i].direction));
-						directLights.push_back(world.lightList[i]);
+						directLightVectors.push_back((shadowRays[index].direction));
+						directLights.push_back(world.lightList[index]);
 					}
 				}
+				/*std::vector<RowVector3f> directLightVectors;
+				std::vector<LightSource> directLights;
+				directLights.push_back(world.lightList[0]);
+				directLightVectors.push_back((world.lightList[0].position.vector() - interRes.intersectPoint.vector()).normalized());*/
 
 				// Create IntersectData
 				IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);

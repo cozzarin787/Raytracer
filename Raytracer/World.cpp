@@ -35,6 +35,14 @@ void World::transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat)
 	}
 }
 
+void World::transformAllLights(Matrix<float, 4, 4, RowMajor> transMat)
+{
+	for (LightSource l : this->lightList)
+	{
+		l.transform(transMat);
+	}
+}
+
 std::vector<Object::intersectResult> World::spawnRay(Ray r)
 {
 	std::vector<Object::intersectResult> retVal;
