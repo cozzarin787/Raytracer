@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Scene">
       <UniqueIdentifier>{bc5dc9c3-e188-4035-a574-8e522f040c25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Accelerated Structures">
+      <UniqueIdentifier>{e329c8fb-34c6-452d-bfc3-34b4e374d992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Accelerated Structures">
+      <UniqueIdentifier>{9ba359b6-03ed-4d1b-805a-afcd18a7fecd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -87,6 +93,18 @@
     <ClCompile Include="IntersectData.cpp">
       <Filter>Source Files\Aux Classes</Filter>
     </ClCompile>
+    <ClCompile Include="KdNode.cpp">
+      <Filter>Source Files\Accelerated Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Voxel.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="KdInterior.cpp">
+      <Filter>Source Files\Accelerated Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="KdLeaf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -130,6 +148,18 @@
     </ClInclude>
     <ClInclude Include="IntersectData.h">
       <Filter>Header Files\Aux Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="KdNode.h">
+      <Filter>Header Files\Accelerated Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Voxel.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="KdInterior.h">
+      <Filter>Header Files\Accelerated Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="KdLeaf.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

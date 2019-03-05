@@ -118,6 +118,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="IntersectData.cpp" />
+    <ClCompile Include="KdInterior.cpp" />
+    <ClCompile Include="KdLeaf.cpp" />
+    <ClCompile Include="KdNode.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -129,12 +132,16 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="IntersectData.h" />
+    <ClInclude Include="KdInterior.h" />
+    <ClInclude Include="KdLeaf.h" />
+    <ClInclude Include="KdNode.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Object.h" />
@@ -145,6 +152,7 @@
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="Voxel.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

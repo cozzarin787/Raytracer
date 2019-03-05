@@ -3,14 +3,16 @@
 #include "Plane.h"
 #include <memory>
 
+using std::unique_ptr;
+
 class KdInterior : public KdNode
 {
 public:
 	Plane plane;
-	std::unique_ptr<KdNode> node1;
-	std::unique_ptr<KdNode> node2;
+	unique_ptr<KdNode> node1;
+	unique_ptr<KdNode> node2;
 
-	KdInterior();
+	KdInterior(Plane p, unique_ptr<KdNode> node1, unique_ptr<KdNode> node2);
 	~KdInterior();
 };
 
