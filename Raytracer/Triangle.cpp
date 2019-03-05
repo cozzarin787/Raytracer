@@ -1,7 +1,6 @@
 #include "Triangle.h"
-#include <iostream>
-#define print(x) std::cout << x << std::endl;
-Triangle::Triangle(Material m, Point p0, Point p1, Point p2) : Object(m)
+
+Triangle::Triangle(Material* m, Point p0, Point p1, Point p2) : Object(m)
 {
 	this->p0 = p0;
 	this->p1 = p1;
@@ -31,6 +30,12 @@ Object::intersectResult Triangle::intersect(Ray r)
 
 	vec *= (1 / denom);
 	omega = vec[0];
+
+	if (omega <= epsilon)
+	{
+		return intersectResult(false);
+	}
+
 	u = vec[1];
 	v = vec[2];
 	w = 1 - u - v;
@@ -55,7 +60,7 @@ Object::intersectResult Triangle::intersect(Ray r)
 		// calc normal
 		RowVector3f normal = e1.cross(e2).normalized();
 
-		return intersectResult(true, omega, this->mat);
+		return intersectResult(true, omega, this->mat, i, normal);
 	}
 }
 
@@ -85,7 +90,7 @@ std::string Triangle::toString()
 	std::string p0 = this->p0.toString();
 	std::string p1 = this->p1.toString();
 	std::string p2 = this->p1.toString();
-	std::string m = this->mat.toString();
+	std::string m = this->mat->toString();
 	return std::string("Triangle\n Material: " + m + "\n p0: " + p0 + "\n p1: " + p1 + "\n p2: " + p2);
 }
 

@@ -12,7 +12,7 @@ public:
 	RowVector3f normal;
 	float F;
 
-	Plane(Material m, Point p, RowVector3f normal);
+	Plane(Material* m, Point p, RowVector3f normal);
 
 	intersectResult intersect(Ray r);
 	void transform(Matrix<float, 4, 4, RowMajor> transMat);

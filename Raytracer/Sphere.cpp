@@ -2,7 +2,7 @@
 #include <iostream>
 #define print(x) std::cout << x << std::endl;
 
-Sphere::Sphere(Material mat, Point center, float radius) : Object(mat)
+Sphere::Sphere(Material* mat, Point center, float radius) : Object(mat)
 {
 	this->center = center;
 	this->radius = radius;
@@ -35,6 +35,8 @@ Object::intersectResult Sphere::intersect(Ray r)
 	float xi, yi, zi;
 	
 	Point intersectPoints[2];
+	Point closest;
+	Point furthest;
 	RowVector3f normals[2];
 
 	if (roots < 0)
@@ -46,10 +48,20 @@ Object::intersectResult Sphere::intersect(Ray r)
 	{ 
 		// one root, ray intersects at sphere's surface
 		omega = (-B + sqrt(roots)) / 2;
+
+		if (omega < 0)
+		{
+			return intersectResult(false);
+		}
+		else if (omega <= epsilon)
+		{
+			return intersectResult(false);
+		}
+
 		xi = x0 + dx * omega;
 		yi = y0 + dy * omega;
 		zi = z0 + dz * omega;
-		intersectPoints[0] = Point(xi, yi, zi);
+		closest = Point(xi, yi, zi);
 	}
 	else
 	{
@@ -59,28 +71,51 @@ Object::intersectResult Sphere::intersect(Ray r)
 			if (i == 0)
 			{
 				omega = (-B + sqrt(roots)) / 2;
+				xi = x0 + dx * omega;
+				yi = y0 + dy * omega;
+				zi = z0 + dz * omega;
+				closest = Point(xi, yi, zi);
 			}
 			else
 			{
 				float temp = (-B - sqrt(roots)) / 2;
-				if (temp < omega)
+				if (temp < omega && temp > epsilon)
 				{
 					omega = temp;
+					furthest = Point(closest.x, closest.y, closest.z);
+					xi = x0 + dx * omega;
+					yi = y0 + dy * omega;
+					zi = z0 + dz * omega;
+					closest = Point(xi, yi, zi);
+				}
+				else
+				{
+					xi = x0 + dx * omega;
+					yi = y0 + dy * omega;
+					zi = z0 + dz * omega;
+					furthest = Point(xi, yi, zi);
 				}
 			}
-			xi = x0 + dx * omega;
-			yi = y0 + dy * omega;
-			zi = z0 + dz * omega;
-			intersectPoints[i] = Point(xi, yi, zi);
 		}
+		if (omega < 0)
+		{
+			return intersectResult(false);
+		}
+		else if (omega <= epsilon)
+		{
+			return intersectResult(false);
+		}
+
 	}
+	intersectPoints[0] = closest;
+	intersectPoints[1] = furthest;
 	for (Point p : intersectPoints)
 	{
 		int i = 0;
 		normals[i++] = RowVector3f(xi - xc, yi - yc, zi - zc).normalized();
 	}
 	
-	return intersectResult(true, omega, this->mat);
+	return intersectResult(true, omega, this->mat, intersectPoints[0], normals[0]);
 }
 
 void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
@@ -94,7 +129,7 @@ void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
 
 std::string Sphere::toString()
 {
-	std::string m = this->mat.toString();
+	std::string m = this->mat->toString();
 	std::string c = this->center.toString();
 	std::string r = std::to_string(this->radius);
 	return std::string("Sphere\n Material: " + m + "\n Center: " + c + "\n Radius: " + r);

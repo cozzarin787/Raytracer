@@ -1,7 +1,7 @@
 #include "Polygon.h"
-#define PI 3.141592654
+#define PI 3.141592654f
 
-Polygon::Polygon(Material mat, std::vector<Point> v_list) : Object(mat)
+Polygon::Polygon(Material* mat, std::vector<Point> v_list) : Object(mat)
 {
 	this->vertices = v_list;
 	
@@ -25,7 +25,7 @@ Object::intersectResult Polygon::intersect(Ray r)
 
 	float numan = -1 * (this->normal[0] * r.origin.x + this->normal[1] * r.origin.y + this->normal[2] * r.origin.z + this->F);
 	float omega = numan / denom;
-	if (omega < 0)
+	if (omega <= epsilon)
 	{
 		return intersectResult(false);
 	}
@@ -39,18 +39,18 @@ Object::intersectResult Polygon::intersect(Ray r)
 	// check if point of intersection lies within the boundaries of the polygon
 	RowVector3f A = RowVector3f(this->vertices[this->vertices.size() - 1].vector() - inter.vector()).normalized();
 	RowVector3f B = RowVector3f(this->vertices[0].vector() - inter.vector()).normalized();
-	float angleSum = acos(A.dot(B) / (A.norm() * B.norm())) * (180 / PI);
+	float angleSum = acos(A.dot(B) / (A.norm() * B.norm())) * (180.0f / PI);
 
 	for (int i = 0; i < this->vertices.size()-1; i++)
 	{
 		A = RowVector3f(this->vertices[i].vector() - inter.vector()).normalized();
 		B = RowVector3f(this->vertices[i+1].vector() - inter.vector()).normalized();
-		angleSum += acos((A.dot(B))) * (180 / PI);
+		angleSum += acos((A.dot(B))) * (180.0f / PI);
 	}
 
-	if (angleSum >= 359.5 && angleSum <= 360.5)
+	if (angleSum >= 359.5f && angleSum <= 360.5f)
 	{
-		return intersectResult(true, omega, this->mat);
+		return intersectResult(true, omega, this->mat, inter, this->normal);
 	}
 	else
 	{
@@ -96,7 +96,7 @@ std::string Polygon::toString()
 	std::string x = std::to_string(this->normal[0]);
 	std::string y = std::to_string(this->normal[1]);
 	std::string z = std::to_string(this->normal[2]);
-	std::string m = this->mat.toString();
+	std::string m = this->mat->toString();
 	return std::string("Polygon\n List of Vertices: \n" + v_list + "\n Normal: [" + x + " " + y + " " + " " + z + "]");
 }
 
