@@ -144,3 +144,37 @@ std::string Camera::toString()
 Camera::~Camera()
 {
 }
+
+// BUILD K-D TREE
+/*
+	N = getNode(voxel, List of primatives)
+		if (List of Primatives size == 1)
+			return leafNode(List of primatives)
+		P = get partition plane
+		L_1 = objects "above P"
+		L_2 = objects "below P"
+		top = getNode(topVoxel, L_1)
+		bottom = getNode(bottomVoxel, L_2)
+*/
+// Spawn Ray
+/*
+	intersect(KDTree Node N, Ray R)
+		if (N is a leaf):
+			go though elements in N and return closest.
+		else:
+			a = where R enters the voxel (changing coordinate)
+			b = where R leaves the voxel (changing coordinate)
+			S = seperating plane
+			case 1: Only crosses top voxel (a and b above P)
+				intersect(N.top, R)
+			case 2: Only crosses bottom voxel (a and b below P)
+				intersect(N.bottom, R)
+			case 3: Starts top, goes to bottom (P between a and b, where a > b)
+				intersect(N.top, R)
+				if (no intersection)
+					intersect(N.bottom, R)
+			case 4: Starts bottom, goes to top (P between a and b, where b > a)
+				intersect(N.bottom, R)
+				if (no intersection)
+					intersect(N.top, R)
+*/
