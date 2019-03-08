@@ -1,6 +1,10 @@
 #include "KdLeaf.h"
 
-KdLeaf::KdLeaf(std::vector<Object*> p)
+KdLeaf::KdLeaf()
+{
+}
+
+KdLeaf::KdLeaf(std::vector<Object*> p) : KdNode()
 {
 	this->primitives = p;
 }

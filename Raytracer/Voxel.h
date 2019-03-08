@@ -23,6 +23,7 @@ public:
 
 	std::vector<Point> vertices;
 
+	Voxel();
 	Voxel(std::vector<Point> boundingPoints);
 
 	intersectVoxel intersect(Ray r);

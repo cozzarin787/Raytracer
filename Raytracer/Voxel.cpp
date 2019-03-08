@@ -2,6 +2,10 @@
 
 
 
+Voxel::Voxel()
+{
+}
+
 Voxel::Voxel(std::vector<Point> boundingPoints)
 {
 	this->vertices = boundingPoints;
