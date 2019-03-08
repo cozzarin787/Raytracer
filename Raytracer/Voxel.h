@@ -21,12 +21,14 @@ public:
 		};
 	};
 
-	std::vector<Point> vertices;
+	Point min;
+	Point max;
 
 	Voxel();
-	Voxel(std::vector<Point> boundingPoints);
+	Voxel(Point min, Point max);
 
 	intersectVoxel intersect(Ray r);
+	bool inVoxel(Voxel v);
 
 	~Voxel();
 };

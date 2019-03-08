@@ -81,6 +81,11 @@ void Polygon::transform(Matrix<float, 4, 4, RowMajor> transMat)
 	this->F = -this->normal[0] * this->vertices[0].x - this->normal[1] * this->vertices[0].y - this->normal[2] * this->vertices[0].z;
 }
 
+bool Polygon::inVoxel(Voxel v)
+{
+	return false;
+}
+
 std::string Polygon::toString()
 {	
 	std::string v_list = "";

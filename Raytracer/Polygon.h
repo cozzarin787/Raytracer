@@ -17,6 +17,7 @@ public:
 	
 	intersectResult intersect(Ray r);
 	void transform(Matrix<float, 4, 4, RowMajor> transMat);
+	bool inVoxel(Voxel v);
 
 	std::string toString();
 

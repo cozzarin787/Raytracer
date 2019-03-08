@@ -2,6 +2,8 @@
 #include "Point.h"
 #include "Ray.h"
 #include "World.h"
+#include "KdInterior.h"
+#include "KdLeaf.h"
 
 using Eigen::Matrix;
 using Eigen::RowMajor;
@@ -24,6 +26,7 @@ public:
 	Camera(Point p, RowVector3f lookat, RowVector3f up);
 
 	void render(World world);
+	KdNode getNode(Voxel v, std::vector<Object*> primitives);
 	void setImageDim(int w, int h);
 	void setFilmPlaneDim(int fov, float aspect);
 	void setFocalLength(float f);

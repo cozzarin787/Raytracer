@@ -1,6 +1,7 @@
 #pragma once
 #include "Material.h"
 #include "Ray.h"
+#include "Voxel.h"
 
 #define epsilon 0.001f
 
@@ -42,6 +43,7 @@ public:
 
 	virtual intersectResult intersect(Ray r) = 0;
 	virtual void transform(Matrix<float, 4, 4, RowMajor> transMat) = 0;
+	virtual bool inVoxel(Voxel v) = 0;
 
 	virtual std::string toString() = 0;
 

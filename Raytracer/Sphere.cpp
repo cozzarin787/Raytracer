@@ -127,6 +127,39 @@ void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
 	this->center = Point(centerPrimeHomo[0] / w, centerPrimeHomo[1] / w, centerPrimeHomo[2] / w);
 }
 
+bool Sphere::inVoxel(Voxel v)
+{
+	float d = 0.0f;
+
+	for (int i = 0; i < 3; i++)
+	{
+		float e = this->center.vector()[i] - v.min.vector()[i];
+		
+		if (e < 0)
+		{
+			if (e < -this->radius)
+			{
+				return false;
+			}
+		}
+		else if ((e = this->center.vector()[i] - v.max.vector()[i]) > 0)
+		{
+			if (e > this->radius)
+			{
+				return false;
+			}
+		}
+		d = d + (e * e);
+	}
+
+	if (d > this->radius_sqr)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 std::string Sphere::toString()
 {
 	std::string m = this->mat->toString();

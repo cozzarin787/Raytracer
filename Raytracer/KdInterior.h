@@ -10,14 +10,13 @@ class KdInterior : public KdNode
 {
 public:
 	Plane s_plane;
-	Voxel v1;
-	Voxel v2;
+	Voxel v;
 
-	unique_ptr<KdNode> node1;
-	unique_ptr<KdNode> node2;
+	KdNode* node1;
+	KdNode* node2;
 
 	KdInterior();
-	KdInterior(Plane p, Voxel v1, Voxel v2, unique_ptr<KdNode> node1, unique_ptr<KdNode> node2);
+	KdInterior(Plane p, Voxel v, KdNode* node1, KdNode* node2);
 
 	~KdInterior();
 };
