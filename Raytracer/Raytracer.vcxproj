@@ -121,6 +121,7 @@
     <ClCompile Include="KdInterior.cpp" />
     <ClCompile Include="KdLeaf.cpp" />
     <ClCompile Include="KdNode.cpp" />
+    <ClCompile Include="KdTreeBuilder.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Object.cpp" />
