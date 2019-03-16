@@ -12,6 +12,9 @@ World::World(Color background)
 
 int World::add(Object* o)
 {
+	// Calculate voxel around object
+
+
 	this->objectList.push_back(o);
 	return (int) this->objectList.size() - 1;
 }

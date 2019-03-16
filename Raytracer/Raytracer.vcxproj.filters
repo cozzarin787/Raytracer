@@ -103,7 +103,10 @@
       <Filter>Source Files\Accelerated Structures</Filter>
     </ClCompile>
     <ClCompile Include="KdLeaf.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Accelerated Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="KdTreeBuilder.cpp">
+      <Filter>Source Files\Accelerated Structures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +162,7 @@
       <Filter>Header Files\Accelerated Structures</Filter>
     </ClInclude>
     <ClInclude Include="KdLeaf.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Accelerated Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
