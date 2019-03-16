@@ -11,6 +11,7 @@ class World
 {
 public:
 	std::vector<Object*> objectList;
+	std::vector<Voxel> voxelList;
 	std::vector<LightSource> lightList;
 	Color background;
 
