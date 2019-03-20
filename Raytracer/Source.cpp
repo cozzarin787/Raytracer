@@ -5,6 +5,7 @@
 #include "Polygon.h"
 #include "Triangle.h"
 #include "Phong.h"
+#include "Checkerboard.h"
 #define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
@@ -27,15 +28,15 @@ Color specColorFloor = Color(1, 1, 1);
 Phong matFloor = Phong(colorFloor, specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
 std::vector<Point> floorVertices{Point(-0.85f, -0.5f, 1), Point(-1, -0.5f, 10), Point(2, -0.5f, 10), Point(2, -0.5f, 1)};
 
-//Triangles
-Color colorTri = Color(1, 0, 0);
-Phong matTri = Phong(colorTri, specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+//Checker Board Triangles
+Color color1 = Color(1, 1, 0);
+Color color2 = Color(1, 0, 0);
+Checkerboard matTri = Checkerboard(color1, color2, Point(0,0,0), Point(0,0,1), Point(1,0,1), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
 Point p0 = Point(-2.7f, -1, -10);
 Point p1 = Point(-2.7f, -1, 20);
 Point p2 = Point(9, -1, 20);
 
-Color colorTri2 = Color(1, 0, 0);
-Phong matTri2 = Phong(colorTri2, specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+Checkerboard matTri2 = Checkerboard(color1, color2, Point(1, 0, 1), Point(1, 0, 0), Point(0, 0, 0), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
 Point p3 = Point(9, -1, 20);
 Point p4 = Point(9, -1, -10);
 Point p5 = Point(-2.7f, -1, -10);

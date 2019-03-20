@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Checkerboard.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="IntersectData.cpp" />
     <ClCompile Include="LightSource.cpp" />
@@ -133,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Checkerboard.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="IntersectData.h" />
     <ClInclude Include="LightSource.h" />

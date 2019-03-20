@@ -14,7 +14,7 @@ public:
 	std::vector<RowVector3f> H;			// Halfway Between Viewing Dir and Light Dir
 	RowVector3f V;						// Viewing Direction
 	std::vector<LightSource> lights;	// List of Light Sources
-	Color ambientLight;					// Ambient Backgroud of the World
+	Color ambientLight;					// Ambient Background of the World
 
 	IntersectData(Point p, RowVector3f normal, std::vector<RowVector3f> lightDirs, RowVector3f view, std::vector<LightSource> lightList, Color ambientLight);
 
