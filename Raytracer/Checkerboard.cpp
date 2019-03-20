@@ -21,7 +21,8 @@ Checkerboard::Checkerboard(Color c1, Color c2, Point u, Point v, Point w, Color 
 Color Checkerboard::illuminate(IntersectData interData)
 {
 	// Checkerboard checker size constant
-	float checkerSize = 1.0f / 16.0f;
+	float checkerWidth = 1.0f / 32.0f;
+	float checkerHeight = 1.0f / 16.0f;
 
 	// Convert intersection point into barycentric coordinates
 	RowVector3f v0 = p1.vector() - p0.vector(), v1 = p2.vector() - p0.vector(), v2 = interData.P.vector() - p0.vector();
@@ -49,7 +50,7 @@ Color Checkerboard::illuminate(IntersectData interData)
 	Color C_o;
 
 	bool rowEven, colEven;
-	int row = (int)(uv[0] / checkerSize), col = (int)uv[1] / checkerSize;
+	int row = (int)(uv[0] / checkerWidth), col = (int)(uv[1] / checkerHeight);
 	if (row % 2 == 0)
 	{
 		rowEven = true;
@@ -72,22 +73,22 @@ Color Checkerboard::illuminate(IntersectData interData)
 	{
 		if (colEven)
 		{
-			C_o = this->color1;
+			C_o = this->color2;
 		}
 		else
 		{
-			C_o = this->color2;
+			C_o = this->color1;
 		}
 	}
 	else
 	{
 		if (colEven)
 		{
-			C_o = this->color2;
+			C_o = this->color1;
 		}
 		else
 		{
-			C_o = this->color1;
+			C_o = this->color2;
 		}
 	}
 
