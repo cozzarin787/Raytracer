@@ -10,8 +10,20 @@ using Eigen::RowMajor;
 class World
 {
 public:
+	struct voxelObjectWrapper
+	{
+		Object* o;
+		Voxel v;
+
+		voxelObjectWrapper(Object* object, Voxel voxel)
+		{
+			this->o = object;
+			this->v = voxel;
+		};
+	};
+	
+	std::vector<voxelObjectWrapper> voxelObjectList;
 	std::vector<Object*> objectList;
-	std::vector<Voxel> voxelList;
 	std::vector<LightSource> lightList;
 	Color background;
 
