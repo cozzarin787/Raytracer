@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="KdTreeBuilder.h" />
     <ClInclude Include="IntersectData.h" />
     <ClInclude Include="KdInterior.h" />
     <ClInclude Include="KdLeaf.h" />

@@ -91,6 +91,9 @@ int main()
 	// translate, rotate, and scale world objects to taste
 	//world.transform(floorIndex, scalingMatrix);
 
+	// Once all objects placed in world, calculate the total bounding box of the world
+	world.calcWorldVoxel();
+
 	// Define camera
 	Camera c = Camera(Point(0, 0.941f, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
 	c.setFocalLength(1);

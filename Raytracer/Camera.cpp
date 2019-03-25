@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "IntersectData.h"
+#include "KdTreeBuilder.h"
 #include <lodepng.h>
 #include <iostream>
 #define PI 3.141592654f
@@ -33,7 +34,8 @@ void Camera::render(World world)
 	world.transformAllLights(this->viewTransform);
 
 	// BUILD K-D TREE
-
+	KdTreeBuilder treeBuilder = KdTreeBuilder();
+	KdNode* KDTree = treeBuilder.getNode(world.totalBound, world.voxelObjectList);
 
 	// init pixelArray
 	std::vector<std::vector<Color>> pixelArray(imageHeightPx);
@@ -58,8 +60,8 @@ void Camera::render(World world)
 			RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
 			Ray r = Ray(cameraOrigin, rayvec);
 
-			// Calculate Intersections with world objects
-			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
+			// Calculate Intersections with world objects by sending ray through KDTree
+			std::vector<Object::intersectResult> intersectlist = treeBuilder.rayThroughTree(KDTree, r);
 
 			Color radiance;
 			Object::intersectResult interRes;
@@ -103,17 +105,13 @@ void Camera::render(World world)
 				for (int index = 0; index < shadowRays.size(); index++)
 				{
 					// Check to see if shadow ray makes it to light without intersection
-					if (world.spawnRay(shadowRays[index]).empty())
+					if (treeBuilder.rayThroughTree(KDTree, shadowRays[index]).empty())
 					{
 						directLightVectors.push_back((shadowRays[index].direction));
 						directLights.push_back(world.lightList[index]);
 					}
 				}
-				/*std::vector<RowVector3f> directLightVectors;
-				std::vector<LightSource> directLights;
-				directLights.push_back(world.lightList[0]);
-				directLightVectors.push_back((world.lightList[0].position.vector() - interRes.intersectPoint.vector()).normalized());*/
-
+				
 				// Create IntersectData
 				IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);
 
@@ -222,26 +220,3 @@ std::string Camera::toString()
 Camera::~Camera()
 {
 }
-
-// Spawn Ray
-/*
-	intersect(KDTree Node N, Ray R)
-		if (N is a leaf):
-			go though elements in N and return closest.
-		else:
-			a = where R enters the voxel (changing coordinate)
-			b = where R leaves the voxel (changing coordinate)
-			S = seperating plane
-			case 1: Only crosses top voxel (a and b above P)
-				intersect(N.top, R)
-			case 2: Only crosses bottom voxel (a and b below P)
-				intersect(N.bottom, R)
-			case 3: Starts top, goes to bottom (P between a and b, where a > b)
-				intersect(N.top, R)
-				if (no intersection)
-					intersect(N.bottom, R)
-			case 4: Starts bottom, goes to top (P between a and b, where b > a)
-				intersect(N.bottom, R)
-				if (no intersection)
-					intersect(N.top, R)
-*/

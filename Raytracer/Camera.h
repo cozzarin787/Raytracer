@@ -26,7 +26,6 @@ public:
 	Camera(Point p, RowVector3f lookat, RowVector3f up);
 
 	void render(World world);
-	KdNode getNode(Voxel v, std::vector<Object*> primitives);
 	void setImageDim(int w, int h);
 	void setFilmPlaneDim(int fov, float aspect);
 	void setFocalLength(float f);

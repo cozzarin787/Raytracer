@@ -4,7 +4,6 @@ KdNode::KdNode()
 {
 }
 
-
 KdNode::~KdNode()
 {
 }

@@ -5,6 +5,8 @@
 #include <Eigen/dense>
 
 using Eigen::RowVector3f;
+using Eigen::Matrix;
+using Eigen::RowMajor;
 
 class Voxel
 {
@@ -29,6 +31,8 @@ public:
 
 	intersectVoxel intersect(Ray r);
 	bool inVoxel(Voxel v);
+	void transform(Matrix<float, 4, 4, RowMajor> transMat);
+	std::string toString();
 
 	~Voxel();
 };

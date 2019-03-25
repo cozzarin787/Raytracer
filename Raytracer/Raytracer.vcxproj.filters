@@ -164,6 +164,9 @@
     <ClInclude Include="KdLeaf.h">
       <Filter>Header Files\Accelerated Structures</Filter>
     </ClInclude>
+    <ClInclude Include="KdTreeBuilder.h">
+      <Filter>Header Files\Accelerated Structures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

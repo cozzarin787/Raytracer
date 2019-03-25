@@ -22,6 +22,7 @@ public:
 		};
 	};
 	
+	Voxel totalBound;
 	std::vector<voxelObjectWrapper> voxelObjectList;
 	std::vector<Object*> objectList;
 	std::vector<LightSource> lightList;
@@ -35,6 +36,7 @@ public:
 	void transform(int index, Matrix<float, 4, 4, RowMajor> transMat);
 	void transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat);
 	void transformAllLights(Matrix<float, 4, 4, RowMajor> transMat);
+	void calcWorldVoxel();
 	std::vector<Object::intersectResult> spawnRay(Ray r);
 
 	std::string toString();
