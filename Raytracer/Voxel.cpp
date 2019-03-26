@@ -14,6 +14,7 @@ Voxel::Voxel(Point min, Point max)
 
 Voxel::intersectVoxel Voxel::intersect(Ray r)
 {
+
 	return Voxel::intersectVoxel(Point(0,0,0), Point(0,0,0));
 }
 
@@ -25,9 +26,9 @@ bool Voxel::inVoxel(Voxel v)
 		{
 			return false;
 		}
-
-		return true;
 	}
+
+	return true;
 }
 
 void Voxel::transform(Matrix<float, 4, 4, RowMajor> transMat)

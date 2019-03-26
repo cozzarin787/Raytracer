@@ -50,10 +50,9 @@ std::vector<World::voxelObjectWrapper> KdTreeBuilder::getObjectsInVoxel(Voxel v,
 
 KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> primitives)
 {
-	if (primitives.size() <= 1)
+	if (primitives.size() <= 3)
 	{
-		KdLeaf node = KdLeaf(primitives);
-		KdNode* retNode = &node;
+		KdNode* retNode = new KdLeaf(primitives);
 		return retNode;
 	}
 	else
@@ -62,26 +61,26 @@ KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> p
 		Plane P = getPartitionPlane(v);
 
 		// Create new voxels based on partitioning plane
-		Voxel v1 = v;
-		Voxel v2 = v;
+		Voxel v1 = Voxel(v.min, v.max);
+		Voxel v2 = Voxel(v.min, v.max);
 		float seperateValue;
 
 		switch (this->i % 3)
 		{
 			case X_AXIS:
-				seperateValue = (v1.max.x + v1.min.x) / 2.0f;
-				v1.max.x = seperateValue;
-				v2.min.x = seperateValue;
+				seperateValue = (v.max.x + v.min.x) / 2.0f;
+				v1.min.x = seperateValue;
+				v2.max.x = seperateValue;
 				break;
 			case Y_AXIS:
-				seperateValue = (v1.max.y + v1.min.y) / 2.0f;
+				seperateValue = (v.max.y + v.min.y) / 2.0f;
 				v1.min.y = seperateValue;
 				v2.max.y = seperateValue;
 				break;
 			case Z_AXIS:
-				seperateValue = (v1.max.z + v1.min.z) / 2.0f;
-				v1.max.z = seperateValue;
-				v2.min.z = seperateValue;
+				seperateValue = (v.max.z + v.min.z) / 2.0f;
+				v1.min.z = seperateValue;
+				v2.max.z = seperateValue;
 				break;
 		}
 
@@ -89,22 +88,13 @@ KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> p
 		std::vector<World::voxelObjectWrapper> L_1 = getObjectsInVoxel(v1, primitives);
 		std::vector<World::voxelObjectWrapper> L_2 = getObjectsInVoxel(v2, primitives);
 
-		KdInterior node = KdInterior(P, (i % 3), v, getNode(v1, L_1), getNode(v2, L_2));
-		KdNode* retNode = &node;
+		KdNode* node1 = getNode(v1, L_1);
+		KdNode* node2 = getNode(v2, L_2);
+
+		KdNode* retNode = new KdInterior(P, (i % 3), v, node1, node2);
 		return retNode;
 	}
 }
-
-/*
-	intersect(KDTree Node N, Ray R)
-		if (N is a leaf):
-			go though elements in N and return closest.
-		else:
-			a = where R enters the voxel (changing coordinate)
-			b = where R leaves the voxel (changing coordinate)
-			S = seperating plane
-			
-*/
 
 std::vector<Object::intersectResult> KdTreeBuilder::rayThroughTree(KdNode* N, Ray r)
 {
