@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "IntersectData.h"
+#include "Checkerboard.h"
 #include <lodepng.h>
 #include <iostream>
 #define PI 3.141592654f
@@ -106,11 +107,7 @@ void Camera::render(World world)
 						directLights.push_back(world.lightList[index]);
 					}
 				}
-				/*std::vector<RowVector3f> directLightVectors;
-				std::vector<LightSource> directLights;
-				directLights.push_back(world.lightList[0]);
-				directLightVectors.push_back((world.lightList[0].position.vector() - interRes.intersectPoint.vector()).normalized());*/
-
+				
 				// Create IntersectData
 				IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);
 
