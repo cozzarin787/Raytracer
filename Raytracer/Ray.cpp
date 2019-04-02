@@ -4,6 +4,10 @@ Ray::Ray(Point origin, RowVector3f direction)
 {
 	this->origin = origin;
 	this->direction = direction.normalized();
+	this->invDir = -1 * this->direction;
+	this->invSign[0] = (this->invDir[0] < 0);
+	this->invSign[1] = (this->invDir[1] < 0);
+	this->invSign[2] = (this->invDir[2] < 0);
 }
 
 std::string Ray::toString()

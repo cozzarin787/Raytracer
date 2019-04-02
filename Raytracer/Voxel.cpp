@@ -10,12 +10,41 @@ Voxel::Voxel(Point min, Point max)
 {
 	this->min = min;
 	this->max = max;
+	this->bounds[0] = this->min;
+	this->bounds[1] = this->max;
 }
 
 Voxel::intersectVoxel Voxel::intersect(Ray r)
 {
+	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-	return Voxel::intersectVoxel(Point(0,0,0), Point(0,0,0));
+	tmin = (bounds[r.invSign[0]].x - r.origin.x) * r.invDir[0];
+	tmax = (bounds[1 - r.invSign[0]].x - r.origin.x) * r.invDir[0];
+	tymin = (bounds[r.invSign[1]].y - r.origin.y) * r.invDir[1];
+	tymax = (bounds[1 - r.invSign[1]].y - r.origin.y) * r.invDir[1];
+
+	if ((tmin > tymax) || (tymin > tmax))
+		return false;
+	if (tymin > tmin)
+		tmin = tymin;
+	if (tymax < tmax)
+		tmax = tymax;
+
+	tzmin = (bounds[r.invSign[2]].z - r.origin.z) * r.invDir[2];
+	tzmax = (bounds[1 - r.invSign[2]].z - r.origin.z) * r.invDir[2];
+
+	if ((tmin > tzmax) || (tzmin > tmax))
+		return false;
+	if (tzmin > tmin)
+		tmin = tzmin;
+	if (tzmax < tmax)
+		tmax = tzmax;
+
+	// Ray intersects Voxel, return points a and b
+	Point a = Point(tmin, tymin, tzmin);
+	Point b = Point(tmax, tymax, tzmax);
+
+	return Voxel::intersectVoxel(true, a, b);
 }
 
 bool Voxel::inVoxel(Voxel v)

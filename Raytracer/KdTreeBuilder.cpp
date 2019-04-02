@@ -144,23 +144,27 @@ std::vector<Object::intersectResult> KdTreeBuilder::rayThroughTree(KdNode* N, Ra
 		}
 		// case 1: Only crosses node1 voxel (a and b above P)
 		if (a >= P && b >= P)
-			rayThroughTree(node->node1, r);
+			return rayThroughTree(node->node1, r);
 		// case 2: Only crosses node2 voxel (a and b below P)
 		else if (a < P && b < P)
-			rayThroughTree(node->node2, r);
+			return rayThroughTree(node->node2, r);
 		// case 3: Starts node1, goes to node2 (P between a and b, where a > b)
 		else if (a > b)
 		{
 			std::vector<Object::intersectResult> intersection = rayThroughTree(node->node1, r);
 			if (intersection.empty())
-				rayThroughTree(node->node2, r);
+				return rayThroughTree(node->node2, r);
+			else
+				return intersection;
 		}
 		// case 4: Starts node2, goes to node1 (P between a and b, where b > a)
 		else if (b > a)
 		{
 			std::vector<Object::intersectResult> intersection = rayThroughTree(node->node2, r);
 			if (intersection.empty())
-				rayThroughTree(node->node1, r);
+				return rayThroughTree(node->node1, r);
+			else
+				return intersection;
 		}
 	}
 }

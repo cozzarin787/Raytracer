@@ -13,11 +13,18 @@ class Voxel
 public:
 	struct intersectVoxel
 	{
+		bool intersect;
 		Point enter;
 		Point exit;
 
-		intersectVoxel(Point ent, Point exi)
+		intersectVoxel(bool inter)
 		{
+			intersect = inter;
+		};
+
+		intersectVoxel(bool inter, Point ent, Point exi)
+		{
+			intersect = inter;
 			enter = ent;
 			exit = exi;
 		};
@@ -25,6 +32,7 @@ public:
 
 	Point min;
 	Point max;
+	Point bounds[2];
 
 	Voxel();
 	Voxel(Point min, Point max);
