@@ -1,4 +1,5 @@
 #include "Triangle.h"
+#include "Checkerboard.h"
 
 /********************************************************/
 /* AABB-triangle overlap test code                      */
@@ -194,6 +195,16 @@ void Triangle::transform(Matrix<float, 4, 4, RowMajor> transMat)
 	RowVector4f p2PrimeHomo = transMat * p2Homo.transpose();
 	w = p2PrimeHomo[3];
 	this->p2 = Point(p2PrimeHomo[0] / w, p2PrimeHomo[1] / w, p2PrimeHomo[2] / w);
+
+	// Check to see if illumination model is a texture
+	Checkerboard* check = dynamic_cast<Checkerboard*>(this->mat);
+	if (check != NULL)
+	{
+		// Update object coordinates
+		check->p0 = this->p0;
+		check->p1 = this->p1;
+		check->p2 = this->p2;
+	}
 }
 
 bool Triangle::inVoxel(Voxel v)

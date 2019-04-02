@@ -108,6 +108,9 @@
     <ClCompile Include="KdTreeBuilder.cpp">
       <Filter>Source Files\Accelerated Structures</Filter>
     </ClCompile>
+    <ClCompile Include="Checkerboard.cpp">
+      <Filter>Source Files\Lighting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="KdTreeBuilder.h">
       <Filter>Header Files\Accelerated Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkerboard.h">
+      <Filter>Header Files\Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

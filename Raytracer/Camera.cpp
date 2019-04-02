@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "IntersectData.h"
+#include "Checkerboard.h"
 #include "KdTreeBuilder.h"
 #include <lodepng.h>
 #include <iostream>
