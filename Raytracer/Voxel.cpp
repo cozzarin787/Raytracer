@@ -1,7 +1,5 @@
 #include "Voxel.h"
 
-
-
 Voxel::Voxel()
 {
 }
@@ -51,12 +49,11 @@ bool Voxel::inVoxel(Voxel v)
 {
 	for (int i = 0; i < 3; i++)
 	{
-		if ((this->min.vector()[i] > v.max.vector()[i]) || (v.min.vector()[i] > this->max.vector()[i]))
+		if ((v.min.vector()[i] > this->max.vector()[i]) || (this->min.vector()[i] > v.max.vector()[i]))
 		{
 			return false;
 		}
 	}
-
 	return true;
 }
 

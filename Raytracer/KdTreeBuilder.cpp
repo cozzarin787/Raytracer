@@ -48,9 +48,9 @@ std::vector<World::voxelObjectWrapper> KdTreeBuilder::getObjectsInVoxel(Voxel v,
 	return newList;
 }
 
-KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> primitives)
+KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> primitives, int depth)
 {
-	if (primitives.size() <= 3)
+	if (primitives.size() <= 2 || depth == MAX_DEPTH)
 	{
 		KdNode* retNode = new KdLeaf(primitives);
 		return retNode;
@@ -59,6 +59,7 @@ KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> p
 	{
 		// Create a partitioning plane
 		Plane P = getPartitionPlane(v);
+		int partitionAxis = i % 3;
 
 		// Create new voxels based on partitioning plane
 		Voxel v1 = Voxel(v.min, v.max);
@@ -69,18 +70,18 @@ KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> p
 		{
 			case X_AXIS:
 				seperateValue = (v.max.x + v.min.x) / 2.0f;
-				v1.min.x = seperateValue;
-				v2.max.x = seperateValue;
+				v1.max.x = seperateValue;
+				v2.min.x = seperateValue;
 				break;
 			case Y_AXIS:
 				seperateValue = (v.max.y + v.min.y) / 2.0f;
-				v1.min.y = seperateValue;
-				v2.max.y = seperateValue;
+				v1.max.y = seperateValue;
+				v2.min.y = seperateValue;
 				break;
 			case Z_AXIS:
 				seperateValue = (v.max.z + v.min.z) / 2.0f;
-				v1.min.z = seperateValue;
-				v2.max.z = seperateValue;
+				v1.max.z = seperateValue;
+				v2.min.z = seperateValue;
 				break;
 		}
 
@@ -88,10 +89,10 @@ KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> p
 		std::vector<World::voxelObjectWrapper> L_1 = getObjectsInVoxel(v1, primitives);
 		std::vector<World::voxelObjectWrapper> L_2 = getObjectsInVoxel(v2, primitives);
 
-		KdNode* node1 = getNode(v1, L_1);
-		KdNode* node2 = getNode(v2, L_2);
+		KdNode* node1 = getNode(v1, L_1, depth+1);
+		KdNode* node2 = getNode(v2, L_2, depth+1);
 
-		KdNode* retNode = new KdInterior(P, (i % 3), v, node1, node2);
+		KdNode* retNode = new KdInterior(P, partitionAxis, v, node1, node2);
 		return retNode;
 	}
 }
@@ -142,14 +143,14 @@ std::vector<Object::intersectResult> KdTreeBuilder::rayThroughTree(KdNode* N, Ra
 				P = node->s_plane.p.z;
 				break;
 		}
-		// case 1: Only crosses node1 voxel (a and b above P)
-		if (a >= P && b >= P)
+		// case 1: Only crosses node1 voxel (a and b below P)
+		if (a <= P && b <= P)
 			return rayThroughTree(node->node1, r);
-		// case 2: Only crosses node2 voxel (a and b below P)
-		else if (a < P && b < P)
+		// case 2: Only crosses node2 voxel (a and b above P)
+		else if (a > P && b > P)
 			return rayThroughTree(node->node2, r);
-		// case 3: Starts node1, goes to node2 (P between a and b, where a > b)
-		else if (a > b)
+		// case 3: Starts node1, goes to node2 (P between a and b, where a < b)
+		else if (a < b)
 		{
 			std::vector<Object::intersectResult> intersection = rayThroughTree(node->node1, r);
 			if (intersection.empty())
@@ -157,8 +158,8 @@ std::vector<Object::intersectResult> KdTreeBuilder::rayThroughTree(KdNode* N, Ra
 			else
 				return intersection;
 		}
-		// case 4: Starts node2, goes to node1 (P between a and b, where b > a)
-		else if (b > a)
+		// case 4: Starts node2, goes to node1 (P between a and b, where a > b)
+		else if (a > b)
 		{
 			std::vector<Object::intersectResult> intersection = rayThroughTree(node->node2, r);
 			if (intersection.empty())
@@ -169,7 +170,29 @@ std::vector<Object::intersectResult> KdTreeBuilder::rayThroughTree(KdNode* N, Ra
 	}
 }
 
+std::string KdTreeBuilder::toString(KdNode* N)
+{
+	if (dynamic_cast<KdLeaf*>(N))
+	{
+		KdLeaf* leaf = dynamic_cast<KdLeaf*>(N);
 
+		std::string o_list = "Primitives: \n";
+		for (int i = 0; i < leaf->primitives.size(); i++)
+		{
+			std::string str_i = std::to_string(i);
+			o_list += str_i + "\n" + leaf->primitives[i].o->toString() + "\n";
+		}
+
+		return "Leaf: \n" + o_list;
+	}
+	else
+	{
+		KdInterior* node = dynamic_cast<KdInterior*>(N);
+		std::string interior = "Interior: \n";
+		interior += node->v.toString() + "\n" + node->s_plane.toString() + "\n" + std::to_string(node->changingAxis) + "\n";
+		return interior + "\n\t" + this->toString(node->node1) + "\n\t" + this->toString(node->node1);
+	}
+}
 
 KdTreeBuilder::~KdTreeBuilder()
 {

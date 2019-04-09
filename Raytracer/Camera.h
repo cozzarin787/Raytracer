@@ -16,6 +16,7 @@ private:
 	int imageWidthPx;
 	float filmPlaneHeight;
 	float filmPlaneWidth;
+	int spatialFlag;
 
 public:
 	Point position;
@@ -29,6 +30,7 @@ public:
 	void setImageDim(int w, int h);
 	void setFilmPlaneDim(int fov, float aspect);
 	void setFocalLength(float f);
+	void setSpatialDataStructure(int flag);
 
 	std::string toString();
 

@@ -145,12 +145,12 @@ void World::calcWorldVoxel()
 		if (this->voxelObjectList[i].v.max.y > max.y) max.y = this->voxelObjectList[i].v.max.y;
 		if (this->voxelObjectList[i].v.max.z > max.z) max.z = this->voxelObjectList[i].v.max.z;
 	}
-	min.x -= 1.0f;
-	min.y -= 1.0f;
-	min.z -= 1.0f;
-	max.x += 1.0f;
-	max.y += 1.0f;
-	max.z += 1.0f;
+	min.x -= 0.5f;
+	min.y -= 0.5f;
+	min.z -= 0.5f;
+	max.x += 0.5f;
+	max.y += 0.5f;
+	max.z += 0.5f;
 	this->totalBound = Voxel(min, max);
 }
 

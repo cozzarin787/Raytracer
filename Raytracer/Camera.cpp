@@ -4,16 +4,20 @@
 #include "KdTreeBuilder.h"
 #include <lodepng.h>
 #include <iostream>
+#include <chrono>
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
+
+using namespace std::chrono;
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 {
 	this->position = p;
 	this->lookat = lookat;
 	this->up = up;
-	// default value
+	// default values
 	this->focalLength = 1;
+	this->spatialFlag = 1;
 
 	// construct view transform
 	RowVector3f n = lookat.normalized();
@@ -34,9 +38,22 @@ void Camera::render(World world)
 	// transform lightsources into camera coordinates
 	world.transformAllLights(this->viewTransform);
 
+	// calculate the bounding box of the world
+	world.calcWorldVoxel();
+
 	// BUILD K-D TREE
-	KdTreeBuilder treeBuilder = KdTreeBuilder();
-	KdNode* KDTree = treeBuilder.getNode(world.totalBound, world.voxelObjectList);
+	KdTreeBuilder treeBuilder;
+	KdNode* KDTree;
+	if (spatialFlag == 1)
+	{
+		auto start = high_resolution_clock::now();
+		treeBuilder = KdTreeBuilder();
+		KDTree = treeBuilder.getNode(world.totalBound, world.voxelObjectList, 0);
+		auto stop = high_resolution_clock::now();
+		auto duration = duration_cast<milliseconds>(stop - start);
+		print("\nK-D TREE BUILD TIME: ");
+		print(duration.count() + "milliseconds\n\n");
+	}
 
 	// init pixelArray
 	std::vector<std::vector<Color>> pixelArray(imageHeightPx);
@@ -51,6 +68,7 @@ void Camera::render(World world)
 	float pxX = -1 * this->filmPlaneWidth / 2;
 
 	// Create the array of pixels representing the rendered image of the world
+	auto start = high_resolution_clock::now();
 	for (int i = 0; i < this->imageHeightPx; i++)
 	{
 		for (int j = 0; j < this->imageWidthPx; j++)
@@ -61,8 +79,17 @@ void Camera::render(World world)
 			RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
 			Ray r = Ray(cameraOrigin, rayvec);
 
+			std::vector<Object::intersectResult> intersectlist;
+
 			// Calculate Intersections with world objects by sending ray through KDTree
-			std::vector<Object::intersectResult> intersectlist = treeBuilder.rayThroughTree(KDTree, r);
+			if (spatialFlag == 1)
+			{
+				intersectlist = treeBuilder.rayThroughTree(KDTree, r);
+			}
+			else
+			{
+				// Original Implementation HERE:
+			}
 
 			Color radiance;
 			Object::intersectResult interRes;
@@ -127,6 +154,11 @@ void Camera::render(World world)
 		pxY -= pXh;
 		pxX = -1 * this->filmPlaneWidth / 2;
 	}
+
+	auto stop = high_resolution_clock::now();
+	auto duration = duration_cast<milliseconds>(stop - start);
+	print("\nK-D TREE TRAVERSAL TIME: ");
+	print(duration.count() + " milliseconds\n\n");
 
 	// Tone Reproduction
 	// Find max radiance value
@@ -196,6 +228,11 @@ void Camera::setFilmPlaneDim(int fov, float aspect)
 void Camera::setFocalLength(float f)
 {
 	this->focalLength = f;
+}
+
+void Camera::setSpatialDataStructure(int flag)
+{
+	this->spatialFlag = flag;
 }
 
 std::string Camera::toString()
