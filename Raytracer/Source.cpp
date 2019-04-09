@@ -4,21 +4,21 @@
 #include "Sphere.h"
 #include "Polygon.h"
 #include "Triangle.h"
-#include "Phong.h"
+#include "Phong-Blinn.h"
 #include "Checkerboard.h"
 #define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
 Color colorGlass = Color(1, 1, 0);
 Color specColorGlass = Color(1, 1, 1);
-Phong matGlass = Phong(1.0f, 0.0f, colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
+Phong matGlass = Phong(colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
 Point centerGlass = Point(-0.121f, 1.014f, -4.724f);
 float radiusGlass = 1.2988f;
 
 // Mirror Sphere
-Color colorMirror = Color(0, 1, 1);
+Color colorMirror = Color(0, 0, 1);
 Color specColorMirror = Color(1, 1, 1);
-Phong matMirror = Phong(colorMirror, specColorMirror, 0.0f, 0.70f, 0.30f, 10.0f);
+Phong matMirror = Phong(1.0f, 0.0f, colorMirror, specColorMirror, 0.0f, 0.70f, 0.30f, 10.0f);
 Point centerMirror = Point(1.5f, 0.2f, -3.94f);
 float radiusMirror = 1.11f;
 

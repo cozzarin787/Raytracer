@@ -16,6 +16,7 @@ class Color
 
 		RowVector3f vector();
 		Color operator+(const Color & other);
+		Color operator*(const float k);
 		std::string toString();
 
 		~Color();

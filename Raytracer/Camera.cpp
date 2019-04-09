@@ -5,7 +5,7 @@
 #include <iostream>
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
-#define MAX_DEPTH 15
+#define MAX_DEPTH 4
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 {
@@ -180,21 +180,21 @@ Color Camera::trace(World world, Ray r, int depth)
 			// Create IntersectData
 			IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);
 
-			// Use illumination model
+			// Use illumination model for local illumination
 			radiance = interRes.mat->illuminate(interData);
 
 			// Reflective
-			if (interRes.mat->kr != 0)
+			if (interRes.mat->kr > 0)
 			{
 				for (int i = 0; i < interData.R.size(); i++)
 				{
 					//Overloaded operator '+' to add Colors as r+r,g+g,b+b
-					radiance = trace(world, interData.R[i], depth + 1);
+					radiance = radiance + trace(world, interData.R[i], depth + 1) * interRes.mat->kr;
 				}
 			}
 
 			// Transmisive
-			if (interRes.mat->kt != 0)
+			if (interRes.mat->kt > 0)
 			{
 				// TODO
 			}

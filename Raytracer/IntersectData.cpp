@@ -7,13 +7,17 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	this->S = lightDirs;	
 	this->ambientLight = ambientLight;
 	this->V = view;
-	// Calculate Reflection Vectors
+	// Calculate Reflection Rays
 	for (int i = 0; i < this->S.size(); i++)
 	{
 		this->R.push_back(reflect(this->N, Ray(this->P, this->S[i])));
 	}
-	// Calculate Halfway Vectors
-	// TODO
+
+	// Calculate Halfway Vectors to implement Phong-Blinn
+	for (int i = 0; i < this->S.size(); i++)
+	{
+		this->H.push_back((this->V + this->S[i]).normalized());
+	}
 	this->lights = lightList;
 }
 
