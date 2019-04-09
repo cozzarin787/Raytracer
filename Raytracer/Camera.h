@@ -24,6 +24,7 @@ public:
 	Camera(Point p, RowVector3f lookat, RowVector3f up);
 
 	void render(World world);
+	Color trace(World world , Ray r, int depth);
 	void setImageDim(int w, int h);
 	void setFilmPlaneDim(int fov, float aspect);
 	void setFocalLength(float f);

@@ -5,6 +5,7 @@
 #include <iostream>
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
+#define MAX_DEPTH 15
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 {
@@ -56,64 +57,7 @@ void Camera::render(World world)
 			RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
 			Ray r = Ray(cameraOrigin, rayvec);
 
-			// Calculate Intersections with world objects
-			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
-
-			Color radiance;
-			Object::intersectResult interRes;
-
-			// Find closest intersecting point
-			if (intersectlist.empty())
-			{
-				// Background Color
-				radiance = world.background;
-			}
-			else
-			{
-				if (intersectlist.size() == 1)
-				{
-					interRes = intersectlist[0];
-				}
-				else
-				{
-					int omegaMinIndex = 0;
-					for (int index = 0; index < intersectlist.size(); index++)
-					{
-						if (intersectlist[index].omega < omegaMinIndex)
-						{
-							omegaMinIndex = index;
-						}
-					}
-
-					interRes = intersectlist[omegaMinIndex];
-				}
-
-				// Spawn shadow rays from P to all Light Sources
-				std::vector<Ray> shadowRays;
-				for (int index = 0; index < world.lightList.size(); index++)
-				{
-					RowVector3f shadowDir = (world.lightList[index].position.vector() - interRes.intersectPoint.vector()).normalized();
-					shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
-				}
-
-				std::vector<RowVector3f> directLightVectors;
-				std::vector<LightSource> directLights;
-				for (int index = 0; index < shadowRays.size(); index++)
-				{
-					// Check to see if shadow ray makes it to light without intersection
-					if (world.spawnRay(shadowRays[index]).empty())
-					{
-						directLightVectors.push_back((shadowRays[index].direction));
-						directLights.push_back(world.lightList[index]);
-					}
-				}
-				
-				// Create IntersectData
-				IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);
-
-				// Use illumination model
-				radiance = interRes.mat->illuminate(interData);
-			}
+			Color radiance = trace(world, r, 0);
 
 			pixelArray[i][j] = radiance;
 
@@ -170,6 +114,93 @@ void Camera::render(World world)
 			image[4 * width * y + 4 * x + 3] = 255;
 		}
 	lodepng::encode(filename, image, width, height);
+}
+
+Color Camera::trace(World world, Ray r, int depth)
+{
+	if (depth >= MAX_DEPTH)
+	{
+		return world.background;
+	}
+	else
+	{
+		Color radiance;
+
+		// Calculate Intersections with world objects
+		std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
+
+		Object::intersectResult interRes;
+
+		// Find closest intersecting point
+		if (intersectlist.empty())
+		{
+			// Background Color
+			return world.background;
+		}
+		else
+		{
+			if (intersectlist.size() == 1)
+			{
+				interRes = intersectlist[0];
+			}
+			else
+			{
+				int omegaMinIndex = 0;
+				for (int index = 0; index < intersectlist.size(); index++)
+				{
+					if (intersectlist[index].omega < omegaMinIndex)
+					{
+						omegaMinIndex = index;
+					}
+				}
+
+				interRes = intersectlist[omegaMinIndex];
+			}
+
+			// Spawn shadow rays from P to all Light Sources
+			std::vector<Ray> shadowRays;
+			for (int index = 0; index < world.lightList.size(); index++)
+			{
+				RowVector3f shadowDir = (world.lightList[index].position.vector() - interRes.intersectPoint.vector()).normalized();
+				shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
+			}
+
+			std::vector<RowVector3f> directLightVectors;
+			std::vector<LightSource> directLights;
+			for (int index = 0; index < shadowRays.size(); index++)
+			{
+				// Check to see if shadow ray makes it to light without intersection
+				if (world.spawnRay(shadowRays[index]).empty())
+				{
+					directLightVectors.push_back((shadowRays[index].direction));
+					directLights.push_back(world.lightList[index]);
+				}
+			}
+
+			// Create IntersectData
+			IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);
+
+			// Use illumination model
+			radiance = interRes.mat->illuminate(interData);
+
+			// Reflective
+			if (interRes.mat->kr != 0)
+			{
+				for (int i = 0; i < interData.R.size(); i++)
+				{
+					//Overloaded operator '+' to add Colors as r+r,g+g,b+b
+					radiance = trace(world, interData.R[i], depth + 1);
+				}
+			}
+
+			// Transmisive
+			if (interRes.mat->kt != 0)
+			{
+				// TODO
+			}
+			return radiance;
+		}
+	}
 }
 
 void Camera::setImageDim(int w, int h)

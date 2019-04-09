@@ -47,7 +47,7 @@ Color Phong::illuminate(IntersectData interData)
 
 			// Specular
 			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
-			specular += (L_iC_s * pow(interData.R[i].dot(interData.V), this->k_e));
+			specular += (L_iC_s * pow(interData.R[i].direction.dot(interData.V), this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
 		specular = this->k_s * specular;
