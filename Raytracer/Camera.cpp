@@ -5,7 +5,8 @@
 #include <iostream>
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
-#define MAX_DEPTH 4
+#define MAX_DEPTH 1
+#define OUTPUT_FILENAME "test.png"
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 {
@@ -57,7 +58,12 @@ void Camera::render(World world)
 			RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
 			Ray r = Ray(cameraOrigin, rayvec);
 
-			Color radiance = trace(world, r, 0);
+			// Calculate Intersections with world objects
+			std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
+
+			r.direction *= -1;
+
+			Color radiance = trace(world, r, intersectlist, 0);
 
 			pixelArray[i][j] = radiance;
 
@@ -100,23 +106,10 @@ void Camera::render(World world)
 		}
 	}
 
-	//generate some image
-	const char* filename = "test.png";
-
-	unsigned width = this->imageWidthPx, height = this->imageHeightPx;
-	std::vector<unsigned char> image;
-	image.resize(width * height * 4);
-	for (unsigned y = 0; y < height; y++)
-		for (unsigned x = 0; x < width; x++) {
-			image[4 * width * y + 4 * x + 0] = (unsigned char) pixelArray[y][x].r;
-			image[4 * width * y + 4 * x + 1] = (unsigned char) pixelArray[y][x].g;
-			image[4 * width * y + 4 * x + 2] = (unsigned char) pixelArray[y][x].b;
-			image[4 * width * y + 4 * x + 3] = 255;
-		}
-	lodepng::encode(filename, image, width, height);
+	generateImage(pixelArray, OUTPUT_FILENAME);
 }
 
-Color Camera::trace(World world, Ray r, int depth)
+Color Camera::trace(World world, Ray r, std::vector<Object::intersectResult> intersectlist, int depth)
 {
 	if (depth >= MAX_DEPTH)
 	{
@@ -125,9 +118,6 @@ Color Camera::trace(World world, Ray r, int depth)
 	else
 	{
 		Color radiance;
-
-		// Calculate Intersections with world objects
-		std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
 
 		Object::intersectResult interRes;
 
@@ -178,7 +168,7 @@ Color Camera::trace(World world, Ray r, int depth)
 			}
 
 			// Create IntersectData
-			IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, -1 * r.direction, directLights, world.background);
+			IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors, r.direction, directLights, world.background);
 
 			// Use illumination model for local illumination
 			radiance = interRes.mat->illuminate(interData);
@@ -188,8 +178,11 @@ Color Camera::trace(World world, Ray r, int depth)
 			{
 				for (int i = 0; i < interData.R.size(); i++)
 				{
-					//Overloaded operator '+' to add Colors as r+r,g+g,b+b
-					radiance = radiance + trace(world, interData.R[i], depth + 1) * interRes.mat->kr;
+					// Calculate Intersections with world objects
+					std::vector<Object::intersectResult> intersectlistreflection = world.spawnRay(interData.R[i]);
+					// Overloaded operator '+' to add Colors as r+r,g+g,b+b
+					// Overloaded operator '*' to multiply Color * scalar (--order matters--)
+					radiance = radiance + trace(world, interData.R[i], intersectlistreflection,  depth + 1) * interRes.mat->kr;
 				}
 			}
 
@@ -201,6 +194,21 @@ Color Camera::trace(World world, Ray r, int depth)
 			return radiance;
 		}
 	}
+}
+
+void Camera::generateImage(std::vector<std::vector<Color>> pixelArray, const char* filename)
+{
+	unsigned width = this->imageWidthPx, height = this->imageHeightPx;
+	std::vector<unsigned char> image;
+	image.resize(width * height * 4);
+	for (unsigned y = 0; y < height; y++)
+		for (unsigned x = 0; x < width; x++) {
+			image[4 * width * y + 4 * x + 0] = (unsigned char)pixelArray[y][x].r;
+			image[4 * width * y + 4 * x + 1] = (unsigned char)pixelArray[y][x].g;
+			image[4 * width * y + 4 * x + 2] = (unsigned char)pixelArray[y][x].b;
+			image[4 * width * y + 4 * x + 3] = 255;
+		}
+	lodepng::encode(filename, image, width, height);
 }
 
 void Camera::setImageDim(int w, int h)

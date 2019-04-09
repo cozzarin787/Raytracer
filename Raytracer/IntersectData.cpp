@@ -7,6 +7,8 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	this->S = lightDirs;	
 	this->ambientLight = ambientLight;
 	this->V = view;
+	this->lights = lightList;
+
 	// Calculate Reflection Rays
 	for (int i = 0; i < this->S.size(); i++)
 	{
@@ -18,7 +20,7 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	{
 		this->H.push_back((this->V + this->S[i]).normalized());
 	}
-	this->lights = lightList;
+	
 }
 
 Ray IntersectData::reflect(RowVector3f normal, Ray r)
