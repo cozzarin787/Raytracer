@@ -88,7 +88,8 @@ void Camera::render(World world)
 			}
 			else
 			{
-				// Original Implementation HERE:
+				// Original Implementation
+				intersectlist = world.spawnRay(r);
 			}
 
 			Color radiance;
