@@ -65,6 +65,50 @@ std::vector<Triangle> makeStanfordBunny(std::string fileName)
 	return bunny;
 }
 
+void createWorld()
+{
+	// Glass Sphere
+	Color colorGlass = Color(0, 1, 0);
+	Color specColorGlass = Color(1, 1, 1);
+	Phong matGlass = Phong(colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
+	Point centerGlass = Point(0.0f, 0.0f, 0.0f);
+	float radiusGlass = 1.0f;
+
+	// Create Objects
+	Material* m1 = &matGlass;
+
+	Sphere sphereGlass = Sphere(m1, centerGlass, radiusGlass);
+
+	// Wrap objects in object pointers to induce polymorphism
+	Object* o1 = &sphereGlass;
+
+	// Create LightSources
+	Point lightPoint1 = Point(0.0f, 4.0f, -0.0f);
+	LightSource l1 = LightSource(lightPoint1, Color(1, 1, 1));
+
+	// Add objects to world
+	World world = World(Color(0.11765f, 0.56471f, 1));
+
+	int glassIndex = world.add(o1);
+
+	// Add lights to world
+	int light1Index = world.addLight(l1);
+
+	// Define camera 
+	Camera c = Camera(Point(-3.0f, 0.0f, -3.0f), RowVector3f(1, 0, 1), RowVector3f(0, 1, 0));
+	c.setFocalLength(1);
+	c.setFilmPlaneDim(60, (4 / 3.0f));
+	c.setImageDim(512, 384);
+	c.setSpatialDataStructure(0);
+
+	c.render(world);
+
+	print(world.toString());
+	print(c.toString());
+
+	std::cin.ignore();
+}
+
 void createScene1()
 {
 	// Glass Sphere
@@ -147,10 +191,11 @@ void createScene1()
 	int light2Index = world.addLight(l2);
 
 	// Define camera 
-	Camera c = Camera(Point(0, 0.941f, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
+	Camera c = Camera(Point(0, 0.9f, -6), RowVector3f(0.5, 0, 0.5), RowVector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);
+	c.setSpatialDataStructure(0);
 
 	c.render(world);
 
@@ -205,6 +250,7 @@ void createBunnyScene()
 int main(void)
 {
 	//createBunnyScene();
-	createScene1();
+	//createScene1();
+	createWorld();
 	return 0;
 }

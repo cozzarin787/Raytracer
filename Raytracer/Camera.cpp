@@ -52,7 +52,8 @@ void Camera::render(World world)
 		auto stop = high_resolution_clock::now();
 		auto duration = duration_cast<milliseconds>(stop - start);
 		print("\nK-D TREE BUILD TIME: ");
-		print(duration.count() + "milliseconds\n\n");
+		std::string s = std::to_string(duration.count()) + "milliseconds\n\n";
+		print(s);
 	}
 
 	// init pixelArray
@@ -170,7 +171,8 @@ void Camera::render(World world)
 	auto stop = high_resolution_clock::now();
 	auto duration = duration_cast<milliseconds>(stop - start);
 	print("\nK-D TREE TRAVERSAL TIME: ");
-	print(duration.count() + " milliseconds\n\n");
+	std::string s = std::to_string(duration.count()) + "milliseconds\n\n";
+	print(s);
 
 	// Tone Reproduction
 	// Find max radiance value

@@ -15,6 +15,13 @@ void LightSource::transform(Matrix<float, 4, 4, RowMajor> transMat)
 	this->position = Point(centerPrimeHomo[0] / w, centerPrimeHomo[1] / w, centerPrimeHomo[2] / w);
 }
 
+std::string LightSource::toString()
+{
+	std::string p = this->position.toString();
+	std::string c = this->color.toString();
+	return std::string("LightSource\n Position: " + p + "\n Color: " + c + "\n");
+}
+
 LightSource::~LightSource()
 {
 }

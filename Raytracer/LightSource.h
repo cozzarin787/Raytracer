@@ -16,6 +16,8 @@ public:
 
 	void transform(Matrix<float, 4, 4, RowMajor> transMat);
 
+	std::string toString();
+
 	~LightSource();
 };
 

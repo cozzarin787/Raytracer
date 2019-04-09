@@ -124,9 +124,9 @@ void World::transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat)
 
 void World::transformAllLights(Matrix<float, 4, 4, RowMajor> transMat)
 {
-	for (LightSource l : this->lightList)
+	for (int i = 0; i < this->lightList.size(); i++)
 	{
-		l.transform(transMat);
+		this->lightList[i].transform(transMat);
 	}
 }
 
@@ -176,7 +176,13 @@ std::string World::toString()
 		std::string str_i = std::to_string(i);
 		o_list += "   object" + str_i + "\n      " + this->objectList[i]->toString();
 	}
-	return std::string("World\n" + o_list);
+	std::string l_list = "Light List\n";
+	for (int i = 0; i < this->lightList.size(); i++)
+	{
+		std::string str_i = std::to_string(i);
+		l_list += "   light" + str_i + "\n      " + this->lightList[i].toString();
+	}
+	return std::string("World\n" + o_list + "\n" + l_list);
 }
 
 World::~World()
