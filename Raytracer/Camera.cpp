@@ -43,7 +43,7 @@ void Camera::render(World world)
 
 	// BUILD K-D TREE
 	KdTreeBuilder treeBuilder;
-	KdNode* KDTree;
+	KdNode* KDTree = &KdLeaf();
 	if (spatialFlag == 1)
 	{
 		auto start = high_resolution_clock::now();
@@ -134,10 +134,21 @@ void Camera::render(World world)
 				for (int index = 0; index < shadowRays.size(); index++)
 				{
 					// Check to see if shadow ray makes it to light without intersection
-					if (treeBuilder.rayThroughTree(KDTree, shadowRays[index]).empty())
+					if (spatialFlag == 1)
 					{
-						directLightVectors.push_back((shadowRays[index].direction));
-						directLights.push_back(world.lightList[index]);
+						if (treeBuilder.rayThroughTree(KDTree, shadowRays[index]).empty())
+						{
+							directLightVectors.push_back((shadowRays[index].direction));
+							directLights.push_back(world.lightList[index]);
+						}
+					}
+					else
+					{
+						if (world.spawnRay(shadowRays[index]).empty())
+						{
+							directLightVectors.push_back((shadowRays[index].direction));
+							directLights.push_back(world.lightList[index]);
+						}
 					}
 				}
 				
