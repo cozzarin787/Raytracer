@@ -61,13 +61,13 @@ void Voxel::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
 	// Transform min point
 	RowVector4f minHomo = this->min.homogen();
-	RowVector4f minPrimeHomo = transMat * minHomo.transpose();
+	RowVector4f minPrimeHomo = minHomo * transMat;
 	float w = minPrimeHomo[3];
 	this->min = Point(minPrimeHomo[0] / w, minPrimeHomo[1] / w, minPrimeHomo[2] / w);
 
 	// Transform max point
 	RowVector4f maxHomo = this->max.homogen();
-	RowVector4f maxPrimeHomo = transMat * maxHomo.transpose();
+	RowVector4f maxPrimeHomo = maxHomo * transMat;
 	w = maxPrimeHomo[3];
 	this->max = Point(maxPrimeHomo[0] / w, maxPrimeHomo[1] / w, maxPrimeHomo[2] / w);
 }

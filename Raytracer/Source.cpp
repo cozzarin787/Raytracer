@@ -83,7 +83,7 @@ void createWorld()
 	Object* o1 = &sphereGlass;
 
 	// Create LightSources
-	Point lightPoint1 = Point(0.0f, 4.0f, -0.0f);
+	Point lightPoint1 = Point(0.0f, 0.0f, -3.0f);
 	LightSource l1 = LightSource(lightPoint1, Color(1, 1, 1));
 
 	// Add objects to world
@@ -95,7 +95,7 @@ void createWorld()
 	int light1Index = world.addLight(l1);
 
 	// Define camera 
-	Camera c = Camera(Point(-3.0f, 0.0f, -3.0f), RowVector3f(1, 0, 1), RowVector3f(0, 1, 0));
+	Camera c = Camera(Point(0.0f, 0.0f, -3.0f), RowVector3f(1, 0, 1), RowVector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);

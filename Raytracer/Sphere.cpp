@@ -122,7 +122,7 @@ void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
 {
 	// Transform center of sphere
 	RowVector4f centerHomo = this->center.homogen();
-	RowVector4f centerPrimeHomo = transMat * centerHomo.transpose();
+	RowVector4f centerPrimeHomo = centerHomo * transMat;
 	float w = centerPrimeHomo[3];
 	this->center = Point(centerPrimeHomo[0] / w, centerPrimeHomo[1] / w, centerPrimeHomo[2] / w);
 }

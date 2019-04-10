@@ -24,10 +24,10 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 	RowVector3f u = (up.cross(n)).normalized();
 	RowVector3f v = n.cross(u);
 
-	this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
-	this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
-	this->viewTransform.row(2) << n[0], n[1], n[2], -1 * (p.vector().dot(n));
-	this->viewTransform.row(3) << 0, 0, 0, 1;
+	this->viewTransform.row(0) << u[0], u[1], u[2], 0;
+	this->viewTransform.row(1) << v[0], v[1], v[2], 0;
+	this->viewTransform.row(2) << n[0], n[1], n[2], 0;
+	this->viewTransform.row(3) << -1 * (p.vector().dot(u)), -1 * (p.vector().dot(v)), -1 * (p.vector().dot(n)), 1;
 }
 
 void Camera::render(World world)
