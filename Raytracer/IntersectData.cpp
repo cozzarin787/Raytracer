@@ -1,6 +1,6 @@
 #include "IntersectData.h"
 
-IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3f> lightDirs, RowVector3f view, std::vector<LightSource> lightList, Color ambientLight)
+IntersectData::IntersectData(Point p, Vector3f normal, std::vector<Vector3f> lightDirs, Vector3f view, std::vector<LightSource*> lightList, Color ambientLight)
 {
 	this->P = p;							
 	this->N = normal;						
@@ -17,9 +17,9 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	this->lights = lightList;
 }
 
-Ray IntersectData::reflect(RowVector3f normal, Ray r)
+Ray IntersectData::reflect(Vector3f normal, Ray r)
 {
-	RowVector3f direction = (r.direction - (2 * normal * (r.direction.dot(normal)))).normalized();
+	Vector3f direction = (r.direction - (2 * normal * (r.direction.dot(normal)))).normalized();
 	return Ray(r.origin, direction);
 }
 

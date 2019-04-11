@@ -6,11 +6,11 @@ LightSource::LightSource(Point position, Color c)
 	this->color = c;
 }
 
-void LightSource::transform(Matrix<float, 4, 4, RowMajor> transMat)
+void LightSource::transform(Matrix4f transMat)
 {
 	// Transform center of sphere
-	RowVector4f centerHomo = this->position.homogen();
-	RowVector4f centerPrimeHomo = transMat * centerHomo.transpose();
+	Vector4f centerHomo = this->position.homogen();
+	Vector4f centerPrimeHomo = transMat * centerHomo;
 	float w = centerPrimeHomo[3];
 	this->position = Point(centerPrimeHomo[0] / w, centerPrimeHomo[1] / w, centerPrimeHomo[2] / w);
 }

@@ -25,7 +25,7 @@ Color Checkerboard::illuminate(IntersectData interData)
 	float checkerHeight = 1.0f / 16.0f;
 
 	// Convert intersection point into barycentric coordinates
-	RowVector3f v0 = p1.vector() - p0.vector(), v1 = p2.vector() - p0.vector(), v2 = interData.P.vector() - p0.vector();
+	Vector3f v0 = p1.vector() - p0.vector(), v1 = p2.vector() - p0.vector(), v2 = interData.P.vector() - p0.vector();
 	float d00 = v0.dot(v0);
 	float d01 = v0.dot(v1);
 	float d11 = v1.dot(v1);
@@ -35,10 +35,10 @@ Color Checkerboard::illuminate(IntersectData interData)
 	float u = (d11 * d20 - d01 * d21) / denom;
 	float v = (d00 * d21 - d01 * d20) / denom;
 	float w = 1.0f - u - v;
-	RowVector3f baryInterPoint = RowVector3f(u, v, w);
+	Vector3f baryInterPoint = Vector3f(u, v, w);
 
 	// Calculate u-v mapping of point onto checkerboard texture
-	RowVector3f
+	Vector3f
 		uT = baryInterPoint[0] * this->triU.vector(),
 		vT = baryInterPoint[1] * this->triV.vector(),
 		wT = baryInterPoint[2] * this->triW.vector(),
@@ -93,17 +93,17 @@ Color Checkerboard::illuminate(IntersectData interData)
 	}
 
 
-	std::vector<RowVector3f> L;
+	std::vector<Vector3f> L;
 	for (int i = 0; i < interData.lights.size(); i++)
 	{
-		L.push_back(interData.lights[i].color.vector());
+		L.push_back(interData.lights[i]->color.vector());
 	}
 
 	// Ambient
-	RowVector3f ambient = this->k_a * C_o.vector().array() * interData.ambientLight.vector().array();
+	Vector3f ambient = this->k_a * C_o.vector().array() * interData.ambientLight.vector().array();
 
-	RowVector3f diffuse = RowVector3f(0, 0, 0);
-	RowVector3f specular = RowVector3f(0, 0, 0);
+	Vector3f diffuse = Vector3f(0, 0, 0);
+	Vector3f specular = Vector3f(0, 0, 0);
 
 	// If you can see light from point of intersection:
 	if (!interData.lights.empty())
@@ -112,17 +112,17 @@ Color Checkerboard::illuminate(IntersectData interData)
 		for (int i = 0; i < interData.lights.size(); i++)
 		{
 			// Diffuse
-			RowVector3f L_iC_o = L[i].array() * C_o.vector().array();
+			Vector3f L_iC_o = L[i].array() * C_o.vector().array();
 			diffuse += (L_iC_o * (interData.S[i].dot(interData.N)));
 
 			// Specular
-			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
+			Vector3f L_iC_s = L[i].array() * this->C_s.vector().array();
 			specular += (L_iC_s * pow(interData.R[i].dot(interData.V), this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
 		specular = this->k_s * specular;
 	}
-	RowVector3f totalRad = ambient + diffuse + specular;
+	Vector3f totalRad = ambient + diffuse + specular;
 	return Color(totalRad[0], totalRad[1], totalRad[2]);
 }
 

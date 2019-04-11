@@ -74,6 +74,13 @@ void createWorld()
 	Point centerGlass = Point(0.0f, 0.0f, 0.0f);
 	float radiusGlass = 1.0f;
 
+	//Scaling Matrix
+	Matrix4f scalingMatrix;
+	scalingMatrix.row(0) << 1, 0, 0, 0.0;
+	scalingMatrix.row(1) << 0, 1, 0, 0.0;
+	scalingMatrix.row(2) << 0, 0, 1, 0.0;
+	scalingMatrix.row(3) << 0, 0, 0, 1;
+
 	// Create Objects
 	Material* m1 = &matGlass;
 
@@ -83,7 +90,7 @@ void createWorld()
 	Object* o1 = &sphereGlass;
 
 	// Create LightSources
-	Point lightPoint1 = Point(0.0f, 0.0f, -3.0f);
+	Point lightPoint1 = Point(-6.0f, 3.0f, 0.0f);
 	LightSource l1 = LightSource(lightPoint1, Color(1, 1, 1));
 
 	// Add objects to world
@@ -91,11 +98,14 @@ void createWorld()
 
 	int glassIndex = world.add(o1);
 
+	// Translate object
+	//world.transform(glassIndex, scalingMatrix);
+
 	// Add lights to world
-	int light1Index = world.addLight(l1);
+	int light1Index = world.addLight(&l1);
 
 	// Define camera 
-	Camera c = Camera(Point(0.0f, 0.0f, -3.0f), RowVector3f(1, 0, 1), RowVector3f(0, 1, 0));
+	Camera c = Camera(Point(-6.0f, 0.0f, -6.0f), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);
@@ -145,7 +155,7 @@ void createScene1()
 	Point p5 = Point(-2.7f, -1, -10);
 
 	//Scaling Matrix
-	Matrix<float, 4, 4, RowMajor> scalingMatrix;
+	Matrix4f scalingMatrix;
 	scalingMatrix.row(0) << .57955f, 0, 0, 0;
 	scalingMatrix.row(1) << 0, 1, 0, 0;
 	scalingMatrix.row(2) << 0, 0, 1.79781f, 0;
@@ -187,11 +197,11 @@ void createScene1()
 	int triIndex2 = world.add(o5);
 
 	// Add lights to world
-	int light1Index = world.addLight(l1);
-	int light2Index = world.addLight(l2);
+	int light1Index = world.addLight(&l1);
+	int light2Index = world.addLight(&l2);
 
 	// Define camera 
-	Camera c = Camera(Point(0, 0.9f, -6), RowVector3f(0.5, 0, 0.5), RowVector3f(0, 1, 0));
+	Camera c = Camera(Point(0, 0.9f, -6), Vector3f(0.5, 0, 0.5), Vector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);
@@ -210,7 +220,7 @@ void createBunnyScene()
 	std::vector<Triangle> bunny = makeStanfordBunny("bunny.obj");
 
 	//Scaling Matrix
-	Matrix<float, 4, 4, RowMajor> scalingMatrix;
+	Matrix4f scalingMatrix;
 	scalingMatrix.row(0) << .57955f, 0, 0, 0;
 	scalingMatrix.row(1) << 0, 1, 0, 0;
 	scalingMatrix.row(2) << 0, 0, 1.79781f, 0;
@@ -224,7 +234,7 @@ void createBunnyScene()
 	World world = World(Color(0.11765f, 0.56471f, 1));
 
 	// Add lights to world
-	int light1Index = world.addLight(l1);
+	int light1Index = world.addLight(&l1);
 
 	// Add bunny
 	for (int i = 0; i < bunny.size(); i++)
@@ -234,7 +244,7 @@ void createBunnyScene()
 	}
 
 	// Define camera 
-	Camera c = Camera(Point(0, 0.1f, -2), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
+	Camera c = Camera(Point(0, 0.1f, -2), Vector3f(0, 0, 1), Vector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);

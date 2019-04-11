@@ -4,9 +4,8 @@
 #include "Ray.h"
 #include <Eigen/dense>
 
-using Eigen::RowVector3f;
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Vector3f;
+using Eigen::Matrix4f;
 
 class Voxel
 {
@@ -39,7 +38,7 @@ public:
 
 	intersectVoxel intersect(Ray r);
 	bool inVoxel(Voxel v);
-	void transform(Matrix<float, 4, 4, RowMajor> transMat);
+	void transform(Matrix4f transMat);
 	std::string toString();
 
 	~Voxel();

@@ -10,24 +10,26 @@
 
 using namespace std::chrono;
 
-Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
+Camera::Camera(Point p, Vector3f lookat, Vector3f temp)
 {
 	this->position = p;
 	this->lookat = lookat;
-	this->up = up;
 	// default values
 	this->focalLength = 1;
 	this->spatialFlag = 1;
 
 	// construct view transform
-	RowVector3f n = lookat.normalized();
-	RowVector3f u = (up.cross(n)).normalized();
-	RowVector3f v = n.cross(u);
+	Vector3f n = (lookat - p.vector()).normalized();
 
-	this->viewTransform.row(0) << u[0], u[1], u[2], 0;
-	this->viewTransform.row(1) << v[0], v[1], v[2], 0;
-	this->viewTransform.row(2) << n[0], n[1], n[2], 0;
-	this->viewTransform.row(3) << -1 * (p.vector().dot(u)), -1 * (p.vector().dot(v)), -1 * (p.vector().dot(n)), 1;
+	this->up = ((n.cross(temp)).cross(n)).normalized();
+
+	Vector3f u = (this->up.cross(n)).normalized();
+	Vector3f v = (n.cross(u)).normalized();
+
+	this->viewTransform.row(0) << u[0], v[0], n[0], -(p.vector().dot(u));
+	this->viewTransform.row(1) << u[1], v[1], n[1], -(p.vector().dot(v));
+	this->viewTransform.row(2) << u[2], v[2], n[2], -(p.vector().dot(n));
+	this->viewTransform.row(3) << 0, 0, 0, 1;
 }
 
 void Camera::render(World world)
@@ -77,7 +79,7 @@ void Camera::render(World world)
 			// Spawn Ray through the middle of a pixel
 			Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
 			Point cameraOrigin = Point(0, 0, 0);
-			RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
+			Vector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
 			Ray r = Ray(cameraOrigin, rayvec);
 
 			std::vector<Object::intersectResult> intersectlist;
@@ -126,12 +128,12 @@ void Camera::render(World world)
 				std::vector<Ray> shadowRays;
 				for (int index = 0; index < world.lightList.size(); index++)
 				{
-					RowVector3f shadowDir = (world.lightList[index].position.vector() - interRes.intersectPoint.vector()).normalized();
+					Vector3f shadowDir = (world.lightList[index]->position.vector() - interRes.intersectPoint.vector()).normalized();
 					shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
 				}
 
-				std::vector<RowVector3f> directLightVectors;
-				std::vector<LightSource> directLights;
+				std::vector<Vector3f> directLightVectors;
+				std::vector<LightSource*> directLights;
 				for (int index = 0; index < shadowRays.size(); index++)
 				{
 					// Check to see if shadow ray makes it to light without intersection
@@ -262,7 +264,7 @@ std::string Camera::toString()
 	result += "Up\n   [" + x + " " + y + " " + z + "]\n";
 	std::stringstream ss;
 	ss << viewTransform;
-	result += "View Transform\n   " + ss.str() + "\n";
+	result += "View Transform\n" + ss.str() + "\n";
 	result += "Focal Length\n   " + std::to_string(focalLength) + "\n";
 	result += "Image Dimenstions\n   HeightPx: " + std::to_string(imageHeightPx) + " WidthPx: " + std::to_string(imageWidthPx) + "\n";
 	result += "Film Plane Dimenstions\n   HeightPx: " + std::to_string(filmPlaneHeight) + " WidthPx: " + std::to_string(filmPlaneWidth) + "\n";

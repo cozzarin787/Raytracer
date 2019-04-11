@@ -2,7 +2,7 @@
 #include <string>
 #include <Eigen/Dense>
 
-using Eigen::RowVector3f;
+using Eigen::Vector3f;
 
 class Color
 {
@@ -14,7 +14,7 @@ class Color
 		Color();
 		Color(float r, float g, float b);
 
-		RowVector3f vector();
+		Vector3f vector();
 
 		std::string toString();
 

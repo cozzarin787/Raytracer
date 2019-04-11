@@ -122,7 +122,7 @@ Triangle::Triangle(Material* m, Point p0, Point p1, Point p2) : Object(m)
 Object::intersectResult Triangle::intersect(Ray r)
 {
 	float omega = 0.0f, u = 0.0f, v = 0.0f, w = 0.0f;
-	RowVector3f 
+	Vector3f 
 		e1 = p1.vector() - p0.vector(),
 		e2 = p2.vector() - p0.vector(),
 		T = r.origin.vector() - p0.vector(),
@@ -135,7 +135,7 @@ Object::intersectResult Triangle::intersect(Ray r)
 		return intersectResult(false);
 	}
 
-	RowVector3f vec = RowVector3f(
+	Vector3f vec = Vector3f(
 		Q.dot(e2),
 		P.dot(T),
 		Q.dot(r.direction));
@@ -170,29 +170,29 @@ Object::intersectResult Triangle::intersect(Ray r)
 		Point i = Point(xi, yi, zi);
 
 		// calc normal
-		RowVector3f normal = e1.cross(e2).normalized();
+		Vector3f normal = e1.cross(e2).normalized();
 
 		return intersectResult(true, omega, this->mat, i, normal);
 	}
 }
 
-void Triangle::transform(Matrix<float, 4, 4, RowMajor> transMat)
+void Triangle::transform(Matrix4f transMat)
 {
 	// Transform p0
-	RowVector4f p0Homo = this->p0.homogen();
-	RowVector4f p0PrimeHomo = p0Homo * transMat;
+	Vector4f p0Homo = this->p0.homogen();
+	Vector4f p0PrimeHomo = transMat * p0Homo;
 	float w = p0PrimeHomo[3];
 	this->p0 = Point(p0PrimeHomo[0] / w, p0PrimeHomo[1] / w, p0PrimeHomo[2] / w);
 
 	// Transform p1
-	RowVector4f p1Homo = this->p1.homogen();
-	RowVector4f p1PrimeHomo = p1Homo * transMat;
+	Vector4f p1Homo = this->p1.homogen();
+	Vector4f p1PrimeHomo = transMat * p1Homo;
 	w = p1PrimeHomo[3];
 	this->p1 = Point(p1PrimeHomo[0] / w, p1PrimeHomo[1] / w, p1PrimeHomo[2] / w);
 
 	// Transform p2
-	RowVector4f p2Homo = this->p2.homogen();
-	RowVector4f p2PrimeHomo = p2Homo * transMat;
+	Vector4f p2Homo = this->p2.homogen();
+	Vector4f p2PrimeHomo = transMat * p2Homo;
 	w = p2PrimeHomo[3];
 	this->p2 = Point(p2PrimeHomo[0] / w, p2PrimeHomo[1] / w, p2PrimeHomo[2] / w);
 
@@ -224,7 +224,7 @@ bool Triangle::inVoxel(Voxel v)
 	float trivert2[3] = { this->p1.x, this->p1.y, this->p1.z };
 	float trivert3[3] = { this->p2.x, this->p2.y, this->p2.z };
 
-	RowVector3f spatialMedian = (v.max.vector() + v.min.vector()) / 2.0f;
+	Vector3f spatialMedian = (v.max.vector() + v.min.vector()) / 2.0f;
 	float boxcenter[3] = { spatialMedian[0], spatialMedian[1], spatialMedian[2] };
 	float boxhalfsize[3] = { spatialMedian[0] - v.min.x, spatialMedian[1] - v.min.y, spatialMedian[2] - v.min.z };
 

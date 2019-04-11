@@ -1,20 +1,19 @@
 #pragma once
 #include "Point.h"
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class Plane
 {
 public:
 	Point p;
-	RowVector3f normal;
+	Vector3f normal;
 	float F;
 
 	Plane();
-	Plane(Point p, RowVector3f normal);
+	Plane(Point p, Vector3f normal);
 
-	void transform(Matrix<float, 4, 4, RowMajor> transMat);
+	void transform(Matrix4f transMat);
 
 	std::string toString();
 

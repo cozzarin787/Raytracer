@@ -57,17 +57,17 @@ bool Voxel::inVoxel(Voxel v)
 	return true;
 }
 
-void Voxel::transform(Matrix<float, 4, 4, RowMajor> transMat)
+void Voxel::transform(Matrix4f transMat)
 {
 	// Transform min point
-	RowVector4f minHomo = this->min.homogen();
-	RowVector4f minPrimeHomo = minHomo * transMat;
+	Vector4f minHomo = this->min.homogen();
+	Vector4f minPrimeHomo = transMat * minHomo;
 	float w = minPrimeHomo[3];
 	this->min = Point(minPrimeHomo[0] / w, minPrimeHomo[1] / w, minPrimeHomo[2] / w);
 
 	// Transform max point
-	RowVector4f maxHomo = this->max.homogen();
-	RowVector4f maxPrimeHomo = maxHomo * transMat;
+	Vector4f maxHomo = this->max.homogen();
+	Vector4f maxPrimeHomo = transMat * maxHomo;
 	w = maxPrimeHomo[3];
 	this->max = Point(maxPrimeHomo[0] / w, maxPrimeHomo[1] / w, maxPrimeHomo[2] / w);
 }

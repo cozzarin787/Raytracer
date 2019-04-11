@@ -9,8 +9,8 @@ Polygon::Polygon(Material* mat, std::vector<Point> v_list) : Object(mat)
 	Point p0 = vertices[0];
 	Point p1 = vertices[1];
 	Point p2 = vertices[2];
-	RowVector3f v1 = p1.vector() - p0.vector();
-	RowVector3f v2 = p2.vector() - p0.vector();
+	Vector3f v1 = p1.vector() - p0.vector();
+	Vector3f v2 = p2.vector() - p0.vector();
 	this->normal = (v1.cross(v2).normalized());
 	this->F = -this->normal[0] * p0.x - this->normal[1] * p0.y - this->normal[2] * p0.z;
 }
@@ -37,14 +37,14 @@ Object::intersectResult Polygon::intersect(Ray r)
 	Point inter = Point(xi, yi, zi);
 
 	// check if point of intersection lies within the boundaries of the polygon
-	RowVector3f A = RowVector3f(this->vertices[this->vertices.size() - 1].vector() - inter.vector()).normalized();
-	RowVector3f B = RowVector3f(this->vertices[0].vector() - inter.vector()).normalized();
+	Vector3f A = Vector3f(this->vertices[this->vertices.size() - 1].vector() - inter.vector()).normalized();
+	Vector3f B = Vector3f(this->vertices[0].vector() - inter.vector()).normalized();
 	float angleSum = acos(A.dot(B) / (A.norm() * B.norm())) * (180.0f / PI);
 
 	for (int i = 0; i < this->vertices.size()-1; i++)
 	{
-		A = RowVector3f(this->vertices[i].vector() - inter.vector()).normalized();
-		B = RowVector3f(this->vertices[i+1].vector() - inter.vector()).normalized();
+		A = Vector3f(this->vertices[i].vector() - inter.vector()).normalized();
+		B = Vector3f(this->vertices[i+1].vector() - inter.vector()).normalized();
 		angleSum += acos((A.dot(B))) * (180.0f / PI);
 	}
 
@@ -58,13 +58,13 @@ Object::intersectResult Polygon::intersect(Ray r)
 	}
 }
 
-void Polygon::transform(Matrix<float, 4, 4, RowMajor> transMat)
+void Polygon::transform(Matrix4f transMat)
 {
 	// Transform points of the polygon
 	for (int i = 0; i < this->vertices.size(); i++)
 	{
-		RowVector4f pHomo = this->vertices[i].homogen();
-		RowVector4f pPrimeHomo = pHomo * transMat;
+		Vector4f pHomo = this->vertices[i].homogen();
+		Vector4f pPrimeHomo = transMat * pHomo;
 		float w = pPrimeHomo[3];
 		this->vertices[i] = Point(pPrimeHomo[0] / w, pPrimeHomo[1] / w, pPrimeHomo[2] / w);
 	}
@@ -73,8 +73,8 @@ void Polygon::transform(Matrix<float, 4, 4, RowMajor> transMat)
 	Point p0 = vertices[0];
 	Point p1 = vertices[1];
 	Point p2 = vertices[2];
-	RowVector3f v1 = p1.vector() - p0.vector();
-	RowVector3f v2 = p2.vector() - p0.vector();
+	Vector3f v1 = p1.vector() - p0.vector();
+	Vector3f v2 = p2.vector() - p0.vector();
 	this->normal = (v1.cross(v2).normalized());
 
 	// Recalculate F

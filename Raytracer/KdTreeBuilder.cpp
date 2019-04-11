@@ -13,24 +13,24 @@ Plane KdTreeBuilder::getPartitionPlane(Voxel v)
 	// Alternate axis
 	this->i++;
 
-	RowVector3f normal;
+	Vector3f normal;
 	switch (this->i % 3)
 	{
 		case X_AXIS:
-			normal = RowVector3f(1, 0, 0);
+			normal = Vector3f(1, 0, 0);
 			break;
 		case Y_AXIS:
-			normal = RowVector3f(0, 1, 0);
+			normal = Vector3f(0, 1, 0);
 			break;
 		case Z_AXIS:
-			normal = RowVector3f(0, 0, 1);
+			normal = Vector3f(0, 0, 1);
 			break;
 		default:
-			normal = RowVector3f(1, 0, 0);
+			normal = Vector3f(1, 0, 0);
 			break;
 	}
 
-	RowVector3f spatialMedian = (v.max.vector() + v.min.vector()) / 2.0f;
+	Vector3f spatialMedian = (v.max.vector() + v.min.vector()) / 2.0f;
 	Point planePoint = Point(spatialMedian[0], spatialMedian[1], spatialMedian[2]);
 	return Plane(planePoint, normal);
 }

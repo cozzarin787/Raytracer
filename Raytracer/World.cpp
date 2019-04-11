@@ -95,18 +95,18 @@ int World::add(Object* o)
 	return (int) this->objectList.size() - 1;
 }
 
-int World::addLight(LightSource light)
+int World::addLight(LightSource* light)
 {
 	this->lightList.push_back(light);
 	return (int) this->lightList.size() - 1;
 }
 
-void World::transform(int index, Matrix<float, 4, 4, RowMajor> transMat)
+void World::transform(int index, Matrix4f transMat)
 {
 	objectList[index]->transform(transMat);
 }
 
-void World::transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat)
+void World::transformAllObjects(Matrix4f transMat)
 {
 	// Transform voxel wrapping object, as well as the object
 	for (voxelObjectWrapper vow : this->voxelObjectList)
@@ -114,19 +114,13 @@ void World::transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat)
 		vow.o->transform(transMat);
 		vow.v.transform(transMat);
 	}
-
-	// Transform objects
-	for (Object* o : this->objectList)
-	{
-		o->transform(transMat);
-	}
 }
 
-void World::transformAllLights(Matrix<float, 4, 4, RowMajor> transMat)
+void World::transformAllLights(Matrix4f transMat)
 {
 	for (int i = 0; i < this->lightList.size(); i++)
 	{
-		this->lightList[i].transform(transMat);
+		this->lightList[i]->transform(transMat);
 	}
 }
 
@@ -180,7 +174,7 @@ std::string World::toString()
 	for (int i = 0; i < this->lightList.size(); i++)
 	{
 		std::string str_i = std::to_string(i);
-		l_list += "   light" + str_i + "\n      " + this->lightList[i].toString();
+		l_list += "   light" + str_i + "\n      " + this->lightList[i]->toString();
 	}
 	return std::string("World\n" + o_list + "\n" + l_list);
 }

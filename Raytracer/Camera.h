@@ -5,8 +5,7 @@
 #include "KdInterior.h"
 #include "KdLeaf.h"
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class Camera
 {
@@ -20,11 +19,11 @@ private:
 
 public:
 	Point position;
-	RowVector3f lookat;
-	RowVector3f up;
-	Matrix<float, 4, 4, RowMajor> viewTransform;
+	Vector3f lookat;
+	Vector3f up;
+	Matrix4f viewTransform;
 
-	Camera(Point p, RowVector3f lookat, RowVector3f up);
+	Camera(Point p, Vector3f lookat, Vector3f up);
 
 	void render(World world);
 	void setImageDim(int w, int h);

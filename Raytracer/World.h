@@ -4,8 +4,7 @@
 #include "Ray.h"
 #include <vector>
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class World
 {
@@ -25,17 +24,17 @@ public:
 	Voxel totalBound;
 	std::vector<voxelObjectWrapper> voxelObjectList;
 	std::vector<Object*> objectList;
-	std::vector<LightSource> lightList;
+	std::vector<LightSource*> lightList;
 	Color background;
 
 	World();
 	World(Color background);
 
 	int add(Object* o);
-	int addLight(LightSource light);
-	void transform(int index, Matrix<float, 4, 4, RowMajor> transMat);
-	void transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat);
-	void transformAllLights(Matrix<float, 4, 4, RowMajor> transMat);
+	int addLight(LightSource* light);
+	void transform(int index, Matrix4f transMat);
+	void transformAllObjects(Matrix4f transMat);
+	void transformAllLights(Matrix4f transMat);
 	void calcWorldVoxel();
 	std::vector<Object::intersectResult> spawnRay(Ray r);
 

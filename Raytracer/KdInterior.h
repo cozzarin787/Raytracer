@@ -4,8 +4,6 @@
 #include "Voxel.h"
 #include <memory>
 
-using std::unique_ptr;
-
 class KdInterior : public KdNode
 {
 public:

@@ -2,8 +2,7 @@
 #include "Point.h"
 #include "Object.h"
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class Triangle : public Object
 {
@@ -15,7 +14,7 @@ public:
 	Triangle(Material* m, Point p0, Point p1, Point p2);
 
 	intersectResult intersect(Ray r);
-	void transform(Matrix<float, 4, 4, RowMajor> transMat);
+	void transform(Matrix4f transMat);
 	bool inVoxel(Voxel v);
 
 	std::string toString();
