@@ -27,6 +27,10 @@ Color Color::operator*(const float k)
 {
 	return Color(r * k, g * k, b * k);
 }
+Color Color::operator/(const float k)
+{
+    return Color(r / k, g / k, b / k);
+}
 std::string Color::toString()
 {
 	std::string red = std::to_string(this->r);
