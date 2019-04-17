@@ -6,7 +6,7 @@
 
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
-#define MAX_DEPTH 6
+#define MAX_DEPTH 2
 #define OUTPUT_FILENAME "test.png"
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up) {
