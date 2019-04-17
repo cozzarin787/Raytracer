@@ -12,7 +12,7 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	// Calculate Reflection Rays
 	for (int i = 0; i < this->S.size(); i++)
 	{
-		this->R.push_back(reflect(this->N, Ray(this->P, this->S[i])));
+		this->R.push_back(reflect(this->N, Ray(this->P, -1 * this->S[i])));
 	}
 
 	// Calculate Halfway Vectors to implement Phong-Blinn
