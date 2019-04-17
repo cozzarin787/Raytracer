@@ -80,7 +80,7 @@ int main()
 
 	// Add objects to world
 	// World world = World(Color(0.11765f, 0.56471f, 1));
-	World world = World(Color(160/250, 1.0, 7/250));
+	World world = World(Color(0.11765f, 0.56471f, 1));
 
 	int glassIndex = world.add(o1);
 	int mirrorIndex = world.add(o2);
@@ -90,7 +90,7 @@ int main()
 
 	// Add lights to world
 	int light1Index = world.addLight(l1);
-	int light2Index = world.addLight(l2);
+//	int light2Index = world.addLight(l2);
 
 	// translate, rotate, and scale world objects to taste
 	//world.transform(floorIndex, scalingMatrix);
