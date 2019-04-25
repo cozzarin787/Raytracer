@@ -1,4 +1,4 @@
-#include "Phong-Blinn.h"
+#include "Phong.h"
 
 Phong::Phong(Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight) : Material()
 {
@@ -47,7 +47,7 @@ Color Phong::illuminate(IntersectData interData)
 
 			// Specular
 			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
-			specular += (L_iC_s * pow(interData.H[i].dot(interData.N), this->k_e));
+			specular += (L_iC_s * pow(interData.R[i].direction.dot(interData.N), this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
 		specular = this->k_s * specular;

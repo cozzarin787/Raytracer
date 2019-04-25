@@ -4,7 +4,8 @@
 #include "Sphere.h"
 #include "Polygon.h"
 #include "Triangle.h"
-#include "Phong-Blinn.h"
+#include "PhongBlinn.h"
+#include "Phong.h"
 #include "Checkerboard.h"
 #define print(x) std::cout << x << std::endl;
 

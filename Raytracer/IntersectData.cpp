@@ -15,7 +15,7 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 		this->R.push_back(reflect(this->N, Ray(this->P, -1 * this->S[i])));
 	}
 
-	// Calculate Halfway Vectors to implement Phong-Blinn
+	// Calculate Halfway Vectors to implement PhongBlinn
 	for (int i = 0; i < this->S.size(); i++)
 	{
 		this->H.push_back((this->V + this->S[i]).normalized());
