@@ -90,6 +90,9 @@
     <ClCompile Include="Checkerboard.cpp">
       <Filter>Source Files\Lighting</Filter>
     </ClCompile>
+    <ClCompile Include="PhongBlinn.cpp">
+      <Filter>Source Files\Lighting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -135,6 +138,9 @@
       <Filter>Header Files\Aux Classes</Filter>
     </ClInclude>
     <ClInclude Include="Checkerboard.h">
+      <Filter>Header Files\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="PhongBlinn.h">
       <Filter>Header Files\Lighting</Filter>
     </ClInclude>
   </ItemGroup>

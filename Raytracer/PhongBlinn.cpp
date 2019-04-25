@@ -1,6 +1,6 @@
-#include "Phong.h"
+#include "PhongBlinn.h"
 
-Phong::Phong(Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight) : Material()
+PhongBlinn::PhongBlinn(Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight) : Material()
 {
 	this->k_a = ambient;	// ambient
 	this->k_d = diffuse;	// diffuse
@@ -10,7 +10,7 @@ Phong::Phong(Color objectColor, Color specColor, float ambient, float diffuse, f
 	this->C_s = specColor;  // specular color
 }
 
-Phong::Phong(float kr, float kt, Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight) : Material(kr, kt)
+PhongBlinn::PhongBlinn(float kr, float kt, Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight) : Material(kr, kt)
 {
 	this->k_a = ambient;	// ambient
 	this->k_d = diffuse;	// diffuse
@@ -20,7 +20,7 @@ Phong::Phong(float kr, float kt, Color objectColor, Color specColor, float ambie
 	this->C_s = specColor;  // specular color
 }
 
-Color Phong::illuminate(IntersectData interData)
+Color PhongBlinn::illuminate(IntersectData interData)
 {
 
 	std::vector<RowVector3f> L;
@@ -47,7 +47,7 @@ Color Phong::illuminate(IntersectData interData)
 
 			// Specular
 			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
-			specular += (L_iC_s * pow(interData.R[i].direction.dot(interData.N), this->k_e));
+			specular += (L_iC_s * pow(interData.H[i].dot(interData.N), this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
 		specular = this->k_s * specular;
@@ -56,7 +56,7 @@ Color Phong::illuminate(IntersectData interData)
 	return Color(totalRad[0], totalRad[1], totalRad[2]);
 }
 
-std::string Phong::toString()
+std::string PhongBlinn::toString()
 {
 	std::string s1 = std::to_string(this->k_a);
 	std::string s2 = std::to_string(this->k_d);
@@ -73,6 +73,6 @@ std::string Phong::toString()
 						s6 + "\n");
 }
 
-Phong::~Phong()
+PhongBlinn::~PhongBlinn()
 {
 }

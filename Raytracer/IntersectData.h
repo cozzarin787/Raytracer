@@ -9,8 +9,8 @@ class IntersectData
 public:
 	Point P;							// Point of Intersection
 	RowVector3f N;						// Normal Vector
-	std::vector<RowVector3f> S;			// Direction of incoming light
-	std::vector<RowVector3f> R;			// Perfect Mirror Reflection
+	std::vector<RowVector3f> S;			// Direction of light vectors
+	std::vector<Ray> R;					// Perfect Mirror Reflection
 	std::vector<RowVector3f> H;			// Halfway Between Viewing Dir and Light Dir
 	RowVector3f V;						// Viewing Direction
 	std::vector<LightSource> lights;	// List of Light Sources
