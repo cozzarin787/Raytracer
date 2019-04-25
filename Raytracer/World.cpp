@@ -104,6 +104,7 @@ int World::addLight(LightSource* light)
 void World::transform(int index, Matrix4f transMat)
 {
 	objectList[index]->transform(transMat);
+	this->voxelObjectList[index].v.transform(transMat);
 }
 
 void World::transformAllObjects(Matrix4f transMat)

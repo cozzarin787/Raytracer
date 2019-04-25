@@ -20,16 +20,13 @@ Camera::Camera(Point p, Vector3f lookat, Vector3f temp)
 
 	// construct view transform
 	Vector3f n = (lookat - p.vector()).normalized();
-
-	this->up = ((n.cross(temp)).cross(n)).normalized();
-
-	Vector3f u = (this->up.cross(n)).normalized();
+	Vector3f u = ((temp.normalized()).cross(n)).normalized();
 	Vector3f v = (n.cross(u)).normalized();
 
-	this->viewTransform.row(0) << u[0], v[0], n[0], -(p.vector().dot(u));
-	this->viewTransform.row(1) << u[1], v[1], n[1], -(p.vector().dot(v));
-	this->viewTransform.row(2) << u[2], v[2], n[2], -(p.vector().dot(n));
-	this->viewTransform.row(3) << 0, 0, 0, 1;
+	this->viewTransform << u[0], u[1], u[2], -(p.vector().dot(u)),
+						   v[0], v[1], v[2], -(p.vector().dot(v)),
+						   n[0], n[1], n[2], -(p.vector().dot(n)),
+						   0, 0, 0, 1;
 }
 
 void Camera::render(World world)
@@ -139,7 +136,7 @@ void Camera::render(World world)
 					// Check to see if shadow ray makes it to light without intersection
 					if (spatialFlag == 1)
 					{
-						if (treeBuilder.rayThroughTree(KDTree, shadowRays[index]).empty())
+						if ((treeBuilder.rayThroughTree(KDTree, shadowRays[index])).empty())
 						{
 							directLightVectors.push_back((shadowRays[index].direction));
 							directLights.push_back(world.lightList[index]);
