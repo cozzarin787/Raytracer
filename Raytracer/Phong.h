@@ -14,6 +14,7 @@ private:
 public:
 	Phong(Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight);
 	Phong(float kr, float kt, Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight);
+	Phong(float kr, float kt, float ni, Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight);
 
 	Color illuminate(IntersectData interData);
 	std::string toString();
