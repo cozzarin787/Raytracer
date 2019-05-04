@@ -57,7 +57,7 @@ void Camera::render(World world) {
     // transform world into camera coordinates
     world.transformAllObjects(this->viewTransform);
 
-    // transform lightsources into camera coordinates
+    // transform light sources into camera coordinates
     world.transformAllLights(this->viewTransform);
 
     // init pixelArray
@@ -83,8 +83,6 @@ void Camera::render(World world) {
 
             // Calculate Intersections with world objects
             std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
-
-            r.direction *= -1;
 
             int depth = 0;
             // TODO check to see if camera inside of any object of the world
