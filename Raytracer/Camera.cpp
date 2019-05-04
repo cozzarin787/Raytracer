@@ -8,7 +8,7 @@
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
 #define MAX_DEPTH 4
-#define OUTPUT_FILENAME "test.png"
+#define OUTPUT_FILENAME "test1.png"
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up) {
     this->position = p;
@@ -91,7 +91,7 @@ void Camera::render(World world) {
             Color radiance = trace(world, r, Color(0, 0, 0), intersectlist, &depth, false);
 
             // divide by depth to normalize the reflected rays
-            pixelArray[i][j] = radiance/ (depth + 1);
+            pixelArray[i][j] = radiance / ((depth + 1) * world.lightList.size());
 
             pxX += pXw;
         }

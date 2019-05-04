@@ -12,15 +12,15 @@
 #define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
-Color colorGlass = Color(1, 1, 1);
+Color colorGlass = Color(0, 0, 0);
 Color specColorGlass = Color(1, 1, 1);
-Phong matGlass = Phong(0.0f, 0.95f, 1.52f, colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
+Phong matGlass = Phong(0.0f, 0.95f, 1.0f, colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
 //Point centerGlass = Point(-0.121f, 1.014f, -4.724f);
 Point centerGlass = Point(-0.121f, 1.5, -4.724f);
 float radiusGlass = 1.2988f;
 
 // Mirror Sphere
-Color colorMirror = Color(1, 1, 1);
+Color colorMirror = Color(0, 0, 0);
 Color specColorMirror = Color(1, 1, 1);
 Phong matMirror = Phong(0.80f, 0.0f, colorMirror, specColorMirror, 0.0f, 0.70f, 0.30f, 10.0f);
 //Point centerMirror = Point(1.5f, 0.2f, -3.94f);
@@ -92,7 +92,7 @@ int main()
 
 	// Add lights to world
 	int light1Index = world.addLight(l1);
-//	int light2Index = world.addLight(l2);
+	int light2Index = world.addLight(l2);
 
 	// translate, rotate, and scale world objects to taste
 	//world.transform(floorIndex, scalingMatrix);
