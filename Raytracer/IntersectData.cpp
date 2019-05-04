@@ -1,6 +1,7 @@
 #include "IntersectData.h"
 
-IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3f> lightDirs, RowVector3f view, std::vector<LightSource> lightList, Color ambientLight)
+IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3f> lightDirs, RowVector3f view,
+        std::vector<LightSource> lightList, Color ambientLight, float ni, float nt, bool inside)
 {
 	this->P = p;							
 	this->N = normal;						
@@ -20,7 +21,22 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	{
 		this->H.push_back((this->V + this->S[i]).normalized());
 	}
-	
+
+	// Calculate Transmission Ray
+    for (int i = 0; i < this->S.size(); i++)
+    {
+        // inside -> outside
+        if(inside)
+        {
+            this->R.push_back(refract(this->N, Ray(this->P, -1 * this->S[i]), nt, ni));
+        }
+        // outside -> inside
+        else
+        {
+            this->R.push_back(refract(this->N, Ray(this->P, -1 * this->S[i]), ni, nt));
+        }
+
+    }
 }
 
 Ray IntersectData::reflect(RowVector3f normal, Ray r)
@@ -28,7 +44,24 @@ Ray IntersectData::reflect(RowVector3f normal, Ray r)
 	RowVector3f direction = (r.direction - (2 * normal * (r.direction.dot(normal)))).normalized();
 	return Ray(r.origin, direction);
 }
+Ray IntersectData::refract(RowVector3f normal, Ray r, float ni, float nt)
+{
+    RowVector3f direction = ni * ( r.direction - normal * (r.direction.dot(normal))) / nt;
+    float internalReflection = ( 1 - std::pow(ni, 2) * (1 - std::pow(r.direction.dot(normal), 2) ))/ std::pow(nt, 2);
+
+    if(internalReflection < 0)
+    {
+        this->totalInternalRefraction.push_back(true);
+        return reflect(normal, r);
+    }
+    else {
+        this->totalInternalRefraction.push_back(false);
+        return Ray(r.origin, direction + normal * std::sqrt(internalReflection));
+    }
+}
 
 IntersectData::~IntersectData()
 {
 }
+
+

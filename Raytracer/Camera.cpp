@@ -87,7 +87,8 @@ void Camera::render(World world) {
             r.direction *= -1;
 
             int depth = 0;
-            Color radiance = trace(world, r, Color(0, 0, 0), intersectlist, &depth);
+            // TODO check to see if camera inside of any object of the world
+            Color radiance = trace(world, r, Color(0, 0, 0), intersectlist, &depth, false);
 
             // divide by depth to normalize the reflected rays
             pixelArray[i][j] = radiance/ (depth + 1);
@@ -104,8 +105,7 @@ void Camera::render(World world) {
     generateImage(pixelArray, OUTPUT_FILENAME);
 }
 
-Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::intersectResult> intersectlist, int * depth) {
-//    Color radiance;
+Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::intersectResult> intersectlist, int * depth, bool inside) {
 
     Object::intersectResult interRes;
 
@@ -147,7 +147,7 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
 
         // Create IntersectData
         IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors,
-                                                r.direction, directLights, world.background);
+                                                r.direction, directLights, world.background, world.indexRefract, interRes.mat->indexRefract, inside);
 
         // Use illumination model for local illumination
         radiance = interRes.mat->illuminate(interData);
@@ -163,13 +163,23 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
                     // Overloaded operator '*' to multiply Color * scalar (--order matters--)
                     radiance =
                             radiance +
-                            trace(world, interData.R[i], radiance, intersectlistreflection, depth ) * interRes.mat->kr;
+                            trace(world, interData.R[i], radiance, intersectlistreflection, depth, false ) * interRes.mat->kr;
                 }
             }
 
             // Transmisive
             if (interRes.mat->kt > 0) {
-                // TODO
+                bool isRayInside;
+                for (int i = 0; i < interData.T.size(); i++)
+                {
+                    isRayInside = (interData.totalInternalRefraction[i]) ? inside : !inside;
+
+                    std::vector<Object::intersectResult> intersectlisttransmission = world.spawnRay(interData.T[i]);
+                    (*depth)++;
+
+                    radiance = radiance +
+                           trace(world, interData.T[i], radiance, intersectlisttransmission, depth, isRayInside ) * interRes.mat->kt;
+                }
             }
         }
         return radiance;

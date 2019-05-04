@@ -82,7 +82,6 @@ int main()
 	LightSource l2 = LightSource(lightPoint2, Color(1, 1, 1));
 
 	// Add objects to world
-	// World world = World(Color(0.11765f, 0.56471f, 1));
 	World world = World(Color(10 * 0.11765f, 10 * 0.56471f, 10));
 
 	int glassIndex = world.add(o1);

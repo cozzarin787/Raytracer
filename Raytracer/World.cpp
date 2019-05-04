@@ -2,14 +2,21 @@
 
 World::World()
 {
+    this->indexRefract = 1.0;
 	this->background = Color(0, 0, 0);
 }
 
 World::World(Color background)
 {
+    this->indexRefract = 1.0;
 	this->background = background;
 }
 
+World::World(Color background, float indexRefract)
+{
+    this->indexRefract = indexRefract;
+    this->background = background;
+}
 int World::add(Object* o)
 {
 	this->objectList.push_back(o);
