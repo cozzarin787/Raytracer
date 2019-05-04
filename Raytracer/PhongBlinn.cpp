@@ -43,11 +43,13 @@ Color PhongBlinn::illuminate(IntersectData interData)
 		{
 			// Diffuse
 			RowVector3f L_iC_o = L[i].array() * this->C_o.vector().array();
-			diffuse += (L_iC_o * (interData.S[i].dot(interData.N)));
+			float diffuseDot = interData.S[i].dot(interData.N);
+			diffuse += L_iC_o * ((diffuseDot < 0) ? 0.0f : diffuseDot);
 
 			// Specular
 			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
-			specular += (L_iC_s * pow(interData.H[i].dot(interData.N), this->k_e));
+			float specularDot = interData.H[i].dot(interData.N);
+			specular += (L_iC_s * pow((specularDot < 0) ? 0.0f : specularDot, this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
 		specular = this->k_s * specular;

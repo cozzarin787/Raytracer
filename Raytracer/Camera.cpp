@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "IntersectData.h"
 #include "Checkerboard.h"
+#include "TRReinhard.h"
 #include <lodepng.h>
 #include <iostream>
 
@@ -25,6 +26,31 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up) {
     this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
     this->viewTransform.row(2) << n[0], n[1], n[2], -1 * (p.vector().dot(n));
     this->viewTransform.row(3) << 0, 0, 0, 1;
+
+	// Set default tone reproduction operator
+	TRReinhard trop = TRReinhard(300);
+	this->TRop = &trop;
+}
+
+Camera::Camera(Point p, RowVector3f lookat, RowVector3f up, TROperator* trop)
+{
+	this->position = p;
+	this->lookat = lookat;
+	this->up = up;
+	// default value
+	this->focalLength = 1;
+
+	// construct view transform
+	RowVector3f n = lookat.normalized();
+	RowVector3f u = (up.cross(n)).normalized();
+	RowVector3f v = n.cross(u);
+
+	this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
+	this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
+	this->viewTransform.row(2) << n[0], n[1], n[2], -1 * (p.vector().dot(n));
+	this->viewTransform.row(3) << 0, 0, 0, 1;
+
+	this->TRop = trop;
 }
 
 void Camera::render(World world) {
@@ -73,28 +99,11 @@ void Camera::render(World world) {
     }
 
     // Tone Reproduction
-    // Find max radiance value
-    float maxRadiance = pixelArray[0][0].r;
-    for (int i = 0; i < this->imageHeightPx; i++) {
-        for (int j = 0; j < this->imageWidthPx; j++) {
-            if (pixelArray[i][j].r > maxRadiance) {
-                maxRadiance = pixelArray[i][j].r;
-            } else if (pixelArray[i][j].g > maxRadiance) {
-                maxRadiance = pixelArray[i][j].g;
-            } else if (pixelArray[i][j].b > maxRadiance) {
-                maxRadiance = pixelArray[i][j].b;
-            }
-        }
-    }
-
-    // Interpolate each radiance value to a 255 scale to create png
-    for (int i = 0; i < this->imageHeightPx; i++) {
-        for (int j = 0; j < this->imageWidthPx; j++) {
-            pixelArray[i][j].r = 255 * (pixelArray[i][j].r / maxRadiance);
-            pixelArray[i][j].g = 255 * (pixelArray[i][j].g / maxRadiance);
-            pixelArray[i][j].b = 255 * (pixelArray[i][j].b / maxRadiance);
-        }
-    }
+	this->TRop->reproduceTone(pixelArray);
+	//for (int i = 0; i < this->imageHeightPx; i++)
+	//	for (int j = 0; j < this->imageWidthPx; j++)
+	//		if (pixelArray[i][j].r || pixelArray[i][j].g || pixelArray[i][j].b > 255)
+	//			print(pixelArray[i][j].toString());
 
     generateImage(pixelArray, OUTPUT_FILENAME);
 }

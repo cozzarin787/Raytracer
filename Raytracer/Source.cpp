@@ -7,12 +7,14 @@
 #include "PhongBlinn.h"
 #include "Phong.h"
 #include "Checkerboard.h"
+#include "TRWard.h"
+#include "TRReinhard.h"
 #define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
 Color colorGlass = Color(1, 1, 0);
 Color specColorGlass = Color(1, 1, 1);
-Phong matGlass = Phong(colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
+Phong matGlass = Phong(0.0f, 0.0f, colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
 //Point centerGlass = Point(-0.121f, 1.014f, -4.724f);
 Point centerGlass = Point(-0.121f, 1.5, -4.724f);
 float radiusGlass = 1.2988f;
@@ -74,14 +76,14 @@ int main()
 	Object* o5 = &t2;
 
 	// Create LightSources
-	Point lightPoint1 = Point(-1.0f, 7.014f, -6.0f);
+	Point lightPoint1 = Point(2.0f, 7.014f, -6.0f);
 	Point lightPoint2 = Point(2.0f, 6.0f, -6.0f);
-	LightSource l1 = LightSource(lightPoint1, Color(1, 1, 1));
+	LightSource l1 = LightSource(lightPoint1, Color(100, 100, 100));
 	LightSource l2 = LightSource(lightPoint2, Color(1, 1, 1));
 
 	// Add objects to world
 	// World world = World(Color(0.11765f, 0.56471f, 1));
-	World world = World(Color(0.11765f, 0.56471f, 1));
+	World world = World(Color(10 * 0.11765f, 10 * 0.56471f, 10));
 
 	int glassIndex = world.add(o1);
 	int mirrorIndex = world.add(o2);
@@ -96,8 +98,12 @@ int main()
 	// translate, rotate, and scale world objects to taste
 	//world.transform(floorIndex, scalingMatrix);
 
+	TRWard trop = TRWard(300.0f);
+	TRReinhard trop2 = TRReinhard(300.0f);
+	TROperator* camTrop = &trop;
+
 	// Define camera
-	Camera c = Camera(Point(0, 0.941f, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0));
+	Camera c = Camera(Point(0, 0.941f, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0), camTrop);
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);

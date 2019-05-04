@@ -31,7 +31,7 @@ Color Phong::illuminate(IntersectData interData)
 
 	// Ambient
 	RowVector3f ambient = this->k_a * this->C_o.vector().array() * interData.ambientLight.vector().array();
-	
+
 	RowVector3f diffuse = RowVector3f(0, 0, 0);
 	RowVector3f specular = RowVector3f(0, 0, 0);
 
@@ -43,11 +43,13 @@ Color Phong::illuminate(IntersectData interData)
 		{
 			// Diffuse
 			RowVector3f L_iC_o = L[i].array() * this->C_o.vector().array();
-			diffuse += (L_iC_o * (interData.S[i].dot(interData.N)));
+			float diffuseDot = interData.S[i].dot(interData.N);
+			diffuse += L_iC_o * ((diffuseDot < 0) ? 0.0f : diffuseDot);
 
 			// Specular
 			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
-			specular += (L_iC_s * pow(interData.R[i].direction.dot(interData.N), this->k_e));
+			float specularDot = interData.R[i].direction.dot(interData.N);
+			specular += (L_iC_s * pow((specularDot < 0) ? 0.0f : specularDot, this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
 		specular = this->k_s * specular;

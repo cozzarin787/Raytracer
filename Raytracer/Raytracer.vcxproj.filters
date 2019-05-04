@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Scene">
       <UniqueIdentifier>{bc5dc9c3-e188-4035-a574-8e522f040c25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Tone Reproduction">
+      <UniqueIdentifier>{012ca6b6-c4df-429e-9a02-0a0eb0b1d833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tone Reproduction">
+      <UniqueIdentifier>{8938ddc6-7055-46ae-87a3-981a9eeb9887}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -93,6 +99,15 @@
     <ClCompile Include="PhongBlinn.cpp">
       <Filter>Source Files\Lighting</Filter>
     </ClCompile>
+    <ClCompile Include="TROperator.cpp">
+      <Filter>Source Files\Tone Reproduction</Filter>
+    </ClCompile>
+    <ClCompile Include="TRReinhard.cpp">
+      <Filter>Source Files\Tone Reproduction</Filter>
+    </ClCompile>
+    <ClCompile Include="TRWard.cpp">
+      <Filter>Source Files\Tone Reproduction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -142,6 +157,15 @@
     </ClInclude>
     <ClInclude Include="PhongBlinn.h">
       <Filter>Header Files\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="TRReinhard.h">
+      <Filter>Header Files\Tone Reproduction</Filter>
+    </ClInclude>
+    <ClInclude Include="TRWard.h">
+      <Filter>Header Files\Tone Reproduction</Filter>
+    </ClInclude>
+    <ClInclude Include="TROperator.h">
+      <Filter>Header Files\Tone Reproduction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
