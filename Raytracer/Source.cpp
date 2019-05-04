@@ -100,7 +100,7 @@ int main()
 
 	TRWard trop = TRWard(300.0f);
 	TRReinhard trop2 = TRReinhard(300.0f);
-	TROperator* camTrop = &trop;
+	TROperator* camTrop = &trop2;
 
 	// Define camera
 	Camera c = Camera(Point(0, 0.941f, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0), camTrop);
