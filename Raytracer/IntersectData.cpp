@@ -28,12 +28,12 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
         // inside -> outside
         if(inside)
         {
-            this->T.push_back(refract(this->N, Ray(this->P, -1 * this->V), nt, ni));
+            this->T.push_back(refract(this->N, Ray(this->P, this->V), nt, ni));
         }
         // outside -> inside
         else
         {
-            this->T.push_back(refract(this->N, Ray(this->P, -1 * this->V), ni, nt));
+            this->T.push_back(refract(this->N, Ray(this->P, this->V), ni, nt));
         }
 
     }
