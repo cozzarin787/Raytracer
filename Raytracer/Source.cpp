@@ -12,7 +12,7 @@
 #define print(x) std::cout << x << std::endl;
 
 // Glass Sphere
-Color colorGlass = Color(1, 1, 0);
+Color colorGlass = Color(1, 1, 1);
 Color specColorGlass = Color(1, 1, 1);
 Phong matGlass = Phong(0.0f, 0.95f, 1.52f, colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
 //Point centerGlass = Point(-0.121f, 1.014f, -4.724f);
