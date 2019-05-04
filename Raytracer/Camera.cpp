@@ -100,10 +100,6 @@ void Camera::render(World world) {
 
     // Tone Reproduction
 	this->TRop->reproduceTone(pixelArray);
-	//for (int i = 0; i < this->imageHeightPx; i++)
-	//	for (int j = 0; j < this->imageWidthPx; j++)
-	//		if (pixelArray[i][j].r || pixelArray[i][j].g || pixelArray[i][j].b > 255)
-	//			print(pixelArray[i][j].toString());
 
     generateImage(pixelArray, OUTPUT_FILENAME);
 }

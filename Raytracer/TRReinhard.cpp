@@ -17,7 +17,7 @@ void TRReinhard::reproduceTone(std::vector<std::vector<Color>> &pixelIntensities
 		for (int j = 0; j < pixelIntensities[i].size(); j++)
 		{
 			// convert pixel luminance to scene luminance
-			long double totalLum = 0.27f * pixelIntensities[i][j].r + 0.67f * pixelIntensities[i][j].g + 0.06f * pixelIntensities[i][j].b;
+			float totalLum = 0.27f * pixelIntensities[i][j].r + 0.67f * pixelIntensities[i][j].g + 0.06f * pixelIntensities[i][j].b;
 
 			// Calculate log luminance
 			avgLogLum += log10f(totalLum + epsilon);

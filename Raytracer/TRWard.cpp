@@ -13,36 +13,23 @@ TRWard::TRWard(float Ld_max) : TROperator()
 void TRWard::reproduceTone(std::vector<std::vector<Color>> &pixelIntensities)
 {
 	// Find average Log luminance of the pixels
-	float avgLogLum = 0.0f;
-
-	for (int i = 0; i < pixelIntensities.size(); i++)
-	{
-		for (int j = 0; j < pixelIntensities[i].size(); j++)
-		{
-			// convert pixel luminance to scene luminance
-			float totalLum = 0.27f * pixelIntensities[i][j].r + 0.67f * pixelIntensities[i][j].g + 0.06f * pixelIntensities[i][j].b;
-			
-			// Calculate log luminance
-			avgLogLum += log10f(totalLum + epsilon);
-		}
-	}
-
-	avgLogLum /= (float)(pixelIntensities.size() * pixelIntensities[0].size());
-	avgLogLum = powf(10.0f, avgLogLum);
+	int halfI = (int)(pixelIntensities.size() / 2);
+	int halfJ = (int)(pixelIntensities[0].size() / 2);
+	float L_wa = 0.27f * pixelIntensities[halfI][halfJ].r + 0.67f * pixelIntensities[halfI][halfJ].g + 0.06f * pixelIntensities[halfI][halfJ].b;
 
 	// Calculate sf using Ward's TR Operator
-	float n = (1.219f + powf((this->Ld_max / 2.0f), 0.4f));
-	float d = (1.219f + powf(avgLogLum, 0.4f));
-	float sf = (1.0f / this->Ld_max) * powf((n / d), 2.5f);
-	print(sf);
+	float n = (1.219f + powf((this->Ld_max / 4.0f), 0.4f));
+	float d = (1.219f + powf(L_wa, 0.4f));
+	float sf = powf((n / d), 2.5f);
+
 	// Apply sf to each RGB value of each pixel
 	for (int i = 0; i < pixelIntensities.size(); i++)
 	{
 		for (int j = 0; j < pixelIntensities[i].size(); j++)
 		{
-			pixelIntensities[i][j].r = (pixelIntensities[i][j].r * sf) * 255.0f;
-			pixelIntensities[i][j].g = (pixelIntensities[i][j].g * sf) * 255.0f;
-			pixelIntensities[i][j].b = (pixelIntensities[i][j].b * sf) * 255.0f;
+			pixelIntensities[i][j].r = (pixelIntensities[i][j].r * sf) * (1.0f / this->Ld_max) * 255.0f;
+			pixelIntensities[i][j].g = (pixelIntensities[i][j].g * sf) * (1.0f / this->Ld_max) * 255.0f;
+			pixelIntensities[i][j].b = (pixelIntensities[i][j].b * sf) * (1.0f / this->Ld_max) * 255.0f;
 		}
 	}
 }
