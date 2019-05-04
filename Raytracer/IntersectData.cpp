@@ -56,7 +56,7 @@ Ray IntersectData::refract(RowVector3f normal, Ray r, float ni, float nt)
     }
     else {
         this->totalInternalRefraction.push_back(false);
-        return Ray(r.origin, direction + normal * std::sqrt(internalReflection));
+        return Ray(r.origin, direction + (-1 * normal * std::sqrt(internalReflection)));
     }
 }
 
