@@ -48,6 +48,7 @@ Ray IntersectData::refract(RowVector3f normal, Ray r, float ni, float nt)
 {
     if(ni == nt)
     {
+		this->totalInternalRefraction.push_back(false);
         return r;
     }
     else
