@@ -168,16 +168,15 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
             // Transmisive
             if (interRes.mat->kt > 0) {
                 bool isRayInside;
-                for (int i = 0; i < interData.T.size(); i++)
-                {
-                    isRayInside = (interData.totalInternalRefraction[i]) ? inside : !inside;
 
-                    std::vector<Object::intersectResult> intersectlisttransmission = world.spawnRay(interData.T[i]);
-                    (*depth)++;
+                isRayInside = (interData.totalInternalRefraction) ? inside : !inside;
 
-                    radiance = radiance +
-                           trace(world, interData.T[i], radiance, intersectlisttransmission, depth, isRayInside ) * interRes.mat->kt;
-                }
+                std::vector<Object::intersectResult> intersectlisttransmission = world.spawnRay(interData.T);
+                (*depth)++;
+
+                radiance = radiance +
+                       trace(world, interData.T, radiance, intersectlisttransmission, depth, isRayInside ) * interRes.mat->kt;
+
             }
         }
         return radiance;

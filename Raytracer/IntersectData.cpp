@@ -23,20 +23,18 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
 	}
 
 	// Calculate Transmission Ray
-    for (int i = 0; i < this->S.size(); i++)
+    // inside -> outside
+    if(inside)
     {
-        // inside -> outside
-        if(inside)
-        {
-            this->T.push_back(refract(this->N, Ray(this->P, this->V), nt, ni));
-        }
-        // outside -> inside
-        else
-        {
-            this->T.push_back(refract(this->N, Ray(this->P, this->V), ni, nt));
-        }
-
+        this->T = refract(this->N, Ray(this->P, this->V), nt, ni);
     }
+    // outside -> inside
+    else
+    {
+        this->T = refract(this->N, Ray(this->P, this->V), ni, nt);
+    }
+
+
 }
 
 Ray IntersectData::reflect(RowVector3f normal, Ray r)
@@ -48,7 +46,7 @@ Ray IntersectData::refract(RowVector3f normal, Ray r, float ni, float nt)
 {
     if(ni == nt)
     {
-		this->totalInternalRefraction.push_back(false);
+		this->totalInternalRefraction = false;
         return r;
     }
     else
@@ -58,11 +56,11 @@ Ray IntersectData::refract(RowVector3f normal, Ray r, float ni, float nt)
 
         if(internalReflection < 0)
         {
-            this->totalInternalRefraction.push_back(true);
+            this->totalInternalRefraction = true;
             return reflect(-1 * normal, r);
         }
         else {
-            this->totalInternalRefraction.push_back(false);
+            this->totalInternalRefraction = false;
             return Ray(r.origin, direction + (-1 * normal) * std::sqrt(internalReflection));
         }
     }
