@@ -8,7 +8,7 @@
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
 #define MAX_DEPTH 4
-#define OUTPUT_FILENAME "test1.png"
+#define OUTPUT_FILENAME "test.png"
 
 Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
 {
@@ -89,7 +89,6 @@ void Camera::render(World world)
             std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
 
             int depth = 0;
-            // TODO check to see if camera inside of any object of the world
             Color radiance = trace(world, r, Color(0, 0, 0), intersectlist, &depth);
 
             // divide by depth to normalize the reflected rays
@@ -139,9 +138,9 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
 
         // Spawn shadow rays from P to all Light Sources
         std::vector<Ray> shadowRays;
-        for (int index = 0; index < world.lightList.size(); index++)
+        for (LightSource lightSource : world.lightList)
         {
-            RowVector3f shadowDir = (world.lightList[index].position.vector() - interRes.intersectPoint.vector()).normalized();
+            RowVector3f shadowDir = (lightSource.position.vector() - interRes.intersectPoint.vector()).normalized();
             shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
         }
 
@@ -159,7 +158,8 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
             else
             {
                 // check if all intersections of shadow ray hit transmissive objects
-                if(std::all_of(shadowintersectlist.begin(), shadowintersectlist.end(),[](Object::intersectResult& shadowrayintersect){return shadowrayintersect.mat->kt != 0;} ))
+                if(std::all_of(shadowintersectlist.begin(), shadowintersectlist.end(),
+                        [](Object::intersectResult& shadowrayintersect){return shadowrayintersect.mat->kt != 0;} ))
                 {
                     Color shadowraycolor = world.lightList[index].color;
                     for(Object::intersectResult& shadowrayintersect : shadowintersectlist )
@@ -176,7 +176,6 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
         IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors,
                                                 r.direction, directLights, world.background, world.indexRefract,
                                                 interRes.mat->indexRefract);
-
         // Use illumination model for local illumination
         radiance = interRes.mat->illuminate(interData);
 
@@ -185,16 +184,33 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
             // Reflective
             if (interRes.mat->kr > 0)
             {
-                for (const Ray& reflectionRay : interData.R)
+                for (const Ray& reflectionray : interData.R)
                 {
                     // Calculate Intersections with world objects
-                    std::vector<Object::intersectResult> intersectlistreflection = world.spawnRay(reflectionRay);
+                    std::vector<Object::intersectResult> intersectlistreflection;
+                    std::vector<Object::intersectResult> temp = world.spawnRay(reflectionray);
+
+                    if(temp.empty())
+                    {
+                        intersectlistreflection = temp;
+                    }
+                    else
+                    {
+                        for(const Object::intersectResult& reflectionrayintersect : temp)
+                        {
+                            if(reflectionrayintersect.mat->kt == 0)
+                            {
+                                intersectlistreflection.push_back(reflectionrayintersect);
+                            }
+                        }
+                    }
+
                     (*depth)++;
                     // Overloaded operator '+' to add Colors as r+r,g+g,b+b
                     // Overloaded operator '*' to multiply Color * scalar (--order matters--)
                     radiance =
                             radiance +
-                            trace(world, reflectionRay, radiance, intersectlistreflection, depth) * interRes.mat->kr;
+                            trace(world, reflectionray, radiance, intersectlistreflection, depth) * interRes.mat->kr;
                 }
             }
 
@@ -273,7 +289,8 @@ std::string Camera::toString()
     return result;
 }
 
-Camera::~Camera() {
+Camera::~Camera()
+{
 }
 
 // BUILD K-D TREE
