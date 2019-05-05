@@ -17,7 +17,6 @@ public:
 	RowVector3f V;						// Viewing Direction
 	std::vector<LightSource> lights;	// List of Light Sources
 	Color ambientLight;					// Ambient Background of the World
-    bool totalInternalReflection;
 
 	IntersectData(Point p, RowVector3f normal, std::vector<RowVector3f> lightDirs, RowVector3f view,
 	        std::vector<LightSource> lightList, Color ambientLight, float ni, float nt);

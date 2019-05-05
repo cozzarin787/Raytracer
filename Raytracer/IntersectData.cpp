@@ -27,28 +27,25 @@ IntersectData::IntersectData(Point p, RowVector3f normal, std::vector<RowVector3
     // inside -> outside
     if(r.direction.dot(this->N) < 0)
     {
-        this->T = refract(-1 * this->N, Ray(this->P, this->V), nt, ni);
+        this->T = refract(-1 * this->N, r, nt, ni);
     }
     // outside -> inside
     else
     {
-        this->T = refract(this->N, Ray(this->P, this->V), ni, nt);
+        this->T = refract(this->N, r, ni, nt);
     }
-
-
 }
 
-Ray IntersectData::reflect(RowVector3f normal, Ray r)
+Ray IntersectData::reflect(const RowVector3f normal, Ray r)
 {
 	RowVector3f direction = (r.direction - (2 * normal * (r.direction.dot(normal)))).normalized();
 	return Ray(r.origin, direction);
 }
 
-Ray IntersectData::refract(RowVector3f normal, Ray r, float ni, float nt)
+Ray IntersectData::refract(const RowVector3f normal, Ray r, float ni, float nt)
 {
     if(ni == nt)
     {
-		this->totalInternalReflection = false;
         return r;
     }
     else
@@ -58,11 +55,9 @@ Ray IntersectData::refract(RowVector3f normal, Ray r, float ni, float nt)
 
         if(internalReflection < 0)
         {
-            this->totalInternalReflection = true;
-            return reflect( normal, r);
+            return reflect(normal, r);
         }
         else {
-            this->totalInternalReflection = false;
             return Ray(r.origin, direction + normal * std::sqrtf(internalReflection));
         }
     }
