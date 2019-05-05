@@ -10,7 +10,8 @@
 #define MAX_DEPTH 4
 #define OUTPUT_FILENAME "test1.png"
 
-Camera::Camera(Point p, RowVector3f lookat, RowVector3f up) {
+Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
+{
     this->position = p;
     this->lookat = lookat;
     this->up = up;
@@ -53,7 +54,8 @@ Camera::Camera(Point p, RowVector3f lookat, RowVector3f up, TROperator* trop)
 	this->TRop = trop;
 }
 
-void Camera::render(World world) {
+void Camera::render(World world)
+{
     // transform world into camera coordinates
     world.transformAllObjects(this->viewTransform);
 
@@ -73,8 +75,10 @@ void Camera::render(World world) {
     float pxX = -1 * this->filmPlaneWidth / 2;
 
     // Create the array of pixels representing the rendered image of the world
-    for (int i = 0; i < this->imageHeightPx; i++) {
-        for (int j = 0; j < this->imageWidthPx; j++) {
+    for (int i = 0; i < this->imageHeightPx; i++)
+    {
+        for (int j = 0; j < this->imageWidthPx; j++)
+        {
             // Spawn Ray through the middle of a pixel
             Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
             Point cameraOrigin = Point(0, 0, 0);
@@ -103,21 +107,29 @@ void Camera::render(World world) {
     generateImage(pixelArray, OUTPUT_FILENAME);
 }
 
-Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::intersectResult> intersectlist, int * depth) {
-
+Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::intersectResult> intersectlist, int * depth)
+{
     Object::intersectResult interRes;
 
     // Find closest intersecting point
-    if (intersectlist.empty()) {
+    if (intersectlist.empty())
+    {
         // Background Color
         return world.background;
-    } else {
-        if (intersectlist.size() == 1) {
+    }
+    else
+    {
+        if (intersectlist.size() == 1)
+        {
             interRes = intersectlist[0];
-        } else {
+        }
+        else
+        {
             int omegaMinIndex = 0;
-            for (int index = 0; index < intersectlist.size(); index++) {
-                if (intersectlist[index].omega < omegaMinIndex) {
+            for (int index = 0; index < intersectlist.size(); index++)
+            {
+                if (intersectlist[index].omega < omegaMinIndex)
+                {
                     omegaMinIndex = index;
                 }
             }
@@ -127,46 +139,68 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
 
         // Spawn shadow rays from P to all Light Sources
         std::vector<Ray> shadowRays;
-        for (int index = 0; index < world.lightList.size(); index++) {
-            RowVector3f shadowDir = (world.lightList[index].position.vector() -
-                                     interRes.intersectPoint.vector()).normalized();
+        for (int index = 0; index < world.lightList.size(); index++)
+        {
+            RowVector3f shadowDir = (world.lightList[index].position.vector() - interRes.intersectPoint.vector()).normalized();
             shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
         }
 
         std::vector<RowVector3f> directLightVectors;
         std::vector<LightSource> directLights;
-        for (int index = 0; index < shadowRays.size(); index++) {
+        for (int index = 0; index < shadowRays.size(); index++)
+        {
             // Check to see if shadow ray makes it to light without intersection
-            if (world.spawnRay(shadowRays[index]).empty()) {
+            std::vector<Object::intersectResult> shadowintersectlist = world.spawnRay(shadowRays[index]);
+            if (shadowintersectlist.empty())
+            {
                 directLightVectors.push_back((shadowRays[index].direction));
                 directLights.push_back(world.lightList[index]);
+            }
+            else
+            {
+                // check if all intersections of shadow ray hit transmissive objects
+                if(std::all_of(shadowintersectlist.begin(), shadowintersectlist.end(),[](Object::intersectResult& shadowrayintersect){return shadowrayintersect.mat->kt != 0;} ))
+                {
+                    Color shadowraycolor = world.lightList[index].color;
+                    for(Object::intersectResult& shadowrayintersect : shadowintersectlist )
+                    {
+                        shadowraycolor = shadowraycolor * shadowrayintersect.mat->kt;
+                    }
+                    directLightVectors.push_back((shadowRays[index].direction));
+                    directLights.push_back(LightSource(world.lightList[index].position, shadowraycolor ));
+                }
             }
         }
 
         // Create IntersectData
         IntersectData interData = IntersectData(interRes.intersectPoint, interRes.normal, directLightVectors,
-                                                r.direction, directLights, world.background, world.indexRefract, interRes.mat->indexRefract);
+                                                r.direction, directLights, world.background, world.indexRefract,
+                                                interRes.mat->indexRefract);
 
         // Use illumination model for local illumination
         radiance = interRes.mat->illuminate(interData);
 
-        if (*depth < MAX_DEPTH) {
+        if (*depth < MAX_DEPTH)
+        {
             // Reflective
-            if (interRes.mat->kr > 0) {
-                for (int i = 0; i < interData.R.size(); i++) {
+            if (interRes.mat->kr > 0)
+            {
+                for (const Ray& reflectionRay : interData.R)
+                {
                     // Calculate Intersections with world objects
-                    std::vector<Object::intersectResult> intersectlistreflection = world.spawnRay(interData.R[i]);
+                    std::vector<Object::intersectResult> intersectlistreflection = world.spawnRay(reflectionRay);
                     (*depth)++;
                     // Overloaded operator '+' to add Colors as r+r,g+g,b+b
                     // Overloaded operator '*' to multiply Color * scalar (--order matters--)
                     radiance =
                             radiance +
-                            trace(world, interData.R[i], radiance, intersectlistreflection, depth) * interRes.mat->kr;
+                            trace(world, reflectionRay, radiance, intersectlistreflection, depth) * interRes.mat->kr;
                 }
             }
 
             // Transmissive
-            if (interRes.mat->kt > 0) {
+            if (interRes.mat->kt > 0)
+            {
 
                 std::vector<Object::intersectResult> intersectlisttransmission = world.spawnRay(interData.T);
                 (*depth)++;
@@ -180,13 +214,14 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
     }
 }
 
-
-void Camera::generateImage(std::vector<std::vector<Color>> pixelArray, const char *filename) {
+void Camera::generateImage(std::vector<std::vector<Color>> pixelArray, const char *filename)
+{
     unsigned width = this->imageWidthPx, height = this->imageHeightPx;
     std::vector<unsigned char> image;
     image.resize(width * height * 4);
     for (unsigned y = 0; y < height; y++)
-        for (unsigned x = 0; x < width; x++) {
+        for (unsigned x = 0; x < width; x++)
+        {
             image[4 * width * y + 4 * x + 0] = (unsigned char) pixelArray[y][x].r;
             image[4 * width * y + 4 * x + 1] = (unsigned char) pixelArray[y][x].g;
             image[4 * width * y + 4 * x + 2] = (unsigned char) pixelArray[y][x].b;
@@ -195,12 +230,14 @@ void Camera::generateImage(std::vector<std::vector<Color>> pixelArray, const cha
     lodepng::encode(filename, image, width, height);
 }
 
-void Camera::setImageDim(int w, int h) {
+void Camera::setImageDim(int w, int h)
+{
     this->imageHeightPx = h;
     this->imageWidthPx = w;
 }
 
-void Camera::setFilmPlaneDim(int fov, float aspect) {
+void Camera::setFilmPlaneDim(int fov, float aspect)
+{
     float fovRad = fov * (PI / 180.0f);
     float w = 2 * this->focalLength * tan(fovRad / 2);
     float h = w / aspect;
@@ -209,11 +246,13 @@ void Camera::setFilmPlaneDim(int fov, float aspect) {
     this->filmPlaneWidth = w;
 }
 
-void Camera::setFocalLength(float f) {
+void Camera::setFocalLength(float f)
+{
     this->focalLength = f;
 }
 
-std::string Camera::toString() {
+std::string Camera::toString()
+{
     std::string result = "Camera\n Postion\n   " + this->position.toString() + "\n";
     std::string x = std::to_string(this->lookat[0]);
     std::string y = std::to_string(this->lookat[1]);
