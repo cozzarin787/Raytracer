@@ -17,10 +17,10 @@ public:
 	RowVector3f V;						// Viewing Direction
 	std::vector<LightSource> lights;	// List of Light Sources
 	Color ambientLight;					// Ambient Background of the World
-    bool totalInternalRefraction;
+    bool totalInternalReflection;
 
 	IntersectData(Point p, RowVector3f normal, std::vector<RowVector3f> lightDirs, RowVector3f view,
-	        std::vector<LightSource> lightList, Color ambientLight, float ni, float nt, bool inside);
+	        std::vector<LightSource> lightList, Color ambientLight, float ni, float nt);
 
 	Ray reflect(RowVector3f normal, Ray r);
     Ray refract(RowVector3f normal, Ray r, float ni, float nt);
