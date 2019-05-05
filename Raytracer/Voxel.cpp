@@ -39,8 +39,14 @@ Voxel::intersectVoxel Voxel::intersect(Ray r)
 		tmax = tzmax;
 
 	// Ray intersects Voxel, return points a and b
-	Point a = Point(tmin, tymin, tzmin);
-	Point b = Point(tmax, tymax, tzmax);
+	float xi = r.origin.x + r.direction[0] * tmin;
+	float yi = r.origin.x + r.direction[1] * tmin;
+	float zi = r.origin.x + r.direction[2] * tmin;
+	Point a = Point(xi, yi, zi);
+	xi = r.origin.x + r.direction[0] * tmax;
+	yi = r.origin.x + r.direction[1] * tmax;
+	zi = r.origin.x + r.direction[2] * tmax;
+	Point b = Point(xi, yi, zi);
 
 	return Voxel::intersectVoxel(true, a, b);
 }

@@ -4,7 +4,7 @@ Ray::Ray(Point origin, Vector3f direction)
 {
 	this->origin = origin;
 	this->direction = direction.normalized();
-	this->invDir = -1 * this->direction;
+	this->invDir = Vector3f(1.0f / this->direction[0], 1.0f / this->direction[1], 1.0f / this->direction[2]);
 	this->invSign[0] = (this->invDir[0] < 0);
 	this->invSign[1] = (this->invDir[1] < 0);
 	this->invSign[2] = (this->invDir[2] < 0);

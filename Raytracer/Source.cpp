@@ -72,6 +72,8 @@ void createWorld()
 	Color specColorGlass = Color(1, 1, 1);
 	Phong matGlass = Phong(colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
 	Point centerGlass = Point(0.0f, 0.0f, 0.0f);
+	Point centerGlass2 = Point(0.0f, 2.5f, 0.0f);
+	Point centerGlass3 = Point(-3.0f, 0.0f, 0.0f);
 	float radiusGlass = 1.0f;
 
 	//Scaling Matrix
@@ -85,9 +87,13 @@ void createWorld()
 	Material* m1 = &matGlass;
 
 	Sphere sphereGlass = Sphere(m1, centerGlass, radiusGlass);
+	Sphere s2 = Sphere(m1, centerGlass2, radiusGlass);
+	Sphere s3 = Sphere(m1, centerGlass3, radiusGlass);
 
 	// Wrap objects in object pointers to induce polymorphism
 	Object* o1 = &sphereGlass;
+	Object* o2 = &s2;
+	Object* o3 = &s3;
 
 	// Create LightSources
 	Point lightPoint1 = Point(-6.0f, 3.0f, 0.0f);
@@ -97,6 +103,8 @@ void createWorld()
 	World world = World(Color(0.11765f, 0.56471f, 1));
 
 	int glassIndex = world.add(o1);
+	world.add(o2);
+	//world.add(o3);
 
 	// Translate object
 	//world.transform(glassIndex, scalingMatrix);
@@ -105,11 +113,11 @@ void createWorld()
 	int light1Index = world.addLight(&l1);
 
 	// Define camera 
-	Camera c = Camera(Point(0.0f, 0.0f, -6.0f), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
+	Camera c = Camera(Point(0.0f, 2.5f, -9.0f), Vector3f(0, 2.5f, 0), Vector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);
-	c.setSpatialDataStructure(0);
+	c.setSpatialDataStructure(1);
 
 	c.render(world);
 
@@ -253,7 +261,7 @@ void createBunnyScene()
 int main(void)
 {
 	//createBunnyScene();
-	createScene1();
-	//createWorld();
+	//createScene1();
+	createWorld();
 	return 0;
 }

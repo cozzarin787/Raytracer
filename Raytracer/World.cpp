@@ -110,7 +110,7 @@ void World::transform(int index, Matrix4f transMat)
 void World::transformAllObjects(Matrix4f transMat)
 {
 	// Transform voxel wrapping object, as well as the object
-	for (voxelObjectWrapper vow : this->voxelObjectList)
+	for (voxelObjectWrapper& vow : this->voxelObjectList)
 	{
 		vow.o->transform(transMat);
 		vow.v.transform(transMat);
