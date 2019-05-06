@@ -13,9 +13,11 @@ public:
 	std::vector<Object*> objectList;
 	std::vector<LightSource> lightList;
 	Color background;
+	float indexRefract;
 
 	World();
 	World(Color background);
+    World(Color background, float indexRefract);
 
 	int add(Object* o);
 	int addLight(LightSource light);

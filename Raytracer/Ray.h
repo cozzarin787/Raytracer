@@ -10,6 +10,7 @@ class Ray
 		Point origin;
 		RowVector3f direction;
 
+		Ray();
 		Ray(Point origin, RowVector3f directions);
 
 		std::string toString();

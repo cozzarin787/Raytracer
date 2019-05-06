@@ -20,6 +20,16 @@ PhongBlinn::PhongBlinn(float kr, float kt, Color objectColor, Color specColor, f
 	this->C_s = specColor;  // specular color
 }
 
+PhongBlinn::PhongBlinn(float kr, float kt, float ni, Color objectColor, Color specColor, float ambient, float diffuse, float specular, float specHighlight) : Material(kr, kt, ni)
+{
+	this->k_a = ambient;	// ambient
+	this->k_d = diffuse;	// diffuse
+	this->k_s = specular;	// specular
+	this->k_e = specHighlight;	// spec highlight
+	this->C_o = objectColor;  // object color
+	this->C_s = specColor;  // specular color
+}
+
 Color PhongBlinn::illuminate(IntersectData interData)
 {
 
