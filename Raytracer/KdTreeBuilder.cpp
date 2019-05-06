@@ -40,7 +40,7 @@ std::vector<World::voxelObjectWrapper> KdTreeBuilder::getObjectsInVoxel(Voxel v,
 	std::vector<World::voxelObjectWrapper> newList;
 	for (int i = 0; i < primitives.size(); i++)
 	{
-		if (primitives[i].v.inVoxel(v))
+		if (primitives[i].o->inVoxel(v))
 		{
 			newList.push_back(primitives[i]);
 		}

@@ -1,7 +1,7 @@
 #include "KdInterior.h"
 #include "KdLeaf.h"
 
-#define MAX_DEPTH 10
+#define MAX_DEPTH 20
 
 class KdTreeBuilder {
 	private:

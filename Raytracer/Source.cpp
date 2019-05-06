@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <math.h>
 
 #define print(x) std::cout << x << std::endl;
 
@@ -219,6 +220,20 @@ void createBunnyScene()
 {
 	std::vector<Triangle> bunny = makeStanfordBunny("bunny.obj");
 
+	// Rotation Matrix
+	Matrix4f rotationMatrix;
+	rotationMatrix.row(0) << cosf(3.14159f), 0, sinf(3.14159f), 0;
+	rotationMatrix.row(1) << 0, 1, 0, 0;
+	rotationMatrix.row(2) << -sinf(3.14159f), 0, cosf(3.14159f), 0;
+	rotationMatrix.row(3) << 0, 0, 0, 1;
+
+	// Translation Matrix
+	Matrix4f translationMatrix;
+	translationMatrix.row(0) << 1, 0, 0, -2;
+	translationMatrix.row(1) << 0, 1, 0, -9.75;
+	translationMatrix.row(2) << 0, 0, 1, 0;
+	translationMatrix.row(3) << 0, 0, 0, 1;
+	
 	//Scaling Matrix
 	Matrix4f scalingMatrix;
 	scalingMatrix.row(0) << 100.0f, 0, 0, 0;
@@ -226,9 +241,12 @@ void createBunnyScene()
 	scalingMatrix.row(2) << 0, 0, 100.0f, 0;
 	scalingMatrix.row(3) << 0, 0, 0, 1;
 
+	Matrix4f transform = translationMatrix * rotationMatrix * scalingMatrix;
+	print(transform);
+
 	// Create LightSources
-	Point lightPoint1 = Point(-1.0f, 5.014f, -4.0f);
-	LightSource l1 = LightSource(lightPoint1, Color(1, 1, 1));
+	Point lightPoint1 = Point(-1.0f, 6.014f, -40.0f);
+	LightSource l1 = LightSource(lightPoint1, Color(100, 100, 100));
 
 	// Add objects to world
 	World world = World(Color(0.11765f, 0.56471f, 1));
@@ -241,14 +259,15 @@ void createBunnyScene()
 	{
 		Object * o = &bunny[i];
 		int oIndex = world.add(o);
-		world.transform(oIndex, scalingMatrix);
+		world.transform(oIndex, transform);
 	}
 
 	// Define camera 
-	Camera c = Camera(Point(0, 0.1f, -12), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
+	Camera c = Camera(Point(0, 0.1f, -20), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);
+	c.setSpatialDataStructure(1);
 
 	c.render(world);
 
@@ -260,8 +279,8 @@ void createBunnyScene()
 
 int main(void)
 {
-	//createBunnyScene();
-	createScene1();
+	createBunnyScene();
+	//createScene1();
 	//createWorld();
 	return 0;
 }

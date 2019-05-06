@@ -141,6 +141,7 @@ bool Sphere::inVoxel(Voxel v)
 			{
 				return false;
 			}
+			d = d + (e * e);
 		}
 		else if ((e = this->center.vector()[i] - v.max.vector()[i]) > 0)
 		{
@@ -148,8 +149,8 @@ bool Sphere::inVoxel(Voxel v)
 			{
 				return false;
 			}
+			d = d + (e * e);
 		}
-		d = d + (e * e);
 	}
 
 	if (d > this->radius_sqr)

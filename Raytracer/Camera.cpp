@@ -51,7 +51,7 @@ void Camera::render(World world)
 		auto stop = high_resolution_clock::now();
 		auto duration = duration_cast<milliseconds>(stop - start);
 		print("\nK-D TREE BUILD TIME: ");
-		std::string s = std::to_string(duration.count()) + "milliseconds\n\n";
+		std::string s = std::to_string(duration.count()) + " milliseconds\n\n";
 		print(s);
 	}
 
@@ -169,8 +169,8 @@ void Camera::render(World world)
 
 	auto stop = high_resolution_clock::now();
 	auto duration = duration_cast<milliseconds>(stop - start);
-	print("\nK-D TREE TRAVERSAL TIME: ");
-	std::string s = std::to_string(duration.count()) + "milliseconds\n\n";
+	print("\nEXECUTION TIME: ");
+	std::string s = std::to_string(duration.count()) + " milliseconds\n\n";
 	print(s);
 
 	// Tone Reproduction
