@@ -201,7 +201,7 @@ void createScene1()
 	//int light2Index = world.addLight(&l2);
 
 	// Define camera 
-	Camera c = Camera(Point(-0.3, 7.9f, -11), Vector3f(-0.121f, 1.014f, -4.724f), Vector3f(0, 1, 0));
+	Camera c = Camera(Point(0, 0.941f, -10), Vector3f(0, 0, 1), Vector3f(0, 1, 0));
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);
@@ -261,7 +261,7 @@ void createBunnyScene()
 int main(void)
 {
 	//createBunnyScene();
-	//createScene1();
-	createWorld();
+	createScene1();
+	//createWorld();
 	return 0;
 }

@@ -22,7 +22,7 @@ Voxel::intersectVoxel Voxel::intersect(Ray r)
 	tymax = (bounds[1 - r.invSign[1]].y - r.origin.y) * r.invDir[1];
 
 	if ((tmin > tymax) || (tymin > tmax))
-		return false;
+		return Voxel::intersectVoxel(false);
 	if (tymin > tmin)
 		tmin = tymin;
 	if (tymax < tmax)
@@ -32,22 +32,47 @@ Voxel::intersectVoxel Voxel::intersect(Ray r)
 	tzmax = (bounds[1 - r.invSign[2]].z - r.origin.z) * r.invDir[2];
 
 	if ((tmin > tzmax) || (tzmin > tmax))
-		return false;
+		return Voxel::intersectVoxel(false);
 	if (tzmin > tmin)
 		tmin = tzmin;
 	if (tzmax < tmax)
 		tmax = tzmax;
 
 	// Ray intersects Voxel, return points a and b
-	float xi = r.origin.x + r.direction[0] * tmin;
-	float yi = r.origin.x + r.direction[1] * tmin;
-	float zi = r.origin.x + r.direction[2] * tmin;
-	Point a = Point(xi, yi, zi);
-	xi = r.origin.x + r.direction[0] * tmax;
-	yi = r.origin.x + r.direction[1] * tmax;
-	zi = r.origin.x + r.direction[2] * tmax;
-	Point b = Point(xi, yi, zi);
+	float xi, yi, zi;
+	Point a, b;
 
+	if (tmin < 0 && tmax < 0)
+	{
+		return Voxel::intersectVoxel(false);
+	}
+	else if (tmin < 0)
+	{
+		xi = r.origin.x + r.direction[0] * tmax;
+		yi = r.origin.x + r.direction[1] * tmax;
+		zi = r.origin.x + r.direction[2] * tmax;
+		b = Point(xi, yi, zi);
+		a = r.origin;
+	}
+	else if (tmax < 0)
+	{
+		xi = r.origin.x + r.direction[0] * tmin;
+		yi = r.origin.x + r.direction[1] * tmin;
+		zi = r.origin.x + r.direction[2] * tmin;
+		b = Point(xi, yi, zi);
+		a = r.origin;
+	}
+	else
+	{
+		xi = r.origin.x + r.direction[0] * tmax;
+		yi = r.origin.x + r.direction[1] * tmax;
+		zi = r.origin.x + r.direction[2] * tmax;
+		b = Point(xi, yi, zi);
+		xi = r.origin.x + r.direction[0] * tmin;
+		yi = r.origin.x + r.direction[1] * tmin;
+		zi = r.origin.x + r.direction[2] * tmin;
+		a = Point(xi, yi, zi);
+	}
 	return Voxel::intersectVoxel(true, a, b);
 }
 
