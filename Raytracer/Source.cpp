@@ -279,8 +279,8 @@ void createBunnyScene()
 
 int main(void)
 {
-	createBunnyScene();
-	//createScene1();
+	//createBunnyScene();
+	createScene1();
 	//createWorld();
 	return 0;
 }

@@ -36,7 +36,6 @@ Object::intersectResult Sphere::intersect(Ray r)
 	
 	Point intersectPoints[2];
 	Point closest;
-	Point furthest;
 	Vector3f normals[2];
 
 	if (roots < 0)
@@ -82,18 +81,10 @@ Object::intersectResult Sphere::intersect(Ray r)
 				if (temp < omega && temp > epsilon)
 				{
 					omega = temp;
-					furthest = Point(closest.x, closest.y, closest.z);
 					xi = x0 + dx * omega;
 					yi = y0 + dy * omega;
 					zi = z0 + dz * omega;
 					closest = Point(xi, yi, zi);
-				}
-				else
-				{
-					xi = x0 + dx * omega;
-					yi = y0 + dy * omega;
-					zi = z0 + dz * omega;
-					furthest = Point(xi, yi, zi);
 				}
 			}
 		}
@@ -108,7 +99,6 @@ Object::intersectResult Sphere::intersect(Ray r)
 
 	}
 	intersectPoints[0] = closest;
-	intersectPoints[1] = furthest;
 	for (Point p : intersectPoints)
 	{
 		int i = 0;
