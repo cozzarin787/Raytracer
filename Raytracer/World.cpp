@@ -35,7 +35,7 @@ int World::add(Object* o)
 
 		std::vector<Point> vertices = { t->p0, t->p1, t->p2 };
 
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			if (vertices[i].x < min.x) min.x = vertices[i].x;
 			if (vertices[i].y < min.y) min.y = vertices[i].y;
