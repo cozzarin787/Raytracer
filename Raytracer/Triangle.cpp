@@ -294,7 +294,7 @@ std::string Triangle::toString()
 {
 	std::string p0 = this->p0.toString();
 	std::string p1 = this->p1.toString();
-	std::string p2 = this->p1.toString();
+	std::string p2 = this->p2.toString();
 	std::string m = this->mat->toString();
 	return std::string("Triangle\n Material: " + m + "\n p0: " + p0 + "\n p1: " + p1 + "\n p2: " + p2);
 }

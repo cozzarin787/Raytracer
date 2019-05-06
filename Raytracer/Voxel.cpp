@@ -101,6 +101,15 @@ void Voxel::transform(Matrix4f transMat)
 	Vector4f maxPrimeHomo = transMat * maxHomo;
 	w = maxPrimeHomo[3];
 	this->max = Point(maxPrimeHomo[0] / w, maxPrimeHomo[1] / w, maxPrimeHomo[2] / w);
+
+	// Transform bounds
+	for (int i = 0; i < 2; i++)
+	{
+		Vector4f boundHomo = this->bounds[i].homogen();
+		Vector4f boundPrimeHomo = transMat * boundHomo;
+		float w = boundPrimeHomo[3];
+		this->bounds[i] = Point(boundPrimeHomo[0] / w, boundPrimeHomo[1] / w, boundPrimeHomo[2] / w);
+	}
 }
 
 std::string Voxel::toString()
