@@ -36,8 +36,7 @@ Camera::Camera(Point p, Vector3f lookat, Vector3f temp)
 						   0, 0, 0, 1;
 
 	// Set default tone reproduction operator
-	TRReinhard trop = TRReinhard(300);
-	this->TRop = &trop;
+	this->TRop = new TRReinhard(300);
 }
 
 Camera::Camera(Point p, Vector3f lookat, Vector3f temp, TROperator* trop)
