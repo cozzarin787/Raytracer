@@ -50,7 +50,7 @@ std::vector<World::voxelObjectWrapper> KdTreeBuilder::getObjectsInVoxel(Voxel v,
 
 KdNode* KdTreeBuilder::getNode(Voxel v, std::vector<World::voxelObjectWrapper> primitives, int depth)
 {
-	if (primitives.size() <= 1 || depth == MAX_DEPTH)
+	if (primitives.size() <= 4 || depth == MAX_DEPTH)
 	{
 		KdNode* retNode = new KdLeaf(primitives);
 		return retNode;
