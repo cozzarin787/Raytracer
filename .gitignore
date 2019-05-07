@@ -263,7 +263,6 @@ __pycache__/
 *.pyc
 
 # Clion CMake
-CMakeLists.txt
 Raytracer/cmake-build-debug/
 
 Raytracer/lodepng.*
