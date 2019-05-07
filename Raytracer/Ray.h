@@ -13,7 +13,7 @@ class Ray
 		int invSign[3];
 
 		Ray();
-		Ray(Point origin, RowVector3f directions);
+		Ray(Point origin, Vector3f directions);
 
 		std::string toString();
 

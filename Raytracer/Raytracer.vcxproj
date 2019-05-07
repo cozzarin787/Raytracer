@@ -139,6 +139,7 @@
     <ClCompile Include="TROperator.cpp" />
     <ClCompile Include="TRReinhard.cpp" />
     <ClCompile Include="TRWard.cpp" />
+    <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>

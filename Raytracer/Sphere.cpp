@@ -36,7 +36,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 	
 	Point closest;
 	//Point furthest;
-	RowVector3f normal;
+	Vector3f normal;
 
 	if (roots < 0)
 	{
@@ -98,7 +98,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 		}
 
 	}
-	normal = RowVector3f(xi - xc, yi - yc, zi - zc).normalized();
+	normal = Vector3f(xi - xc, yi - yc, zi - zc).normalized();
 	
 	return intersectResult(true, omega, this->mat, closest, normal);
 }

@@ -52,12 +52,12 @@ Color Phong::illuminate(IntersectData interData)
 		for (int i = 0; i < interData.lights.size(); i++)
 		{
 			// Diffuse
-			RowVector3f L_iC_o = L[i].array() * this->C_o.vector().array();
+			Vector3f L_iC_o = L[i].array() * this->C_o.vector().array();
 			float diffuseDot = interData.S[i].dot(interData.N);
 			diffuse += L_iC_o * ((diffuseDot < 0) ? 0.0f : diffuseDot);
 
 			// Specular
-			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
+			Vector3f L_iC_s = L[i].array() * this->C_s.vector().array();
 			float specularDot = interData.R[i].direction.dot(interData.N);
 			specular += (L_iC_s * pow((specularDot < 0) ? 0.0f : specularDot, this->k_e));
 		}

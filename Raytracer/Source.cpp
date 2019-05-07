@@ -17,6 +17,8 @@
 
 #define print(x) std::cout << x << std::endl;
 
+float kC = 1.0f / 3.0f;
+
 std::vector<Triangle> makeStanfordBunny(std::string fileName)
 {
 	std::vector<Point> vertices;
@@ -57,7 +59,7 @@ std::vector<Triangle> makeStanfordBunny(std::string fileName)
 			int p0, p1, p2;
 			iss >> f >> p0 >> p1 >> p2;
 
-			Color c = Color(0.7, 0.7, 0.7);
+			Color c = Color(0.7f, 0.7f, 0.7f);
 			Color cSpec = Color(1, 1, 1);
 			Material* mt = new Phong(c, cSpec, 0.0f, 0.75f, 0.25f, 100.0f);
 
@@ -156,38 +158,38 @@ void createWorld()
 void createScene1()
 {
 	// Glass Sphere
-	Color colorGlass = Color(1, 1, 0);
+	Color colorGlass = Color(0.11765f, 0.56471f, 1.0f);
 	Color specColorGlass = Color(1, 1, 1);
-	Phong matGlass = Phong(colorGlass, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
+	Phong matGlass = Phong(0.0f, 0.40f, 1.05f, colorGlass * kC, specColorGlass, 0.0f, 0.75f, 0.25f, 100.0f);
 	Point centerGlass = Point(-0.121f, 1.5f, -4.724f);
 	float radiusGlass = 1.2988f;
 
-// Mirror Sphere
-Color colorMirror = Color(0.11765f, 0.56471f, 1.0f);
-Color specColorMirror = Color(1, 1, 1);
-Phong matMirror = Phong(0.80f, 0.0f, colorMirror * kC, specColorMirror, 0.0f, 0.70f, 0.30f, 10.0f);
-//Point centerMirror = Point(1.5f, 0.2f, -3.94f);
-Point centerMirror = Point(1.5f, 0.7f, -2.94f);
-float radiusMirror = 1.11f;
+	// Mirror Sphere
+	Color colorMirror = Color(0.11765f, 0.56471f, 1.0f);
+	Color specColorMirror = Color(1, 1, 1);
+	Phong matMirror = Phong(0.0f, 0.95f, 1.05f, colorMirror * kC, specColorMirror, 0.0f, 0.70f, 0.30f, 10.0f);
+	//Point centerMirror = Point(1.5f, 0.2f, -3.94f);
+	Point centerMirror = Point(1.5f, 0.7f, -2.94f);
+	float radiusMirror = 1.11f;
 
-//Floor
-Color colorFloor = Color(1, 0, 0);
-Color specColorFloor = Color(1, 1, 1);
-Phong matFloor = Phong(colorFloor, specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
-std::vector<Point> floorVertices{Point(-0.85f, -0.5f, 1), Point(-1, -0.5f, 10), Point(2, -0.5f, 10), Point(2, -0.5f, 1)};
+	//Floor
+	Color colorFloor = Color(1, 0, 0);
+	Color specColorFloor = Color(1, 1, 1);
+	Phong matFloor = Phong(colorFloor, specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+	std::vector<Point> floorVertices{Point(-0.85f, -0.5f, 1), Point(-1, -0.5f, 10), Point(2, -0.5f, 10), Point(2, -0.5f, 1)};
 
-//Checker Board Triangles
-Color color1 = Color(1, 1, 0);
-Color color2 = Color(1, 0, 0);
-Checkerboard matTri = Checkerboard(color1, color2, Point(0,0,0), Point(0,0,1), Point(1,0,1), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
-Point p0 = Point(-2.7f, -1, -10);
-Point p1 = Point(-2.7f, -1, 20);
-Point p2 = Point(9, -1, 20);
+	//Checker Board Triangles
+	Color color1 = Color(1, 1, 0);
+	Color color2 = Color(1, 0, 0);
+	Checkerboard matTri = Checkerboard(color1, color2, Point(0,0,0), Point(0,0,1), Point(1,0,1), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+	Point p0 = Point(-2.7f, -1, -10);
+	Point p1 = Point(-2.7f, -1, 20);
+	Point p2 = Point(9, -1, 20);
 
-Checkerboard matTri2 = Checkerboard(color1, color2, Point(1, 0, 1), Point(1, 0, 0), Point(0, 0, 0), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
-Point p3 = Point(9, -1, 20);
-Point p4 = Point(9, -1, -10);
-Point p5 = Point(-2.7f, -1, -10);
+	Checkerboard matTri2 = Checkerboard(color1, color2, Point(1, 0, 1), Point(1, 0, 0), Point(0, 0, 0), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+	Point p3 = Point(9, -1, 20);
+	Point p4 = Point(9, -1, -10);
+	Point p5 = Point(-2.7f, -1, -10);
 
 	//Scaling Matrix
 	Matrix4f scalingMatrix;
@@ -214,7 +216,7 @@ Point p5 = Point(-2.7f, -1, -10);
 	Object* o5 = &t2;
 
 	// Create LightSources
-	Point lightPoint1 = Point(2.0f, 7.014f, -6.0f);
+	Point lightPoint1 = Point(-2.0f, 6.014f, -10.0f);
 	Point lightPoint2 = Point(2.0f, 6.0f, -6.0f);
 	LightSource l1 = LightSource(lightPoint1, Color(100, 100, 100));
 	LightSource l2 = LightSource(lightPoint2, Color(1, 1, 1));
@@ -240,7 +242,7 @@ Point p5 = Point(-2.7f, -1, -10);
 
 //    0, 0.941f, -10
 //    -0.121f, 1.5, -4.724f
-	Camera c = Camera(Point(0, 0.941f, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0), camTrop);
+	Camera c = Camera(Point(0, 0.941f, -10), Vector3f(0, 0, 1), Vector3f(0, 1, 0), camTrop);
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);

@@ -102,9 +102,6 @@
     <ClCompile Include="KdNode.cpp">
       <Filter>Source Files\Accelerated Structures</Filter>
     </ClCompile>
-    <ClCompile Include="Voxel.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="KdInterior.cpp">
       <Filter>Source Files\Accelerated Structures</Filter>
     </ClCompile>
@@ -128,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="TRWard.cpp">
       <Filter>Source Files\Tone Reproduction</Filter>
+    </ClCompile>
+    <ClCompile Include="Voxel.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

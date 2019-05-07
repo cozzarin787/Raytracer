@@ -25,8 +25,8 @@ public:
 	Vector3f up;
 	Matrix4f viewTransform;
 
-	Camera(Point p, RowVector3f lookat, RowVector3f up);
-	Camera(Point p, RowVector3f lookat, RowVector3f up, TROperator* trop);
+	Camera(Point p, Vector3f lookat, Vector3f up);
+	Camera(Point p, Vector3f lookat, Vector3f up, TROperator* trop);
 
 	void render(World world);
 	Color trace(World world, Ray r, Color radiance, std::vector<Object::intersectResult> intersectlist, int * depth);

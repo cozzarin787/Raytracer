@@ -116,7 +116,7 @@ Color Checkerboard::illuminate(IntersectData interData)
 			diffuse += (L_iC_o * (interData.S[i].dot(interData.N)));
 
 			// Specular
-			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
+			Vector3f L_iC_s = L[i].array() * this->C_s.vector().array();
 			specular += (L_iC_s * pow(interData.R[i].direction.dot(interData.V), this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
