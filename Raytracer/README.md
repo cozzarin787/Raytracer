@@ -1,88 +1,81 @@
-# Project Title
+# RayTracer
 
-One Paragraph of project description goes here
+This was a semester long project for the Global Illumination (CSCI-711) course at RIT. The objective was to develop a 
+RayTracer in C++11 from scratch in order to render Whitted's famous inter-reflecting spheres.
+
+![alt text](https://blogs.nvidia.com/wp-content/uploads/2018/07/sphckbd_35mm.jpg)
+
+The project was divided in 7 Checkpoints:
+1. Setting the Scene
+2. Raytracing Framework
+3. Basic Shading
+4. Procedural Shading
+5. Reflection
+6. Refraction
+7. Tone Reproduction
+
+The output of each Checkpoint is Whitted's spheres.
+
+A KD-Tree was implemented as the acceleration structure of the RayTracer. 
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Download the following software to be able to run the project.
 
-```
-Give examples
-```
+#### Windows
+- [Visual Studio 17](https://visualstudio.microsoft.com/)
+    - [Nuget](https://www.nuget.org/) - Download with Visual Studio Installer 
+
+#### macOS
+- [CLion](https://www.jetbrains.com/clion/)
+- [HomeBrew](https://brew.sh/)
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+Download or clone the code
 ```
-Give the example
+git clone https://github.com/cozzarin787/Raytracer.git
 ```
 
-And repeat
+#### Windows
+1. Open Visual Studio 2017
+2. Click on `Open Project/Solution`
+3. Select the `RayTracer.sln` file inside the `/RayTracer` directory 
+4. Right click on the solution
+5. Click on `Manage Nuget Packages...`
+6. Install `Eigen` & `LodePNG`
 
-```
-until finished
-```
+The project should be ready to run at this point. 
+Running the program should render Whitted's spheres inside the `/RayTracer/RayTracer` directory.
 
-End with an example of getting some data out of the system or using it for a little demo
+#### macOS
+1. Download [lodepng.cpp]() & [lodepng.h]() into the project directory with all the other C++ files
+2. Install `Eigen`
+    ```
+    brew install eigen
+    ```
+3. Open CLion
+4. Select Open and choose the project directory `/RayTracer`
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+The `CMakeLists.txt` file should load the configuration. In case it doesn't just select it.
+The project should be ready to run at this point. 
+Running the program should render Whitted's spheres inside the `/RayTracer/cmake-build-debug` directory.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+For the versions available, see the [tags on this repository](https://github.com/cozzarin787/Raytracer/tags). 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Jacob Cozzarin** <[cozzarin787](https://github.com/cozzarin787)>
+* **Pablo Ordorica** <[pablordoricaw](https://github.com/pablordoricaw)>
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* **Prof. Joe Geigel** <[jmg](https://www.cs.rit.edu/~jmg/#welcome)> - For teaching the course and all his help throughout the project
 
