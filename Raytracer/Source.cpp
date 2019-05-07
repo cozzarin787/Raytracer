@@ -13,62 +13,53 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <iostream>
+#include <algorithm>
+#include <iterator>
 #include <math.h>
+
+using namespace std;
 
 #define print(x) std::cout << x << std::endl;
 
 float kC = 1.0f / 3.0f;
 
-std::vector<Triangle> makeStanfordBunny(std::string fileName)
+std::vector<Triangle> readObj(std::string fileName)
 {
 	std::vector<Point> vertices;
-	std::vector<Triangle> bunny;
-	int numVertices;
-	int numTriangles;
-	int i = 1;
+	std::vector<Triangle> obj;
 
 	std::ifstream inFile(fileName);
 	std::string line;
 	
-	// skip first line
-	std::getline(inFile, line);
-	
 	while (std::getline(inFile, line))
 	{
-		std::istringstream iss(line);
-		if (i == 1)
+		istringstream iss(line);
+		vector<string> tokens{ istream_iterator<string>{iss},
+					  istream_iterator<string>{} };
+		if (!tokens.size() < 1)
 		{
-			std::string hashtag, vertex, count, eq;
-			iss >> hashtag >> vertex >> count >> eq >> numVertices;
-		}
-		else if (i == 2)
-		{
-			std::string hashtag, face, count, eq;
-			iss >> hashtag >> face >> count >> eq >> numTriangles;
-		}
-		else if (i < numVertices + 3)
-		{
-			std::string v;
-			float x, y, z;
-			iss >> v >> x >> y >> z;
-			vertices.push_back(Point(x, y, z));
-		}
-		else
-		{
-			std::string f;
-			int p0, p1, p2;
-			iss >> f >> p0 >> p1 >> p2;
+			if (tokens[0] == "v" || tokens[0] == "vn" || tokens[0] == "vt")
+			{
+				vertices.push_back(Point(stof(tokens[1]), stof(tokens[2]), stof(tokens[3])));
+			}
+			else if (tokens[0] == "f")
+			{
+				Color c = Color(0.7f, 0.7f, 0.7f);
+				Color cSpec = Color(1, 1, 1);
+				Material* mt = new Phong(c, cSpec, 0.0f, 0.75f, 0.25f, 100.0f);
 
-			Color c = Color(0.7f, 0.7f, 0.7f);
-			Color cSpec = Color(1, 1, 1);
-			Material* mt = new Phong(c, cSpec, 0.0f, 0.75f, 0.25f, 100.0f);
+				std::string delimiter = "/";
+				int p0 = stoi(tokens[1].substr(0, tokens[1].find(delimiter)));
+				int p1 = stoi(tokens[2].substr(0, tokens[2].find(delimiter)));
+				int p2 = stoi(tokens[3].substr(0, tokens[3].find(delimiter)));
 
-			bunny.push_back(Triangle(mt, vertices[p0-1], vertices[p1-1], vertices[p2-1]));
+				obj.push_back(Triangle(mt, vertices[p0 - 1], vertices[p1 - 1], vertices[p2 - 1]));
+			}
 		}
-		i++;
 	}
 	
-	return bunny;
+	return obj;
 }
 
 void createWorld()
@@ -258,7 +249,7 @@ void createScene1()
 
 void createBunnyScene()
 {
-	std::vector<Triangle> bunny = makeStanfordBunny("bunny.obj");
+	std::vector<Triangle> bunny = readObj("bunny.obj");
 
 	// Rotation Matrix
 	Matrix4f rotationMatrix;
@@ -318,7 +309,7 @@ void createBunnyScene()
 
 void createDragonScene()
 {
-	std::vector<Triangle> bunny = makeStanfordBunny("bunny.obj");
+	std::vector<Triangle> bunny = readObj("dragon.obj");
 
 	// Rotation Matrix
 	Matrix4f rotationMatrix;
