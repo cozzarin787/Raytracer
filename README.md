@@ -21,12 +21,7 @@ The output of each Checkpoint is Whitted's spheres and can be found in their cor
 
 A sneak peak of the results of checkpoints 2-7 is shown below:
 
-<img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-2/Raytrace_Assn_2.png?token=AEYCRY5QYMNDATRHGNUPHG243JFT4" width="257"/>
-<img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-3/Checkpoint%203.png?token=AEYCRY5CXPOLVD7JSH4BFIC43JGLM" width="257"/>
-<img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-3/Extra_Phong-Blinn.png?token=AEYCRY6G2XAVOPOHBISIQSS43JGHE" width="257"/>
-<img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-5/Checkpoint_5.png?token=AEYCRYYD2DPGFTHYAFV5Q3C43JGOG" width="257"/>
-<img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-7/100_lumin_Ward.png?token=AEYCRY4BSKQLD6PPGOE4XJS43JGR2" width="257"/>
-<img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-6/kt_1.0.png?token=AEYCRYY7AKX4BHT5EXTUCCC43JGTS" width="257"/>
+<img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-2/Raytrace_Assn_2.png?token=AEYCRY5QYMNDATRHGNUPHG243JFT4" width="257"/> <img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-3/Checkpoint%203.png?token=AEYCRY5CXPOLVD7JSH4BFIC43JGLM" width="257"/> <img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-3/Extra_Phong-Blinn.png?token=AEYCRY6G2XAVOPOHBISIQSS43JGHE" width="257"/> <img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-5/Checkpoint_5.png?token=AEYCRYYD2DPGFTHYAFV5Q3C43JGOG" width="257"/> <img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-7/100_lumin_Ward.png?token=AEYCRY4BSKQLD6PPGOE4XJS43JGR2" width="257"/> <img src="https://raw.githubusercontent.com/cozzarin787/Raytracer/master/checkpoints/Raytrace-Assn-6/kt_1.0.png?token=AEYCRYY7AKX4BHT5EXTUCCC43JGTS" width="257"/>
 
 ## Getting Started
 
