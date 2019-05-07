@@ -127,6 +127,7 @@
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="PhongBlinn.cpp" />
     <ClCompile Include="Phong.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Point.cpp" />
@@ -135,7 +136,9 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="Voxel.cpp" />
+    <ClCompile Include="TROperator.cpp" />
+    <ClCompile Include="TRReinhard.cpp" />
+    <ClCompile Include="TRWard.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +153,7 @@
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="PhongBlinn.h" />
     <ClInclude Include="Phong.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Point.h" />
@@ -158,6 +162,9 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Voxel.h" />
+    <ClInclude Include="TROperator.h" />
+    <ClInclude Include="TRReinhard.h" />
+    <ClInclude Include="TRWard.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

@@ -261,3 +261,9 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# Clion CMake
+CMakeLists.txt
+Raytracer/cmake-build-debug/
+
+Raytracer/lodepng.*

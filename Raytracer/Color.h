@@ -14,8 +14,10 @@ class Color
 		Color();
 		Color(float r, float g, float b);
 
-		Vector3f vector();
-
+		RowVector3f vector();
+		Color operator+(const Color & other);
+		Color operator*(const float k);
+        Color operator/(const float k);
 		std::string toString();
 
 		~Color();

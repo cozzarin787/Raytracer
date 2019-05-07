@@ -19,6 +19,18 @@ Vector3f Color::vector()
 	return Vector3f(this->r, this->g, this->b);
 }
 
+Color Color::operator+(const Color& other)
+{
+	return Color(r + other.r, g + other.g, b + other.b);
+}
+Color Color::operator*(const float k)
+{
+	return Color(r * k, g * k, b * k);
+}
+Color Color::operator/(const float k)
+{
+    return Color(r / k, g / k, b / k);
+}
 std::string Color::toString()
 {
 	std::string red = std::to_string(this->r);

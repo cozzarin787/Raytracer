@@ -34,9 +34,9 @@ Object::intersectResult Sphere::intersect(Ray r)
 	float omega;
 	float xi, yi, zi;
 	
-	Point intersectPoints[2];
 	Point closest;
-	Vector3f normals[2];
+	//Point furthest;
+	RowVector3f normal;
 
 	if (roots < 0)
 	{
@@ -98,14 +98,9 @@ Object::intersectResult Sphere::intersect(Ray r)
 		}
 
 	}
-	intersectPoints[0] = closest;
-	for (Point p : intersectPoints)
-	{
-		int i = 0;
-		normals[i++] = Vector3f(xi - xc, yi - yc, zi - zc).normalized();
-	}
+	normal = RowVector3f(xi - xc, yi - yc, zi - zc).normalized();
 	
-	return intersectResult(true, omega, this->mat, intersectPoints[0], normals[0]);
+	return intersectResult(true, omega, this->mat, closest, normal);
 }
 
 void Sphere::transform(Matrix4f transMat)

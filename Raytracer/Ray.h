@@ -12,7 +12,8 @@ class Ray
 		Vector3f invDir;
 		int invSign[3];
 
-		Ray(Point origin, Vector3f directions);
+		Ray();
+		Ray(Point origin, RowVector3f directions);
 
 		std::string toString();
 

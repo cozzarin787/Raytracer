@@ -1,11 +1,14 @@
-#include "Camera.h"
 #include <iostream>
+#include "Camera.h"
 #include "lodepng.h"
 #include "Sphere.h"
 #include "Polygon.h"
 #include "Triangle.h"
+#include "PhongBlinn.h"
 #include "Phong.h"
 #include "Checkerboard.h"
+#include "TRWard.h"
+#include "TRReinhard.h"
 
 #include <string>
 #include <sstream>
@@ -159,26 +162,32 @@ void createScene1()
 	Point centerGlass = Point(-0.121f, 1.5f, -4.724f);
 	float radiusGlass = 1.2988f;
 
-	// Mirror Sphere
-	Color colorMirror = Color(0, 0, 1);
-	Color specColorMirror = Color(1, 1, 1);
-	Phong matMirror = Phong(colorMirror, specColorMirror, 0.0f, 0.70f, 0.30f, 10.0f);
-	Point centerMirror = Point(1.5f, 0.7f, -2.94f);
-	float radiusMirror = 1.11f;
-	
-	//Checker Board Triangles
-	Color color1 = Color(1, 1, 0);
-	Color color2 = Color(1, 0, 0);
-	Color specColorFloor = Color(1, 1, 1);
-	Checkerboard matTri = Checkerboard(color1, color2, Point(0, 0, 0), Point(0, 0, 1), Point(1, 0, 1), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
-	Point p0 = Point(-2.7f, -1, -10);
-	Point p1 = Point(-2.7f, -1, 20);
-	Point p2 = Point(9, -1, 20);
+// Mirror Sphere
+Color colorMirror = Color(0.11765f, 0.56471f, 1.0f);
+Color specColorMirror = Color(1, 1, 1);
+Phong matMirror = Phong(0.80f, 0.0f, colorMirror * kC, specColorMirror, 0.0f, 0.70f, 0.30f, 10.0f);
+//Point centerMirror = Point(1.5f, 0.2f, -3.94f);
+Point centerMirror = Point(1.5f, 0.7f, -2.94f);
+float radiusMirror = 1.11f;
 
-	Checkerboard matTri2 = Checkerboard(color1, color2, Point(1, 0, 1), Point(1, 0, 0), Point(0, 0, 0), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
-	Point p3 = Point(9, -1, 20);
-	Point p4 = Point(9, -1, -10);
-	Point p5 = Point(-2.7f, -1, -10);
+//Floor
+Color colorFloor = Color(1, 0, 0);
+Color specColorFloor = Color(1, 1, 1);
+Phong matFloor = Phong(colorFloor, specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+std::vector<Point> floorVertices{Point(-0.85f, -0.5f, 1), Point(-1, -0.5f, 10), Point(2, -0.5f, 10), Point(2, -0.5f, 1)};
+
+//Checker Board Triangles
+Color color1 = Color(1, 1, 0);
+Color color2 = Color(1, 0, 0);
+Checkerboard matTri = Checkerboard(color1, color2, Point(0,0,0), Point(0,0,1), Point(1,0,1), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+Point p0 = Point(-2.7f, -1, -10);
+Point p1 = Point(-2.7f, -1, 20);
+Point p2 = Point(9, -1, 20);
+
+Checkerboard matTri2 = Checkerboard(color1, color2, Point(1, 0, 1), Point(1, 0, 0), Point(0, 0, 0), specColorFloor, 0.0f, 1.0f, 0.0f, 1.0f);
+Point p3 = Point(9, -1, 20);
+Point p4 = Point(9, -1, -10);
+Point p5 = Point(-2.7f, -1, -10);
 
 	//Scaling Matrix
 	Matrix4f scalingMatrix;
@@ -205,13 +214,13 @@ void createScene1()
 	Object* o5 = &t2;
 
 	// Create LightSources
-	Point lightPoint1 = Point(-2.0f, 5.014f, -10.0f);
-	Point lightPoint2 = Point(2.0f, 1.0f, -10.0f);
-	LightSource l1 = LightSource(lightPoint1, Color(1, 1, 1));
+	Point lightPoint1 = Point(2.0f, 7.014f, -6.0f);
+	Point lightPoint2 = Point(2.0f, 6.0f, -6.0f);
+	LightSource l1 = LightSource(lightPoint1, Color(100, 100, 100));
 	LightSource l2 = LightSource(lightPoint2, Color(1, 1, 1));
 
 	// Add objects to world
-	World world = World(Color(0.11765f, 0.56471f, 1));
+	World world = World(Color(10 * 0.11765f, 10 * 0.56471f, 10));
 
 	int glassIndex = world.add(o1);
 	int mirrorIndex = world.add(o2);
@@ -223,8 +232,15 @@ void createScene1()
 	int light1Index = world.addLight(&l1);
 	//int light2Index = world.addLight(&l2);
 
-	// Define camera 
-	Camera c = Camera(Point(0, 0.941f, -10), Vector3f(0,0,1), Vector3f(0, 1, 0));
+	TRWard trop = TRWard(300.0f);
+	TRReinhard trop2 = TRReinhard(300.0f);
+	TROperator* camTrop = &trop2;
+
+	// Define camera
+
+//    0, 0.941f, -10
+//    -0.121f, 1.5, -4.724f
+	Camera c = Camera(Point(0, 0.941f, -10), RowVector3f(0, 0, 1), RowVector3f(0, 1, 0), camTrop);
 	c.setFocalLength(1);
 	c.setFilmPlaneDim(60, (4 / 3.0f));
 	c.setImageDim(512, 384);
