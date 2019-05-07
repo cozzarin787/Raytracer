@@ -54,6 +54,10 @@ std::vector<Triangle> readObj(std::string fileName)
 				int p1 = stoi(tokens[2].substr(0, tokens[2].find(delimiter)));
 				int p2 = stoi(tokens[3].substr(0, tokens[3].find(delimiter)));
 
+				p0 = (p0 < 0) ? -1 * p0 : p0;
+				p1 = (p1 < 0) ? -1 * p1 : p1;
+				p2 = (p2 < 0) ? -1 * p2 : p2;
+
 				obj.push_back(Triangle(mt, vertices[p0 - 1], vertices[p1 - 1], vertices[p2 - 1]));
 			}
 		}
