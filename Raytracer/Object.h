@@ -1,11 +1,11 @@
 #pragma once
 #include "Material.h"
 #include "Ray.h"
+#include "Voxel.h"
 
 #define epsilon 0.001f
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class Object
 {
@@ -18,7 +18,7 @@ public:
 		float omega;
 		Material* mat;
 		Point intersectPoint;
-		RowVector3f normal;
+		Vector3f normal;
 
 		intersectResult()
 		{};
@@ -28,7 +28,7 @@ public:
 			isIntersection = i;
 		};
 
-		intersectResult(bool i, float o, Material* m, Point p, RowVector3f v)
+		intersectResult(bool i, float o, Material* m, Point p, Vector3f v)
 		{
 			isIntersection = i;
 			omega = o;
@@ -41,7 +41,8 @@ public:
 	Object(Material* mat);
 
 	virtual intersectResult intersect(Ray r) = 0;
-	virtual void transform(Matrix<float, 4, 4, RowMajor> transMat) = 0;
+	virtual void transform(Matrix4f transMat) = 0;
+	virtual bool inVoxel(Voxel v) = 0;
 
 	virtual std::string toString() = 0;
 

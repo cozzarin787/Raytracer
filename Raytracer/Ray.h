@@ -2,16 +2,18 @@
 #include "Point.h"
 #include <Eigen/Dense>
 
-using Eigen::RowVector3f;
+using Eigen::Vector3f;
 
 class Ray
 {
 	public:
 		Point origin;
-		RowVector3f direction;
+		Vector3f direction;
+		Vector3f invDir;
+		int invSign[3];
 
 		Ray();
-		Ray(Point origin, RowVector3f directions);
+		Ray(Point origin, Vector3f directions);
 
 		std::string toString();
 

@@ -2,8 +2,7 @@
 #include "Object.h"
 #include "Ray.h"
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class Sphere : public Object
 {
@@ -15,7 +14,8 @@ public:
 	Sphere(Material* mat, Point center, float radius);
 
 	intersectResult intersect(Ray r);
-	void transform(Matrix<float, 4, 4, RowMajor> transMat);
+	void transform(Matrix4f transMat);
+	bool inVoxel(Voxel v);
 
 	std::string toString();
 

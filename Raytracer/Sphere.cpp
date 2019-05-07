@@ -36,7 +36,7 @@ Object::intersectResult Sphere::intersect(Ray r)
 	
 	Point closest;
 	//Point furthest;
-	RowVector3f normal;
+	Vector3f normal;
 
 	if (roots < 0)
 	{
@@ -81,19 +81,11 @@ Object::intersectResult Sphere::intersect(Ray r)
 				if (temp < omega && temp > epsilon)
 				{
 					omega = temp;
-					//furthest = Point(closest.x, closest.y, closest.z);
 					xi = x0 + dx * omega;
 					yi = y0 + dy * omega;
 					zi = z0 + dz * omega;
 					closest = Point(xi, yi, zi);
 				}
-				//else
-				//{
-				//	xi = x0 + dx * omega;
-				//	yi = y0 + dy * omega;
-				//	zi = z0 + dz * omega;
-				//	furthest = Point(xi, yi, zi);
-				//}
 			}
 		}
 		if (omega < 0)
@@ -106,18 +98,52 @@ Object::intersectResult Sphere::intersect(Ray r)
 		}
 
 	}
-	normal = RowVector3f(xi - xc, yi - yc, zi - zc).normalized();
+	normal = Vector3f(xi - xc, yi - yc, zi - zc).normalized();
 	
 	return intersectResult(true, omega, this->mat, closest, normal);
 }
 
-void Sphere::transform(Matrix<float, 4, 4, RowMajor> transMat)
+void Sphere::transform(Matrix4f transMat)
 {
 	// Transform center of sphere
-	RowVector4f centerHomo = this->center.homogen();
-	RowVector4f centerPrimeHomo = transMat * centerHomo.transpose();
+	Vector4f centerHomo = this->center.homogen();
+	Vector4f centerPrimeHomo = transMat * centerHomo;
 	float w = centerPrimeHomo[3];
 	this->center = Point(centerPrimeHomo[0] / w, centerPrimeHomo[1] / w, centerPrimeHomo[2] / w);
+}
+
+bool Sphere::inVoxel(Voxel v)
+{
+	float d = 0.0f;
+
+	for (int i = 0; i < 3; i++)
+	{
+		float e = this->center.vector()[i] - v.min.vector()[i];
+		
+		if (e < 0)
+		{
+			if (e < -this->radius)
+			{
+				return false;
+			}
+			d = d + (e * e);
+		}
+		else if ((e = this->center.vector()[i] - v.max.vector()[i]) > 0)
+		{
+			if (e > this->radius)
+			{
+				return false;
+			}
+			d = d + (e * e);
+		}
+	}
+
+	if (d > this->radius_sqr)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 std::string Sphere::toString()

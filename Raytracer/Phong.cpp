@@ -33,17 +33,17 @@ Phong::Phong(float kr, float kt, float ni, Color objectColor, Color specColor, f
 Color Phong::illuminate(IntersectData interData)
 {
 
-	std::vector<RowVector3f> L;
+	std::vector<Vector3f> L;
 	for (int i = 0; i < interData.lights.size(); i++)
 	{
-		L.push_back(interData.lights[i].color.vector());
+		L.push_back(interData.lights[i]->color.vector());
 	}
 
 	// Ambient
-	RowVector3f ambient = this->k_a * this->C_o.vector().array() * interData.ambientLight.vector().array();
-
-	RowVector3f diffuse = RowVector3f(0, 0, 0);
-	RowVector3f specular = RowVector3f(0, 0, 0);
+	Vector3f ambient = this->k_a * this->C_o.vector().array() * interData.ambientLight.vector().array();
+	
+	Vector3f diffuse = Vector3f(0, 0, 0);
+	Vector3f specular = Vector3f(0, 0, 0);
 
 	// If you can see light from point of intersection:
 	if (!interData.lights.empty())
@@ -52,19 +52,19 @@ Color Phong::illuminate(IntersectData interData)
 		for (int i = 0; i < interData.lights.size(); i++)
 		{
 			// Diffuse
-			RowVector3f L_iC_o = L[i].array() * this->C_o.vector().array();
+			Vector3f L_iC_o = L[i].array() * this->C_o.vector().array();
 			float diffuseDot = interData.S[i].dot(interData.N);
 			diffuse += L_iC_o * ((diffuseDot < 0) ? 0.0f : diffuseDot);
 
 			// Specular
-			RowVector3f L_iC_s = L[i].array() * this->C_s.vector().array();
+			Vector3f L_iC_s = L[i].array() * this->C_s.vector().array();
 			float specularDot = interData.R[i].direction.dot(interData.N);
 			specular += (L_iC_s * pow((specularDot < 0) ? 0.0f : specularDot, this->k_e));
 		}
 		diffuse = this->k_d * diffuse;
 		specular = this->k_s * specular;
 	}
-	RowVector3f totalRad = ambient + diffuse + specular;
+	Vector3f totalRad = ambient + diffuse + specular;
 	return Color(totalRad[0], totalRad[1], totalRad[2]);
 }
 

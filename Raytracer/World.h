@@ -4,14 +4,27 @@
 #include "Ray.h"
 #include <vector>
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class World
 {
 public:
+	struct voxelObjectWrapper
+	{
+		Object* o;
+		Voxel v;
+
+		voxelObjectWrapper(Object* object, Voxel voxel)
+		{
+			this->o = object;
+			this->v = voxel;
+		};
+	};
+	
+	Voxel totalBound;
+	std::vector<voxelObjectWrapper> voxelObjectList;
 	std::vector<Object*> objectList;
-	std::vector<LightSource> lightList;
+	std::vector<LightSource*> lightList;
 	Color background;
 	float indexRefract;
 
@@ -20,10 +33,11 @@ public:
     World(Color background, float indexRefract);
 
 	int add(Object* o);
-	int addLight(LightSource light);
-	void transform(int index, Matrix<float, 4, 4, RowMajor> transMat);
-	void transformAllObjects(Matrix<float, 4, 4, RowMajor> transMat);
-	void transformAllLights(Matrix<float, 4, 4, RowMajor> transMat);
+	int addLight(LightSource* light);
+	void transform(int index, Matrix4f transMat);
+	void transformAllObjects(Matrix4f transMat);
+	void transformAllLights(Matrix4f transMat);
+	void calcWorldVoxel();
 	std::vector<Object::intersectResult> spawnRay(Ray r);
 
 	std::string toString();

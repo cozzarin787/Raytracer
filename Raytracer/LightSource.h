@@ -3,8 +3,7 @@
 #include "Color.h"
 #include <Eigen/Dense>
 
-using Eigen::Matrix;
-using Eigen::RowMajor;
+using Eigen::Matrix4f;
 
 class LightSource
 {
@@ -14,7 +13,9 @@ public:
 
 	LightSource(Point position, Color c);
 
-	void transform(Matrix<float, 4, 4, RowMajor> transMat);
+	void transform(Matrix4f transMat);
+
+	std::string toString();
 
 	~LightSource();
 };

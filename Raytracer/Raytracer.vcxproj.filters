@@ -43,6 +43,12 @@
     <Filter Include="Source Files\Tone Reproduction">
       <UniqueIdentifier>{8938ddc6-7055-46ae-87a3-981a9eeb9887}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Accelerated Structures">
+      <UniqueIdentifier>{e329c8fb-34c6-452d-bfc3-34b4e374d992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Accelerated Structures">
+      <UniqueIdentifier>{9ba359b6-03ed-4d1b-805a-afcd18a7fecd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -93,6 +99,18 @@
     <ClCompile Include="IntersectData.cpp">
       <Filter>Source Files\Aux Classes</Filter>
     </ClCompile>
+    <ClCompile Include="KdNode.cpp">
+      <Filter>Source Files\Accelerated Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="KdInterior.cpp">
+      <Filter>Source Files\Accelerated Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="KdLeaf.cpp">
+      <Filter>Source Files\Accelerated Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="KdTreeBuilder.cpp">
+      <Filter>Source Files\Accelerated Structures</Filter>
+    </ClCompile>
     <ClCompile Include="Checkerboard.cpp">
       <Filter>Source Files\Lighting</Filter>
     </ClCompile>
@@ -107,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="TRWard.cpp">
       <Filter>Source Files\Tone Reproduction</Filter>
+    </ClCompile>
+    <ClCompile Include="Voxel.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +172,21 @@
     </ClInclude>
     <ClInclude Include="IntersectData.h">
       <Filter>Header Files\Aux Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="KdNode.h">
+      <Filter>Header Files\Accelerated Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Voxel.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="KdInterior.h">
+      <Filter>Header Files\Accelerated Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="KdLeaf.h">
+      <Filter>Header Files\Accelerated Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="KdTreeBuilder.h">
+      <Filter>Header Files\Accelerated Structures</Filter>
     </ClInclude>
     <ClInclude Include="Checkerboard.h">
       <Filter>Header Files\Lighting</Filter>
