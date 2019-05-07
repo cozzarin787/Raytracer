@@ -3,9 +3,11 @@
 #include "Checkerboard.h"
 #include "TRReinhard.h"
 #include "KdTreeBuilder.h"
+#include "ctpl_stl.h"
 #include <lodepng.h>
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
@@ -16,6 +18,10 @@ using namespace std::chrono;
 
 KdTreeBuilder treeBuilder;
 KdNode* KDTree = &KdLeaf();
+
+// Parallel pixelArray
+std::vector<std::vector<Color>> tpixelArray;
+World tworld;
 
 Camera::Camera(Point p, Vector3f lookat, Vector3f temp)
 {

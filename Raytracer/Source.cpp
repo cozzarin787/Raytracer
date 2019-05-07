@@ -9,6 +9,7 @@
 #include "Checkerboard.h"
 #include "TRWard.h"
 #include "TRReinhard.h"
+#include "ThreadCamera.h"
 
 #include <string>
 #include <sstream>
@@ -39,9 +40,13 @@ std::vector<Triangle> readObj(std::string fileName)
 					  istream_iterator<string>{} };
 		if (!tokens.size() < 1)
 		{
-			if (tokens[0] == "v" || tokens[0] == "vn" || tokens[0] == "vt")
+			if (tokens[0] == "v")
 			{
 				vertices.push_back(Point(stof(tokens[1]), stof(tokens[2]), stof(tokens[3])));
+			}
+			else if (tokens[0] == "vn" || tokens[0] == "vt")
+			{
+				vertices.push_back(Point(0,0,0));
 			}
 			else if (tokens[0] == "f")
 			{
@@ -371,9 +376,68 @@ void createDragonScene()
 	std::cin.ignore();
 }
 
+void threading()
+{
+	std::vector<Triangle> bunny = readObj("head.obj");
+
+	// Rotation Matrix
+	Matrix4f rotationMatrix;
+	rotationMatrix.row(0) << cosf(3.14159f), 0, sinf(3.14159f), 0;
+	rotationMatrix.row(1) << 0, 1, 0, 0;
+	rotationMatrix.row(2) << -sinf(3.14159f), 0, cosf(3.14159f), 0;
+	rotationMatrix.row(3) << 0, 0, 0, 1;
+
+	// Translation Matrix
+	Matrix4f translationMatrix;
+	translationMatrix.row(0) << 1, 0, 0, 0;
+	translationMatrix.row(1) << 0, 1, 0, 5.0;
+	translationMatrix.row(2) << 0, 0, 1, 0;
+	translationMatrix.row(3) << 0, 0, 0, 1;
+
+	//Scaling Matrix
+	Matrix4f scalingMatrix;
+	scalingMatrix.row(0) << 100.0f, 0, 0, 0;
+	scalingMatrix.row(1) << 0, 100.0f, 0, 0;
+	scalingMatrix.row(2) << 0, 0, 100.0f, 0;
+	scalingMatrix.row(3) << 0, 0, 0, 1;
+
+	Matrix4f transform = translationMatrix * rotationMatrix * scalingMatrix;
+
+	// Create LightSources
+	Point lightPoint1 = Point(-1.0f, 6.014f, -70.0f);
+	LightSource l1 = LightSource(lightPoint1, Color(100, 100, 100));
+
+	// Add objects to world
+	World world = World(Color(0.11765f, 0.56471f, 1));
+
+	// Add lights to world
+	int light1Index = world.addLight(&l1);
+
+	// Add bunny
+	for (int i = 0; i < bunny.size(); i++)
+	{
+		Object * o = &bunny[i];
+		int oIndex = world.add(o);
+		world.transform(oIndex, transform);
+	}
+	ThreadCamera c = ThreadCamera(Point(0, 0.941f, -10), Vector3f(0, 0, 1), Vector3f(0, 1, 0));
+	c.setFocalLength(1);
+	c.setFilmPlaneDim(60, (4 / 3.0f));
+	c.setImageDim(512, 384);
+	c.setSpatialDataStructure(1);
+
+	c.renderParallel(world);
+
+	print(world.toString());
+	print(c.toString());
+
+	std::cin.ignore();
+}
+
 int main(void)
 {
-	createBunnyScene();
+	//createBunnyScene();
+	threading();
 	//createScene1();
 	//createWorld();
 	return 0;

@@ -129,6 +129,9 @@
     <ClCompile Include="Voxel.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="ThreadCamera.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -202,6 +205,12 @@
     </ClInclude>
     <ClInclude Include="TROperator.h">
       <Filter>Header Files\Tone Reproduction</Filter>
+    </ClInclude>
+    <ClInclude Include="ctpl_stl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadCamera.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

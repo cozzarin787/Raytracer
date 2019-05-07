@@ -5,10 +5,11 @@
 #include "TROperator.h"
 #include "KdInterior.h"
 #include "KdLeaf.h"
+#include "KdTreeBuilder.h"
 
 using Eigen::Matrix4f;
 
-class Camera
+class ThreadCamera
 {
 private:
 	float focalLength;
@@ -18,17 +19,26 @@ private:
 	float filmPlaneWidth;
 	TROperator* TRop;
 	int spatialFlag;
+	KdTreeBuilder treeBuilder;
+	KdNode* KDTree = &KdLeaf();
 
 public:
+	struct rayInfo
+	{
+		int i, j;
+		Ray r;
+	};
+
 	Point position;
 	Vector3f lookat;
 	Vector3f up;
 	Matrix4f viewTransform;
 
-	Camera(Point p, Vector3f lookat, Vector3f up);
-	Camera(Point p, Vector3f lookat, Vector3f up, TROperator* trop);
+	ThreadCamera(Point p, Vector3f lookat, Vector3f up);
+	ThreadCamera(Point p, Vector3f lookat, Vector3f up, TROperator* trop);
 
-	void render(World world);
+	void pixelJob(int id, const rayInfo & params);
+
 	void renderParallel(World world);
 	Color trace(World world, Ray r, Color radiance, std::vector<Object::intersectResult> intersectlist, int * depth);
 	void generateImage(std::vector<std::vector<Color>> pixelArray, const char * filename);
@@ -39,6 +49,6 @@ public:
 
 	std::string toString();
 
-	~Camera();
+	~ThreadCamera();
 };
 
