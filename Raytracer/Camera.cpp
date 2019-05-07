@@ -2,54 +2,61 @@
 #include "IntersectData.h"
 #include "Checkerboard.h"
 #include "TRReinhard.h"
+#include "KdTreeBuilder.h"
 #include <lodepng.h>
 #include <iostream>
+#include <chrono>
 
 #define PI 3.141592654f
 #define print(x) std::cout << x << std::endl;
-#define MAX_DEPTH 4
+#define MAX_RECUR 4
 #define OUTPUT_FILENAME "test.png"
 
-Camera::Camera(Point p, RowVector3f lookat, RowVector3f up)
+using namespace std::chrono;
+
+KdTreeBuilder treeBuilder;
+KdNode* KDTree = &KdLeaf();
+
+Camera::Camera(Point p, Vector3f lookat, Vector3f temp)
 {
-    this->position = p;
-    this->lookat = lookat;
-    this->up = up;
-    // default value
-    this->focalLength = 1;
+	this->position = p;
+	this->lookat = lookat;
+	// default values
+	this->focalLength = 1;
+	this->spatialFlag = 1;
 
-    // construct view transform
-    RowVector3f n = lookat.normalized();
-    RowVector3f u = (up.cross(n)).normalized();
-    RowVector3f v = n.cross(u);
+	// construct view transform
+	Vector3f n = (lookat - p.vector()).normalized();
+	Vector3f u = ((temp.normalized()).cross(n)).normalized();
+	Vector3f v = (n.cross(u)).normalized();
 
-    this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
-    this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
-    this->viewTransform.row(2) << n[0], n[1], n[2], -1 * (p.vector().dot(n));
-    this->viewTransform.row(3) << 0, 0, 0, 1;
+	this->viewTransform << u[0], u[1], u[2], -(p.vector().dot(u)),
+						   v[0], v[1], v[2], -(p.vector().dot(v)),
+						   n[0], n[1], n[2], -(p.vector().dot(n)),
+						   0, 0, 0, 1;
 
 	// Set default tone reproduction operator
 	TRReinhard trop = TRReinhard(300);
 	this->TRop = &trop;
 }
 
-Camera::Camera(Point p, RowVector3f lookat, RowVector3f up, TROperator* trop)
+Camera::Camera(Point p, Vector3f lookat, Vector3f temp, TROperator* trop)
 {
 	this->position = p;
 	this->lookat = lookat;
-	this->up = up;
-	// default value
+	// default values
 	this->focalLength = 1;
+	this->spatialFlag = 1;
 
 	// construct view transform
-	RowVector3f n = lookat.normalized();
-	RowVector3f u = (up.cross(n)).normalized();
-	RowVector3f v = n.cross(u);
+	Vector3f n = (lookat - p.vector()).normalized();
+	Vector3f u = ((temp.normalized()).cross(n)).normalized();
+	Vector3f v = (n.cross(u)).normalized();
 
-	this->viewTransform.row(0) << u[0], u[1], u[2], -1 * (p.vector().dot(u));
-	this->viewTransform.row(1) << v[0], v[1], v[2], -1 * (p.vector().dot(v));
-	this->viewTransform.row(2) << n[0], n[1], n[2], -1 * (p.vector().dot(n));
-	this->viewTransform.row(3) << 0, 0, 0, 1;
+	this->viewTransform << u[0], u[1], u[2], -(p.vector().dot(u)),
+						   v[0], v[1], v[2], -(p.vector().dot(v)),
+						   n[0], n[1], n[2], -(p.vector().dot(n)),
+						   0, 0, 0, 1;
 
 	this->TRop = trop;
 }
@@ -62,10 +69,26 @@ void Camera::render(World world)
     // transform light sources into camera coordinates
     world.transformAllLights(this->viewTransform);
 
-    // init pixelArray
-    std::vector<std::vector<Color>> pixelArray(imageHeightPx);
-    for (int i = 0; i < imageHeightPx; i++)
-        pixelArray[i].resize(imageWidthPx);
+	// calculate the bounding box of the world
+	world.calcWorldVoxel();
+
+	// BUILD K-D TREE
+	if (spatialFlag == 1)
+	{
+		auto start = high_resolution_clock::now();
+		treeBuilder = KdTreeBuilder();
+		KDTree = treeBuilder.getNode(world.totalBound, world.voxelObjectList, 0);
+		auto stop = high_resolution_clock::now();
+		auto duration = duration_cast<milliseconds>(stop - start);
+		print("\nK-D TREE BUILD TIME: ");
+		std::string s = std::to_string(duration.count()) + " milliseconds\n\n";
+		print(s);
+	}
+
+	// init pixelArray
+	std::vector<std::vector<Color>> pixelArray(imageHeightPx);
+	for (int i = 0; i < imageHeightPx; i++)
+		pixelArray[i].resize(imageWidthPx);
 
     // Calculate pixel height and width
     float pXh = this->filmPlaneHeight / this->imageHeightPx;
@@ -74,25 +97,36 @@ void Camera::render(World world)
     float pxY = this->filmPlaneHeight / 2;
     float pxX = -1 * this->filmPlaneWidth / 2;
 
-    // Create the array of pixels representing the rendered image of the world
-    for (int i = 0; i < this->imageHeightPx; i++)
-    {
-        for (int j = 0; j < this->imageWidthPx; j++)
-        {
-            // Spawn Ray through the middle of a pixel
-            Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
-            Point cameraOrigin = Point(0, 0, 0);
-            RowVector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
-            Ray r = Ray(cameraOrigin, rayvec);
+	// Create the array of pixels representing the rendered image of the world
+	auto start = high_resolution_clock::now();
+	for (int i = 0; i < this->imageHeightPx; i++)
+	{
+		for (int j = 0; j < this->imageWidthPx; j++)
+		{
+			// Spawn Ray through the middle of a pixel
+			Point pxpos = Point(pxX + pXw, pxY - pXh, this->focalLength);
+			Point cameraOrigin = Point(0, 0, 0);
+			Vector3f rayvec = (pxpos.vector() - cameraOrigin.vector()).normalized();
+			Ray r = Ray(cameraOrigin, rayvec);
 
-            // Calculate Intersections with world objects
-            std::vector<Object::intersectResult> intersectlist = world.spawnRay(r);
+			std::vector<Object::intersectResult> intersectlist;
+
+			// Calculate Intersections with world objects by sending ray through KDTree
+			if (spatialFlag == 1)
+			{
+				intersectlist = treeBuilder.rayThroughTree(KDTree, r);
+			}
+			else
+			{
+				// Original Implementation
+				intersectlist = world.spawnRay(r);
+			}
 
             int depth = 0;
             Color radiance = trace(world, r, Color(0, 0, 0), intersectlist, &depth);
 
             // divide by depth to normalize the reflected rays
-            pixelArray[i][j] = radiance / ((depth + 1) * world.lightList.size());
+            pixelArray[i][j] = radiance / (float)((depth + 1) * world.lightList.size());
 
             pxX += pXw;
         }
@@ -104,6 +138,12 @@ void Camera::render(World world)
 	this->TRop->reproduceTone(pixelArray);
 
     generateImage(pixelArray, OUTPUT_FILENAME);
+
+	auto stop = high_resolution_clock::now();
+	auto duration = duration_cast<milliseconds>(stop - start);
+	print("\nEXECUTION TIME: ");
+	std::string s = std::to_string(duration.count()) + " milliseconds\n\n";
+	print(s);
 }
 
 Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::intersectResult> intersectlist, int * depth)
@@ -138,18 +178,27 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
 
         // Spawn shadow rays from P to all Light Sources
         std::vector<Ray> shadowRays;
-        for (LightSource lightSource : world.lightList)
+        for (LightSource* lightSource : world.lightList)
         {
-            RowVector3f shadowDir = (lightSource.position.vector() - interRes.intersectPoint.vector()).normalized();
+            Vector3f shadowDir = (lightSource->position.vector() - interRes.intersectPoint.vector()).normalized();
             shadowRays.push_back(Ray(interRes.intersectPoint, shadowDir));
         }
 
-        std::vector<RowVector3f> directLightVectors;
-        std::vector<LightSource> directLights;
+        std::vector<Vector3f> directLightVectors;
+        std::vector<LightSource*> directLights;
         for (int index = 0; index < shadowRays.size(); index++)
         {
             // Check to see if shadow ray makes it to light without intersection
-            std::vector<Object::intersectResult> shadowintersectlist = world.spawnRay(shadowRays[index]);
+			std::vector<Object::intersectResult> shadowintersectlist;
+			if (this->spatialFlag == 1)
+			{
+				shadowintersectlist = treeBuilder.rayThroughTree(KDTree, shadowRays[index]);
+			}
+			else
+			{
+				shadowintersectlist = world.spawnRay(shadowRays[index]);
+			}
+
             if (shadowintersectlist.empty())
             {
                 directLightVectors.push_back((shadowRays[index].direction));
@@ -161,13 +210,13 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
                 if(std::all_of(shadowintersectlist.begin(), shadowintersectlist.end(),
                         [](Object::intersectResult& shadowrayintersect){return shadowrayintersect.mat->kt != 0;} ))
                 {
-                    Color shadowraycolor = world.lightList[index].color;
+                    Color shadowraycolor = Color(world.lightList[index]->color.r, world.lightList[index]->color.g, world.lightList[index]->color.b);
                     for(Object::intersectResult& shadowrayintersect : shadowintersectlist )
                     {
                         shadowraycolor = shadowraycolor * shadowrayintersect.mat->kt;
                     }
                     directLightVectors.push_back((shadowRays[index].direction));
-                    directLights.push_back(LightSource(world.lightList[index].position, shadowraycolor ));
+                    directLights.push_back(new LightSource(world.lightList[index]->position, shadowraycolor));
                 }
             }
         }
@@ -179,7 +228,7 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
         // Use illumination model for local illumination
         radiance = interRes.mat->illuminate(interData);
 
-        if (*depth < MAX_DEPTH)
+        if (*depth < MAX_RECUR)
         {
             // Reflective
             if (interRes.mat->kr > 0)
@@ -188,7 +237,15 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
                 {
                     // Calculate Intersections with world objects
                     std::vector<Object::intersectResult> intersectlistreflection;
-                    std::vector<Object::intersectResult> temp = world.spawnRay(reflectionray);
+					std::vector<Object::intersectResult> temp;
+					if (this->spatialFlag == 1)
+					{
+						temp = treeBuilder.rayThroughTree(KDTree, reflectionray);
+					}
+					else
+					{
+						temp = world.spawnRay(reflectionray);
+					}
 
                     if(temp.empty())
                     {
@@ -218,7 +275,15 @@ Color Camera::trace(World world, Ray r, Color radiance, std::vector<Object::inte
             if (interRes.mat->kt > 0)
             {
 
-                std::vector<Object::intersectResult> intersectlisttransmission = world.spawnRay(interData.T);
+				std::vector<Object::intersectResult> intersectlisttransmission;
+				if (this->spatialFlag == 1)
+				{
+					intersectlisttransmission = treeBuilder.rayThroughTree(KDTree, interData.T);
+				}
+				else
+				{
+					intersectlisttransmission = world.spawnRay(interData.T);
+				}
                 (*depth)++;
 
                 radiance = radiance +
@@ -267,6 +332,11 @@ void Camera::setFocalLength(float f)
     this->focalLength = f;
 }
 
+void Camera::setSpatialDataStructure(int flag)
+{
+	this->spatialFlag = flag;
+}
+
 std::string Camera::toString()
 {
     std::string result = "Camera\n Postion\n   " + this->position.toString() + "\n";
@@ -292,37 +362,3 @@ std::string Camera::toString()
 Camera::~Camera()
 {
 }
-
-// BUILD K-D TREE
-/*
-	N = getNode(voxel, List of primatives)
-		if (List of Primatives size == 1)
-			return leafNode(List of primatives)
-		P = get partition plane
-		L_1 = objects "above P"
-		L_2 = objects "below P"
-		top = getNode(topVoxel, L_1)
-		bottom = getNode(bottomVoxel, L_2)
-*/
-// Spawn Ray
-/*
-	intersect(KDTree Node N, Ray R)
-		if (N is a leaf):
-			go though elements in N and return closest.
-		else:
-			a = where R enters the voxel (changing coordinate)
-			b = where R leaves the voxel (changing coordinate)
-			S = seperating plane
-			case 1: Only crosses top voxel (a and b above P)
-				intersect(N.top, R)
-			case 2: Only crosses bottom voxel (a and b below P)
-				intersect(N.bottom, R)
-			case 3: Starts top, goes to bottom (P between a and b, where a > b)
-				intersect(N.top, R)
-				if (no intersection)
-					intersect(N.bottom, R)
-			case 4: Starts bottom, goes to top (P between a and b, where b > a)
-				intersect(N.bottom, R)
-				if (no intersection)
-					intersect(N.top, R)
-*/

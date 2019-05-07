@@ -14,9 +14,9 @@ Color::Color(float r, float g, float b)
 	this->b = b;
 }
 
-RowVector3f Color::vector()
+Vector3f Color::vector()
 {
-	return RowVector3f(this->r, this->g, this->b);
+	return Vector3f(this->r, this->g, this->b);
 }
 
 Color Color::operator+(const Color& other)
