@@ -3,7 +3,7 @@
 This was a semester long project for the Global Illumination (CSCI-711) course at RIT. The objective was to develop a 
 RayTracer in C++11 from scratch in order to render Whitted's famous inter-reflecting spheres.
 
-![alt text](https://blogs.nvidia.com/wp-content/uploads/2018/07/sphckbd_35mm.jpg)
+[![alt text](https://blogs.nvidia.com/wp-content/uploads/2018/07/sphckbd_35mm.jpg)](https://blogs.nvidia.com/blog/2018/08/01/ray-tracing-global-illumination-turner-whitted/)
 
 The project was divided in 7 Checkpoints:
 1. Setting the Scene
