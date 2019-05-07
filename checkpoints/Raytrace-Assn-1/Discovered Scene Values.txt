@@ -1,0 +1,14 @@
+Glass Sphere: 
+    Size: 1.2988 (Applied to X, Y, and Z)
+    Location: X = -0.121, Y = 1.014, Z = -7.724 
+Mirror Sphere:
+    Size: 1.2567 (Applied to X, Y, and Z)
+    Location: X = 0.86, Y = 0.55, and Z = -6.94
+Floor: 
+    Size: 100 x 100 Plane with Scaling X = 0.57955, Y = 1, Z = 1.79781
+    Location: X = 1.72, Y = 0, Z = 0
+Light Source: 
+    Location: X = -1.49, Y = 4.47, Z = -5.158
+Camera:
+    Position: X = 0, Y = 0.941, Z = -10
+    LookAt: X = 0, Y = 0, Z = 1

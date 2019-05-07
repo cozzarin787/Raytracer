@@ -3,9 +3,10 @@
 This was a semester long project for the Global Illumination (CSCI-711) course at RIT. The objective was to develop a 
 RayTracer in C++11 from scratch in order to render Whitted's famous inter-reflecting spheres.
 
-![alt text](https://blogs.nvidia.com/wp-content/uploads/2018/07/sphckbd_35mm.jpg)
+[![alt text](https://blogs.nvidia.com/wp-content/uploads/2018/07/sphckbd_35mm.jpg)](https://blogs.nvidia.com/blog/2018/08/01/ray-tracing-global-illumination-turner-whitted/)
 
 The project was divided in 7 Checkpoints:
+
 1. Setting the Scene
 2. Raytracing Framework
 3. Basic Shading
@@ -14,9 +15,12 @@ The project was divided in 7 Checkpoints:
 6. Refraction
 7. Tone Reproduction
 
-The output of each Checkpoint is Whitted's spheres.
-
 A KD-Tree was implemented as the acceleration structure of the RayTracer. 
+
+The output of each Checkpoint is Whitted's spheres and can be found in their corresponding directory inside the `/checkpoints` directory.
+
+A sneak peak of the results of each checkpoint is shown below:
+
 
 ## Getting Started
 

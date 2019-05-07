@@ -2,7 +2,7 @@
 #include <vector>
 #include "Point.h"
 #include "Ray.h"
-#include <Eigen/dense>
+#include <Eigen/Dense>
 
 using Eigen::Vector3f;
 using Eigen::Matrix4f;

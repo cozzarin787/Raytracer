@@ -1,0 +1,5 @@
+K-D TREE BUILD TIME: 47 milliseconds
+
+K-D TREE TRAVERSAL TIME: 2147 milliseconds
+
+WITHOUT K-D TREE: 62517 milliseconds
